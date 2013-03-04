@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  tests
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -47,14 +47,6 @@ class Core_Mage_Category_Create_RootCategoryTest extends Mage_Selenium_TestCase
     }
 
     /**
-     * @TODO Temporary workaround(should be deleted)
-     */
-    protected function tearDownAfterTest()
-    {
-        $this->navigate('manage_categories', false);
-    }
-
-    /**
      * <p>Creating Root Category with required fields</p>
      * <p>Steps</p>
      * <p>1. Click "Add Root Category" button </p>
@@ -64,12 +56,11 @@ class Core_Mage_Category_Create_RootCategoryTest extends Mage_Selenium_TestCase
      * <p>Root Category created, success message appears</p>
      *
      * @test
-     *
      */
     public function rootCategoryWithRequiredFieldsOnly()
     {
         //Data
-        $categoryData = $this->loadData('root_category_required');
+        $categoryData = $this->loadDataSet('Category', 'root_category_required');
         //Steps
         $this->categoryHelper()->createCategory($categoryData);
         //Verifying
@@ -87,12 +78,11 @@ class Core_Mage_Category_Create_RootCategoryTest extends Mage_Selenium_TestCase
      * <p>Root Category created, success message appears</p>
      *
      * @test
-     *
      */
     public function rootCategoryWithAllFields()
     {
         //Data
-        $categoryData = $this->loadData('root_category_all');
+        $categoryData = $this->loadDataSet('Category', 'root_category_all');
         //Steps
         $this->categoryHelper()->createCategory($categoryData);
         //Verifying
@@ -114,12 +104,11 @@ class Core_Mage_Category_Create_RootCategoryTest extends Mage_Selenium_TestCase
      *
      * @test
      * @dataProvider withRequiredFieldsEmptyDataProvider
-     *
      */
     public function withRequiredFieldsEmpty($emptyField, $fieldType)
     {
         //Data
-        $categoryData = $this->loadData('root_category_required', array($emptyField => '%noValue%'));
+        $categoryData = $this->loadDataSet('Category', 'root_category_required', array($emptyField => '%noValue%'));
         //Steps
         $this->categoryHelper()->createCategory($categoryData);
         //Verifying
@@ -135,5 +124,4 @@ class Core_Mage_Category_Create_RootCategoryTest extends Mage_Selenium_TestCase
             array('available_product_listing', 'multiselect')
         );
     }
-
 }

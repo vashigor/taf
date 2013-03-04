@@ -20,7 +20,7 @@
 # @package     selenium
 # @subpackage  uimaps
 # @author      Magento Core Team <core@magentocommerce.com>
-# @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+# @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
 # @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 #
 ---
@@ -47,10 +47,13 @@ index_management:
                             select_visible: //a[text()='Select Visible']
                             unselect_visible: //a[text()='Unselect Visible']
                             reindex_index: //tr[td[normalize-space(text())='%indexName%']]//a[text()='Reindex Data']
+                            reindex_required_index: //tr[normalize-space(td/span)='Reindex Required']//a[text()='Reindex Data']
+                            update_required_index: //tr[normalize-space(td/span)='Yes']//a[text()='Reindex Data']
                         pageelements:
                             selected_items: //strong[@id='indexer_processes_grid_massaction-count']
                             reindex_required: //tr[normalize-space(td/span)='Reindex Required']
                             update_required: //tr[normalize-space(td/span)='Yes']
+                            index_line: //table[@id='indexer_processes_grid_table']/tbody/tr
         messages:
-            success_reindex: //li[normalize-space(@class)='success-msg' and contains(.,'Product Prices index was rebuilt.')]
+            success_reindex: //li[normalize-space(@class)='success-msg' and contains(.,'%indexName% index was rebuilt.')]
             massaction_success_reindex: //li[normalize-space(@class)='success-msg' and contains(.,'Total of %qtySelected% index(es) have reindexed data.')]

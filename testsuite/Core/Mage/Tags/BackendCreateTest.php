@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  tests
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -35,8 +35,6 @@
  */
 class Core_Mage_Tags_BackendCreateTest extends Mage_Selenium_TestCase
 {
-    protected $_tagToBeDeleted = array();
-
     /**
      * <p>Preconditions:</p>
      * <p>Navigate to Catalog -> Tags -> All tags</p>
@@ -45,32 +43,13 @@ class Core_Mage_Tags_BackendCreateTest extends Mage_Selenium_TestCase
     {
         $this->loginAdminUser();
         $this->navigate('all_tags');
-        $this->assertTrue($this->checkCurrentPage('all_tags'), $this->getParsedMessages());
-        $this->addParameter('storeId', '1');
     }
 
     protected function tearDownAfterTest()
     {
-        if (!empty($this->_tagToBeDeleted)) {
-            $this->navigate('all_tags');
-            $this->tagsHelper()->deleteTag($this->_tagToBeDeleted);
-            $this->_tagToBeDeleted = array();
-        }
-    }
-
-    /**
-     * <p>Create a simple product for tests</p>
-     *
-     * @return string
-     * @test
-     */
-    public function createSimpleProduct()
-    {
-        $simpleProduct = $this->loadData('simple_product_visible', null, array('general_name', 'general_sku'));
-        $this->navigate('manage_products');
-        $this->productHelper()->createProduct($simpleProduct);
-        $this->assertMessagePresent('success', 'success_saved_product');
-        return $simpleProduct['general_name'];
+        $this->loginAdminUser();
+        $this->navigate('all_tags');
+        $this->tagsHelper()->deleteAllTags();
     }
 
     /**
@@ -87,14 +66,12 @@ class Core_Mage_Tags_BackendCreateTest extends Mage_Selenium_TestCase
     public function createNew()
     {
         //Setup
-        $setData = $this->loadData('backend_new_tag', null, 'tag_name');
+        $setData = $this->loadDataSet('Tag', 'backend_new_tag');
         //Steps
         $this->tagsHelper()->addTag($setData);
         //Verify
         $this->assertTrue($this->checkCurrentPage('all_tags'), $this->getParsedMessages());
         $this->assertMessagePresent('success', 'success_saved_tag');
-        //Cleanup
-        $this->_tagToBeDeleted = array('tag_name' => $setData['tag_name']);
     }
 
     /**
@@ -111,7 +88,7 @@ class Core_Mage_Tags_BackendCreateTest extends Mage_Selenium_TestCase
     public function withEmptyTagName()
     {
         //Setup
-        $setData = $this->loadData('backend_new_tag', array('tag_name' => ''));
+        $setData = $this->loadDataSet('Tag', 'backend_new_tag', array('tag_name' => ''));
         //Steps
         $this->tagsHelper()->addTag($setData);
         //Verify
@@ -138,17 +115,15 @@ class Core_Mage_Tags_BackendCreateTest extends Mage_Selenium_TestCase
     public function withSpecialValues(array $specialValue)
     {
         //Data
-        $setData = $this->loadData('backend_new_tag', $specialValue, 'tag_name');
+        $setData = $this->loadDataSet('Tag', 'backend_new_tag', $specialValue);
+        $tagToOpen = $this->loadDataSet('Tag', 'backend_search_tag', array('tag_name' => $setData['tag_name']));
         //Steps
         $this->tagsHelper()->addTag($setData);
         //Verify
         $this->assertTrue($this->checkCurrentPage('all_tags'), $this->getParsedMessages());
         $this->assertMessagePresent('success', 'success_saved_tag');
-        $tagToOpen = $this->loadData('backend_search_tag', array('tag_name' => $setData['tag_name']));
         $this->tagsHelper()->openTag($tagToOpen);
         $this->verifyForm($setData);
-        //Cleanup
-        $this->_tagToBeDeleted = $tagToOpen;
     }
 
     public function withSpecialValuesDataProvider()
@@ -176,17 +151,17 @@ class Core_Mage_Tags_BackendCreateTest extends Mage_Selenium_TestCase
      * <p>Expected result:</p>
      * <p>The assigned tag is displayed.</p>
      *
-     * @param string $product
-     *
      * @test
-     * @depends createSimpleProduct
-     *
      */
-    public function productTaggedByAdministrator($product)
+    public function productTaggedByAdministrator()
     {
+        $simple = $this->loadDataSet('Product', 'simple_product_visible');
+        $setData = $this->loadDataSet('Tag', 'backend_new_tag_with_product',
+            array('prod_tag_admin_name' => $simple['general_name']));
         //Setup
-        $setData = $this->loadData('backend_new_tag_with_product',
-                array('prod_tag_admin_name' => $product), 'tag_name');
+        $this->navigate('manage_products');
+        $this->productHelper()->createProduct($simple);
+        $this->assertMessagePresent('success', 'success_saved_product');
         //Steps
         $this->navigate('all_tags');
         $this->tagsHelper()->addTag($setData);
@@ -194,11 +169,9 @@ class Core_Mage_Tags_BackendCreateTest extends Mage_Selenium_TestCase
         $this->assertTrue($this->checkCurrentPage('all_tags'), $this->getParsedMessages());
         $this->assertMessagePresent('success', 'success_saved_tag');
         $tagSearchData = array('tag_name' => $setData['tag_name']);
-        $productSearchData = array('general_name' => $product);
+        $productSearchData = array('general_name' => $simple['general_name']);
         $this->navigate('manage_products');
         $this->assertTrue($this->tagsHelper()->verifyTagProduct($tagSearchData, $productSearchData),
-                $this->getParsedMessages());
-        //Cleanup
-        $this->_tagToBeDeleted = array('tag_name' => $setData['tag_name']);
+            $this->getParsedMessages());
     }
 }

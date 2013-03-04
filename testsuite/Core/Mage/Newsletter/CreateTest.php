@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  tests
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -59,7 +59,7 @@ class Core_Mage_Newsletter_CreateTest extends Mage_Selenium_TestCase
         //Verifying
         $this->assertMessagePresent('success', 'success_saved_category');
         $this->reindexInvalidedData();
-        $this->clearInvalidedCache();
+        $this->flushCache();
         return $category['name'];
     }
 
@@ -81,7 +81,6 @@ class Core_Mage_Newsletter_CreateTest extends Mage_Selenium_TestCase
      *
      * @test
      * @depends preconditionsForTests
-     *
      */
     public function guestUseValidNotExistCustomerEmail($category)
     {
@@ -115,17 +114,18 @@ class Core_Mage_Newsletter_CreateTest extends Mage_Selenium_TestCase
      *
      * @test
      * @depends preconditionsForTests
-     *
      */
     public function guestUseValidExistCustomerEmail($category)
     {
-        $customer = $this->loadDataSet('Customers', 'customer_account_register');
+        $customer = $this->loadDataSet('Customers', 'generic_customer_account');
         $search = $this->loadDataSet('Newsletter', 'search_newsletter_subscribers',
                                      array('filter_email' => $customer['email']));
         //Steps
-        $this->frontend('customer_login');
-        $this->customerHelper()->registerCustomer($customer);
-        $this->logoutCustomer();
+        $this->loginAdminUser();
+        $this->navigate('manage_customers');
+        $this->customerHelper()->createCustomer($customer);
+        $this->assertMessagePresent('success', 'success_saved_customer');
+        $this->frontend();
         $this->categoryHelper()->frontOpenCategory($category);
         $this->newsletterHelper()->frontSubscribe($search['filter_email']);
         //Verifying
@@ -147,7 +147,6 @@ class Core_Mage_Newsletter_CreateTest extends Mage_Selenium_TestCase
      *
      * @test
      * @depends preconditionsForTests
-     *
      */
     public function guestInvalidEmail($category)
     {
@@ -175,7 +174,6 @@ class Core_Mage_Newsletter_CreateTest extends Mage_Selenium_TestCase
      *
      * @test
      * @depends preconditionsForTests
-     *
      */
     public function guestEmptyEmail($category)
     {
@@ -202,7 +200,6 @@ class Core_Mage_Newsletter_CreateTest extends Mage_Selenium_TestCase
      *
      * @test
      * @depends preconditionsForTests
-     *
      */
     public function guestLongValidEmail($category)
     {
@@ -233,16 +230,19 @@ class Core_Mage_Newsletter_CreateTest extends Mage_Selenium_TestCase
      *
      * @test
      * @depends preconditionsForTests
-     *
      */
     public function customerUseOwnEmail($category)
     {
-        $customer = $this->loadDataSet('Customers', 'customer_account_register');
+        $customer = $this->loadDataSet('Customers', 'generic_customer_account');
         $search = $this->loadDataSet('Newsletter', 'search_newsletter_subscribers',
                                      array('filter_email' => $customer['email']));
         //Steps
-        $this->frontend('customer_login');
-        $this->customerHelper()->registerCustomer($customer);
+        $this->loginAdminUser();
+        $this->navigate('manage_customers');
+        $this->customerHelper()->createCustomer($customer);
+        $this->assertMessagePresent('success', 'success_saved_customer');
+        $this->customerHelper()->frontLoginCustomer(array('email'    => $customer['email'],
+                                                          'password' => $customer['password']));
         $this->categoryHelper()->frontOpenCategory($category);
         $this->newsletterHelper()->frontSubscribe($search['filter_email']);
         //Verifying
@@ -276,7 +276,6 @@ class Core_Mage_Newsletter_CreateTest extends Mage_Selenium_TestCase
      *
      * @test
      * @depends preconditionsForTests
-     *
      */
     public function deleteSubscriber($category)
     {
@@ -297,7 +296,6 @@ class Core_Mage_Newsletter_CreateTest extends Mage_Selenium_TestCase
         $this->newsletterHelper()->massAction('delete', array($search));
         //Verifying
         $this->assertMessagePresent('success', 'success_delete');
-        $this->assertNull($this->search($search), 'Subscriber is not deleted');
     }
 
     /**
@@ -321,7 +319,6 @@ class Core_Mage_Newsletter_CreateTest extends Mage_Selenium_TestCase
      *
      * @test
      * @depends preconditionsForTests
-     *
      */
     public function subscriberUnsubscribe($category)
     {

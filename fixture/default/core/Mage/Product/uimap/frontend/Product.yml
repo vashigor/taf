@@ -21,14 +21,14 @@
 # @package     selenium
 # @subpackage  uimaps
 # @author      Magento Core Team <core@magentocommerce.com>
-# @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+# @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
 # @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 #
 ---
 #
 product_page:
     mca: %productUrl%.html
-    title: %productTitle%
+    title: %elementTitle%
     uimap:
         form:
             fieldsets: &productFieldsets
@@ -102,7 +102,7 @@ product_page:
                             custom_option_file: //input[@type='file']
                         checkboxes:
                             custom_option_check_attribute: //input
-                            custom_option_checkbox: //input[@type='checkbox']
+                            custom_option_checkbox: //li[contains(.//label,'%optionTitle%')]//input[@type='checkbox']
                         dropdowns:
                             custom_option_select_attribute: //select
                             custom_option_dropdown: //select
@@ -121,7 +121,7 @@ product_page:
                         multiselects:
                             custom_option_multiselect: //select[@multiple='multiple']
                         radiobuttons:
-                            custom_option_radiobutton: //input[@type='radio']
+                            custom_option_radiobutton: //li[contains(.//label,'%optionTitle%')]//input[@type='radio']
                         pageelements:
                             custom_option_price: //span[@class='price' and normalize-space(text())='%price%']
                             custom_option_select: //option[contains(text(),'%optionTitle% +%optionPrice%')]
@@ -241,7 +241,7 @@ product_page:
 
 product_review:
     mca: review/product/list/id/%id%/
-    title: %productTitle%
+    title: %elementTitle%
     uimap: &productReview
         form:
             fieldsets:
@@ -259,6 +259,8 @@ product_review:
                             review_summary: //dt[span='%reviewerName%']/a
                         pageelements:
                             review_details: //dt[span='%reviewerName%']/following-sibling::dd[1]
+                            review_details_ratings: //dt[span='%reviewerName%']/following-sibling::dd[1]/table
+                            review_details_ratings_line: //dt[span='%reviewerName%']/following-sibling::dd[1]/table//th
                             review_rate_name: //dt[span='%reviewerName%']/following-sibling::dd[1]//th[text()='%rateName%']
                             review_rate_value: //dt[span='%reviewerName%']/following-sibling::dd[1]//tr[th='%rateName%']//div[@class='rating']
                             review_table_rate_name: //table[@id='product-review-table']//th[text()='%rateName%']
@@ -274,10 +276,10 @@ product_review:
 
 product_review_index:
     mca: review/product/list/id/%id%/#review-form/
-    title: %productTitle%
+    title: %elementTitle%
     uimap: *productReview
 
 product_review_category:
     mca: review/product/list/id/%id%/category/%categoryId%/#review-form/
-    title: %productTitle%
+    title: %elementTitle%
     uimap: *productReview

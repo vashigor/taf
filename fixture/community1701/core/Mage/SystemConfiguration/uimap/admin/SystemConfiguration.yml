@@ -1,0 +1,929 @@
+#
+# Magento
+#
+# NOTICE OF LICENSE
+#
+# This source file is subject to the Academic Free License (AFL 3.0)
+# that is bundled with this package in the file LICENSE_AFL.txt.
+# It is also available through the world-wide-web at this URL:
+# http://opensource.org/licenses/afl-3.0.php
+# If you did not receive a copy of the license and are unable to
+# obtain it through the world-wide-web, please send an email
+# to license@magentocommerce.com so we can send you a copy immediately.
+#
+# DISCLAIMER
+#
+# Do not edit or add to this file if you wish to upgrade Magento to newer
+# versions in the future. If you wish to customize Magento for your
+# needs please refer to http://www.magentocommerce.com for more information.
+#
+# @category    tests
+# @package     selenium
+# @subpackage  uimaps
+# @author      Magento Core Team <core@magentocommerce.com>
+# @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+# @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+#
+---
+#Manage System Configuration
+
+# 'System Configuration' page
+system_configuration:
+    uimap: &system_configuration_uimap
+        form:
+            tabs:
+                 -
+                    sales_paypal:
+                 -
+                    sales_payment_methods:
+                        fieldsets:
+                            -
+                                merchant_location:
+                                    xpath: //div[fieldset[@id='payment_account']]
+                                    dropdowns:
+                                        merchant_country: //select[@id='payment_account_merchant_country']
+                            -
+                        #PayPal All-in-one Payment Solutions
+                                paypal_all_in_one:
+                                    xpath: //div[fieldset[@id='payment_paypal_group_all_in_one']]
+                                    links:
+                                        paypal_all_in_one_section: //a[@id='payment_paypal_group_all_in_one-head']
+                                        paypal_all_in_one_help: //a[text()='Help']
+                                        ppa_learn_more: //strong[contains(text(),'Payments Advanced (Includes Express Checkout)')]//a[@class='link-more']
+                                        ppp_learn_more: //strong[contains(text(),'Payments Pro')]//a[@class='link-more']
+                                        pps_learn_more: //strong[contains(text(),'Payments Standard')]//a[@class='link-more']
+                                    buttons:
+                                        ppa_configure: //button[@id='payment_payflow_advanced-head'][@class='button']
+                                        ppp_configure: //button[@id='payment_wpp-head'][@class='button']
+                                        pps_configure: //button[@id='payment_wps-head'][@class='button']
+                                        wpfp_configure: //button[@id='payment_payments_pro_payflow_edition-head'][@class='button']
+                                        ppa_close: //button[@id='payment_payflow_advanced-head'][@class='button open']
+                                        ppp_close: //button[@id='payment_wpp-head'][@class='button open']
+                                        pps_close: //button[@id='payment_wps-head'][@class='button open']
+                                        wpfp_close: //button[@id='payment_payments_pro_payflow_edition-head'][@class='button open']
+                            -
+                                #PayPal All-in-one Payment Solutions ==> Payments Advanced (Includes Express Checkout) ==> Required PayPal Settings
+                                ppa_required_settings:
+                                    xpath: //div[fieldset[@id='payment_required_settings']]
+                                    links:
+                                        ppa_required_settings_section: //a[@id='payment_required_settings-head']
+                                    dropdowns:
+                                        ppa_enable: //select[@id='payment_required_settings_enable_payflow_advanced']
+                            -
+                                    #PayPal All-in-one Payment Solutions ==> Payments Advanced (Includes Express Checkout) ==> Required PayPal Settings ==> Payments Advanced
+                                ppa_pa_required_settings:
+                                    xpath: //div[fieldset[@id='payment_payments_advanced']]
+                                    links:
+                                        ppa_pa_required_settings_section: //a[@id='payment_payments_advanced-head']
+                                    fields:
+                                        ppa_pa_partner: //input[@id='payment_payments_advanced_partner']
+                                        ppa_pa_vendor: //input[@id='payment_payments_advanced_vendor']
+                                        ppa_pa_user: //input[@id='payment_payments_advanced_user']
+                                        ppa_pa_password: //input[@id='payment_payments_advanced_pwd']
+                                        ppa_pa_proxy_host: //input[@id='payment_payments_advanced_proxy_host']
+                                        ppa_pa_proxy_port: //input[@id='payment_payments_advanced_proxy_port']
+                                    dropdowns:
+                                        ppa_pa_use_proxy: //select[@id='payment_payments_advanced_use_proxy']
+                                        ppa_pa_test_mode: //select[@id='payment_payments_advanced_sandbox_flag']
+                            -
+                                    #PayPal All-in-one Payment Solutions ==> Payments Advanced (Includes Express Checkout) ==> Required PayPal Settings ==> Express Checkout
+                                ppa_ec_required_settings:
+                                    xpath: //div[fieldset[@id='payment_express']]
+                                    links:
+                                        ppa_ec_required_settings_section: //a[@id='payment_express-head']
+                                    buttons:
+                                    fields:
+                                        ppa_email_associated_with_paypal_merchant_account: //input[@id='payment_express_business_account']
+                                        ppa_api_username: //input[@id='payment_express_api_username']
+                                        ppa_api_password: //input[@id='payment_express_api_password']
+                                        ppa_api_signature: //input[@id='payment_express_api_signature']
+                                        ppa_api_certificate: //input[@id='payment_express_api_cert']
+                                        ppa_ec_proxy_host: //input[@id='payment_express_proxy_host']
+                                        ppa_ec_proxy_port: //input[@id='payment_express_proxy_port']
+                                    dropdowns:
+                                        ppa_api_authentication_methods: //select[@id='payment_express_api_authentication']
+                                        ppa_ec_sandbox_mode: //select[@id='payment_express_sandbox_flag']
+                                        ppa_ec_use_proxy: //select[@id='payment_express_use_proxy']
+                            -
+                                #PayPal All-in-one Payment Solutions ==> Payments Advanced (Includes Express Checkout) => Basic Settings - PayPal Payments Advanced
+                                ppa_basic_settings:
+                                    xpath: //div[fieldset[@id='payment_settings_payments_advanced']]
+                                    links:
+                                        ppa_basic_settings_section: //a[@id='payment_settings_payments_advanced-head']
+                                    fields:
+                                        ppa_pa_title: //input[@id='payment_settings_payments_advanced_title']
+                                        ppa_pa_sort_order: //input[@id='payment_settings_payments_advanced_sort_order']
+                                    dropdowns:
+                                        ppa_pa_payment_action: //select[@id='payment_settings_payments_advanced_payment_action']
+                            -
+                                    #PayPal All-in-one Payment Solutions ==> Payments Advanced (Includes Express Checkout) ==> Basic Settings - PayPal Payments Advanced ==> Advanced Settings
+                                ppa_basic_settings_advanced:
+                                    xpath: //div[div/a/@id='payment_settings_payments_advanced_advanced-head']
+                                    links:
+                                        ppa_basic_settings_advanced_section: //a[@id='payment_settings_payments_advanced_advanced-head']
+                                    dropdowns:
+                                        ppa_pa_payment_applicable_from: //select[@id='payment_settings_payments_advanced_advanced_allowspecific']
+                                        ppa_pa_debug_mode: //select[@id='payment_settings_payments_advanced_advanced_debug']
+                                        ppa_pa_enable_ssl_verification: //select[@id='payment_settings_payments_advanced_advanced_verify_peer']
+                                        ppa_pa_cvv_entry_is_editable: //select[@id='payment_settings_payments_advanced_advanced_csc_editable']
+                                        ppa_pa_require_cvv_entry: //select[@id='payment_settings_payments_advanced_advanced_csc_required']
+                                        ppa_pa_send_email_confirmation: //select[@id='payment_settings_payments_advanced_advanced_email_confirmation']
+                                        ppa_pa_url_method_for_cancel_and_return: //select[@id='payment_settings_payments_advanced_advanced_url_method']
+                                    multiselects:
+                                        ppa_pa_specific_countries_applicable_from: //select[@id='payment_settings_payments_advanced_advanced_specificcountry']
+                            -
+                                        #PayPal All-in-one Payment Solutions ==> Payments Advanced (Includes Express Checkout) ==> Basic Settings - PayPal Payments Advanced ==> Advanced Settings ==> PayPal Billing Agreement Settings
+                                ppa_ba_settings:
+                                    xpath: //div[fieldset[@id='payment_billing_agreement']]
+                                    links:
+                                        ppa_ba_settings_section: //a[@id='payment_billing_agreement-head']
+                                    fields:
+                                        ppa_ba_title: //input[@id='payment_billing_agreement_title']
+                                        ppa_ba_sort_order: //input[@id='payment_billing_agreement_sort_order']
+                                    dropdowns:
+                                        ppa_ba_enable: //select[@id='payment_billing_agreement_active']
+                                        ppa_ba_payment_action: //select[@id='payment_billing_agreement_payment_action']
+                                        ppa_ba_payment_applicable_from: //select[@id='payment_billing_agreement_allowspecific']
+                                        ppa_ba_debug_mode: //select[@id='payment_billing_agreement_debug']
+                                        ppa_ba_enable_ssl_verification: //select[@id='payment_billing_agreement_verify_peer']
+                                        ppa_ba_transfer_cart_line_items: //select[@id='payment_billing_agreement_line_items_enabled']
+                                        ppa_ba_allow_in_agreement_wizard: //select[@id='payment_billing_agreement_allow_billing_agreement_wizard']
+                                    multiselects:
+                                        ppa_ba_specific_countries_applicable_from: //select[@id='payment_billing_agreement_specificcountry']
+                            -
+                                        #PayPal All-in-one Payment Solutions ==> Payments Advanced (Includes Express Checkout) ==> Basic Settings - PayPal Payments Advanced ==> Advanced Settings ==> Settlement Report Settings
+                                ppa_sr_settings:
+                                    xpath: //div[fieldset[@id='payment_settlement_report']]
+                                    links:
+                                        ppa_sr_settings_section: //a[@id='payment_settlement_report-head']
+                                    fields:
+                                        ppa_sr_login: //input[@id='payment_settlement_report_settlement_reports_ftp_login']
+                                        ppa_sr_password: //input[@id='payment_settlement_report_settlement_reports_ftp_password']
+                                        ppa_sr_custom_endpoint: //input[@id='payment_settlement_report_settlement_reports_ftp_ip']
+                                        ppa_sr_custom_path: //input[@id='payment_settlement_report_settlement_reports_ftp_path']
+                                    dropdowns:
+                                        ppa_sr_sandbox_mode: //select[@id='payment_settlement_report_settlement_reports_ftp_sandbox']
+                                        ppa_sr_enable_automatic_fetching: //select[@id='payment_settlement_report_settlement_reports_active']
+                                        ppa_sr_schedule: //select[@id='payment_settlement_report_settlement_reports_schedule']
+                                        ppa_sr_time_of_day_hour: //tr[@id='row_payment_settlement_report_settlement_reports_time']//select[1]
+                                        ppa_sr_time_of_day_min: //tr[@id='row_payment_settlement_report_settlement_reports_time']//select[2]
+                                        ppa_sr_time_of_day_sec: //tr[@id='row_payment_settlement_report_settlement_reports_time']//select[3]
+                            -
+                                ppa_fe_settings:
+                                    xpath: //div[fieldset[@id='payment_frontend']]
+                                    links:
+                                        ppa_fe_settings_section: //a[@id='payment_frontend-head']
+                                    fields:
+                                        ppa_fe_page_style: //input[@id='payment_frontend_page_style']
+                                        ppa_fe_header_image_url: //input[@id='payment_frontend_paypal_hdrimg']
+                                        ppa_fe_header_background_color: //input[@id='payment_frontend_paypal_hdrbackcolor']
+                                        ppa_fe_header_border_color: //input[@id='payment_frontend_paypal_hdrbordercolor']
+                                        ppa_fe_page_background_color: //input[@id='payment_frontend_paypal_payflowcolor']
+                                    dropdowns:
+                                        ppa_fe_product_logo: //select[@id='payment_frontend_logo']
+                            -
+                                #PayPal All-in-one Payment Solutions ==> Payments Advanced (Includes Express Checkout) ==> Basic Settings - PayPal Express Checkout
+                                ppa_ec_basic_settings:
+                                    xpath: //div[fieldset[@id='payment_settings_express_checkout']]
+                                    links:
+                                        ppa_ec_basic_settings_section: //a[@id='payment_settings_express_checkout-head']
+                                    fields:
+                                        ppa_ec_title: //input[@id='payment_settings_express_checkout_title']
+                                        ppa_ec_sort_order: //input[@id='payment_settings_express_checkout_sort_order']
+                                        ppa_ec_authorization_honor_period: //input[@id='payment_settings_express_checkout_authorization_honor_period']
+                                        ppa_ec_order_valid_period: //input[@id='payment_settings_express_checkout_order_valid_period']
+                                        ppa_ec_child_authorization_number: //input[@id='payment_settings_express_checkout_child_authorization_number']
+                                    dropdowns:
+                                        ppa_ec_payment_action: //select[@id='payment_settings_express_checkout_payment_action']
+                                        ppa_ec_shortcut_on_cart: //select[@id='payment_settings_express_checkout_visible_on_cart']
+                                        ppa_ec_shortcut_on_product: //select[@id='payment_settings_express_checkout_visible_on_product']
+                            -
+                                    #PayPal All-in-one Payment Solutions ==> Payments Advanced (Includes Express Checkout) ==> Basic Settings - PayPal Express Checkout ==> Advanced Settings
+                                ppa_ec_basic_settings_advanced:
+                                    xpath: //div[div/a[@id='payment_settings_express_checkout_advanced-head']]
+                                    links:
+                                        ppa_ec_basic_settings_advanced_section: //a[@id='payment_settings_express_checkout_advanced-head']
+                                    dropdowns:
+                                        ppa_ec_payment_applicable_from: //select[@id='payment_settings_express_checkout_advanced_allowspecific']
+                                        ppa_ec_debug_mode: //select[@id='payment_settings_express_checkout_advanced_debug']
+                                        ppa_ec_enable_ssl_verification: //select[@id='payment_settings_express_checkout_advanced_verify_peer']
+                                        ppa_ec_transfer_cart_line_items: //select[@id='payment_settings_express_checkout_advanced_line_items_enabled']
+                                        ppa_ec_transfer_shipping_options: //select[@id='payment_settings_express_checkout_advanced_transfer_shipping_options']
+                                        ppa_ec_shortcut_buttons_flavor: //select[@id='payment_settings_express_checkout_advanced_button_flavor']
+                                        ppa_ec_enable_guest_checkout: //select[@id='payment_settings_express_checkout_advanced_solution_type']
+                                        ppa_ec_require_customer_billing_address: //select[@id='payment_settings_express_checkout_advanced_require_billing_address']
+                                        ppa_ec_billing_agreement_signup: //select[@id='payment_settings_express_checkout_advanced_allow_ba_signup']
+                                    multiselects:
+                                        ppa_ec_specific_countries_applicable_from: //select[@id='payment_settings_express_checkout_advanced_specificcountry']
+                            -
+                                #PayPal All-in-one Payment Solutions ==> Payments Pro (Includes Express Checkout) ==> Required PayPal Settings
+                                ppp_required_settings:
+                                    xpath: //div[fieldset[@id='payment_wpp_required_settings']]
+                                    links:
+                                        ppp_required_settings_section: //a[@id='payment_wpp_required_settings-head']
+                                    dropdowns:
+                                        ppp_enable: //select[@id='payment_wpp_required_settings_enable_wpp']
+                            -
+                                #PayPal All-in-one Payment Solutions ==> Payments Pro (Includes Express Checkout) ==> Required PayPal Settings ==> Payments Pro and Express Checkout
+                                ppp_pp_required_settings:
+                                    xpath: //div[fieldset[@id='payment_wpp_and_express_checkout']]
+                                    links:
+                                        ppp_pp_required_settings_section: //a[@id='payment_wpp_and_express_checkout-head']
+                                    buttons:
+                                    fields:
+                                        ppp_email_associated_with_paypal_merchant_account: //input[@id='payment_wpp_and_express_checkout_business_account']
+                                        ppp_api_username: //input[@id='payment_wpp_and_express_checkout_api_username']
+                                        ppp_api_password: //input[@id='payment_wpp_and_express_checkout_api_password']
+                                        ppp_api_signature: //input[@id='payment_wpp_and_express_checkout_api_signature']
+                                        ppp_api_certificate: //input[@id='payment_wpp_and_express_checkout_api_cert']
+                                        ppp_ec_proxy_host: //input[@id='payment_wpp_and_express_checkout_proxy_host']
+                                        ppp_ec_proxy_port: //input[@id='payment_wpp_and_express_checkout_proxy_port']
+                                    dropdowns:
+                                        ppp_api_authentication_methods: //select[@id='payment_wpp_and_express_checkout_api_authentication']
+                                        ppp_ec_sandbox_mode: //select[@id='payment_wpp_and_express_checkout_sandbox_flag']
+                                        ppp_ec_use_proxy: //select[@id='payment_wpp_and_express_checkout_use_proxy']
+                            -
+                                #PayPal All-in-one Payment Solutions ==> Payments Pro (Includes Express Checkout) ==> Basic Settings - PayPal Payments Pro
+                                ppp_pp_basic_settings:
+                                    xpath: //div[fieldset[@id='payment_wpp_settings']]
+                                    links:
+                                        ppp_pp_basic_settings_section: //a[@id='payment_wpp_settings-head']
+                                    fields:
+                                        ppp_pp_title: //input[@id='payment_wpp_settings_title']
+                                        ppp_pp_sort_order: //input[@id='payment_wpp_settings_sort_order']
+                                    dropdowns:
+                                        ppp_pp_payment_action: //select[@id='payment_wpp_settings_payment_action']
+                                    multiselects:
+                                        ppp_pp_allowed_credit_card: //select[@id='payment_wpp_settings_cctypes']
+                            -
+                                #PayPal All-in-one Payment Solutions ==> Payments Pro (Includes Express Checkout) ==> Basic Settings - PayPal Payments Pro ==> Advanced Settings
+                                ppp_pp_basic_settings_advanced:
+                                    xpath: //div[div/a/@id='payment_wpp_settings_advanced-head']
+                                    links:
+                                        ppp_pp_basic_settings_advanced_section: //a[@id='payment_wpp_settings_advanced-head']
+                                    dropdowns:
+                                        ppp_pp_payment_applicable_from: //select[@id='payment_wpp_settings_advanced_allowspecific']
+                                        ppp_pp_debug_mode: //select[@id='payment_wpp_settings_advanced_debug']
+                                        ppp_pp_enable_ssl_verification: //select[@id='payment_wpp_settings_advanced_verify_peer']
+                                        ppp_pp_transfer_cart_line_items: //select[@id='payment_wpp_settings_advanced_line_items_enabled']
+                                        ppp_pp_require_cvv_entry: //select[@id='payment_wpp_settings_advanced_useccv']
+                                        ppp_pp_3d_secure_validation: //select[@id='payment_wpp_settings_advanced_centinel']
+                                        ppp_pp_severe_3d_secure_validation: //select[@id='payment_wpp_settings_advanced_centinel_is_mode_strict']
+                                    fields:
+                                        ppp_pp_advanced_centinel_api_url: //input[@id='payment_wpp_settings_advanced_centinel_api_url']
+                                    multiselects:
+                                        ppp_pp_specific_countries_applicable_from: //select[@id='payment_wpp_settings_advanced_specificcountry']
+                            -
+                                    #PayPal All-in-one Payment Solutions ==> Payments Pro (Includes Express Checkout) ==> Basic Settings - PayPal Payments Pro ==> Advanced Settings ==> PayPal Billing Agreement Settings
+                                ppp_ba_settings:
+                                    xpath: //div[fieldset[@id='payment_wpp_billing_agreement']]
+                                    links:
+                                        ppp_ba_settings_section: //a[@id='payment_wpp_billing_agreement-head']
+                                    fields:
+                                        ppp_ba_title: //input[@id='payment_wpp_billing_agreement_title']
+                                        ppp_ba_sort_order: //input[@id='payment_wpp_billing_agreement_sort_order']
+                                    dropdowns:
+                                        ppp_ba_enable: //select[@id='payment_wpp_billing_agreement_active']
+                                        ppp_ba_payment_action: //select[@id='payment_wpp_billing_agreement_payment_action']
+                                        ppp_ba_payment_applicable_from: //select[@id='payment_wpp_billing_agreement_allowspecific']
+                                        ppp_ba_debug_mode: //select[@id='payment_wpp_billing_agreement_debug']
+                                        ppp_enable_ssl_verification: //select[@id='payment_wpp_billing_agreement_verify_peer']
+                                        ppp_ba_transfer_cart_line_items: //select[@id='payment_wpp_billing_agreement_line_items_enabled']
+                                        ppp_ba_allow_in_agreement_wizard: //select[@id='payment_wpp_billing_agreement_allow_billing_agreement_wizard']
+                                    multiselects:
+                                        ppp_ba_specific_countries_applicable_from: //select[@id='payment_wpp_billing_agreement_specificcountry']
+                            -
+                                    #PayPal All-in-one Payment Solutions ==> Payments Pro (Includes Express Checkout) ==> Basic Settings - PayPal Payments Pro ==> Advanced Settings  ==> Settlement Report Settings
+                                ppp_sr_settings:
+                                    xpath: //div[fieldset[@id='payment_wpp_settlement_report']]
+                                    links:
+                                        ppp_sr_settings_section: //a[@id='payment_wpp_settlement_report-head']
+                                    fields:
+                                        ppp_sr_login: //input[@id='payment_wpp_settlement_report_settlement_reports_ftp_login']
+                                        ppp_sr_password: //input[@id='payment_wpp_settlement_report_settlement_reports_ftp_password']
+                                        ppp_sr_custom_endpoint: //input[@id='payment_wpp_settlement_report_settlement_reports_ftp_ip']
+                                        ppp_sr_custom_path: //input[@id='payment_wpp_settlement_report_settlement_reports_ftp_path']
+                                    dropdowns:
+                                        ppp_sr_sandbox_mode: //select[@id='payment_wpp_settlement_report_settlement_reports_ftp_sandbox']
+                                        ppp_sr_enable_automatic_fetching: //select[@id='payment_wpp_settlement_report_settlement_reports_active']
+                                        ppp_sr_schedule: //select[@id='payment_wpp_settlement_report_settlement_reports_schedule']
+                                        ppp_sr_time_of_day_hour: //tr[@id='row_payment_wpp_settlement_report_settlement_reports_time']//select[1]
+                                        ppp_sr_time_of_day_min: //tr[@id='row_payment_wpp_settlement_report_settlement_reports_time']//select[2]
+                                        ppp_sr_time_of_day_sec: //tr[@id='row_payment_wpp_settlement_report_settlement_reports_time']//select[3]
+                            -
+                                    #PayPal All-in-one Payment Solutions ==> Payments Pro (Includes Express Checkout) ==> Basic Settings - PayPal Payments Pro ==> Advanced Settings  ==> Frontend Experience Settings
+                                ppp_fe_settings:
+                                    xpath: //div[fieldset[@id='payment_wpp_frontend']]
+                                    links:
+                                        ppp_fe_settings_section: //a[@id='payment_wpp_frontend-head']
+                                    fields:
+                                        ppp_fe_page_style: //input[@id='payment_wpp_frontend_page_style']
+                                        ppp_fe_header_image_url: //input[@id='payment_wpp_frontend_paypal_hdrimg']
+                                        ppp_fe_header_background_color: //input[@id='payment_wpp_frontend_paypal_hdrbackcolor']
+                                        ppp_fe_header_border_color: //input[@id='payment_wpp_frontend_paypal_hdrbordercolor']
+                                        ppp_fe_page_background_color: //input[@id='payment_wpp_frontend_paypal_payflowcolor']
+                                    dropdowns:
+                                        ppp_fe_product_logo: //select[@id='payment_wpp_frontend_logo']
+                            -
+                                #PayPal All-in-one Payment Solutions ==> Payments Pro (Includes Express Checkout) ==> Basic Settings - PayPal Express Checkout
+                                ppp_ec_basic_settings:
+                                    xpath: //div[fieldset[@id='payment_wpp_settings_express_checkout']]
+                                    links:
+                                        ppp_ec_basic_settings_section: //a[@id='payment_wpp_settings_express_checkout-head']
+                                    fields:
+                                        ppp_ec_title: //input[@id='payment_wpp_settings_express_checkout_title']
+                                        ppp_ec_sort_order: //input[@id='payment_wpp_settings_express_checkout_sort_order']
+                                        ppp_ec_authorization_honor_period: //input[@id='payment_wpp_settings_express_checkout_authorization_honor_period']
+                                        ppp_ec_order_valid_period: //input[@id='payment_wpp_settings_express_checkout_order_valid_period']
+                                        ppp_ec_child_authorization_number: //input[@id='payment_wpp_settings_express_checkout_child_authorization_number']
+                                    dropdowns:
+                                        ppp_ec_payment_action: //select[@id='payment_wpp_settings_express_checkout_payment_action']
+                                        ppp_ec_shortcut_on_cart: //select[@id='payment_wpp_settings_express_checkout_visible_on_cart']
+                                        ppp_ec_shortcut_on_product: //select[@id='payment_wpp_settings_express_checkout_visible_on_product']
+                            -
+                                    #PayPal All-in-one Payment Solutions ==> Payments Pro (Includes Express Checkout) ==> Basic Settings - PayPal Express Checkout ==> Advanced Settings
+                                ppp_ec_basic_settings_advanced:
+                                    xpath: //div[div/a/@id='payment_wpp_settings_express_checkout_advanced-head']
+                                    links:
+                                        ppp_ec_basic_settings_advanced_section: //a[@id='payment_wpp_settings_express_checkout_advanced-head']
+                                    dropdowns:
+                                        ppp_ec_payment_applicable_from: //select[@id='payment_wpp_settings_express_checkout_advanced_allowspecific']
+                                        ppp_ec_debug_mode: //select[@id='payment_wpp_settings_express_checkout_advanced_debug']
+                                        ppp_ec_enable_ssl_verification: //select[@id='payment_wpp_settings_express_checkout_advanced_verify_peer']
+                                        ppp_ec_transfer_cart_line_items: //select[@id='payment_wpp_settings_express_checkout_advanced_line_items_enabled']
+                                        ppp_ec_transfer_shipping_options: //select[@id='payment_wpp_settings_express_checkout_advanced_transfer_shipping_options']
+                                        ppp_ec_shortcut_buttons_flavor: //select[@id='payment_wpp_settings_express_checkout_advanced_button_flavor']
+                                        ppp_ec_enable_guest_checkout: //select[@id='payment_wpp_settings_express_checkout_advanced_solution_type']
+                                        ppp_ec_require_customer_billing_address: //select[@id='payment_wpp_settings_express_checkout_advanced_require_billing_address']
+                                        ppp_ec_billing_agreement_signup: //select[@id='payment_wpp_settings_express_checkout_advanced_allow_ba_signup']
+                                    multiselects:
+                                        ppp_ec_specific_countries_applicable_from: //select[@id='payment_wpp_settings_express_checkout_advanced_specificcountry']
+                            -
+                                #PayPal All-in-one Payment Solutions ==> Payments Standard ==> Required PayPal Settings
+                                pps_required_settings:
+                                    xpath: //div[fieldset[@id='payment_wps_required_settings']]
+                                    links:
+                                        pps_required_settings_section: //a[@id='payment_wps_required_settings-head']
+                                        pps_start_accepting_payments:  //a[text()='Start accepting payments via PayPal!']
+                                    fields:
+                                        pps_email_associated_with_merchant_account: //input[@id='payment_wps_required_settings_business_account']
+                                    dropdowns:
+                                        pps_enable: //select[@id='payment_wps_required_settings_enable_wps']
+                            -
+                                #PayPal All-in-one Payment Solutions ==> Payments Standard ==> Basic Settings - PayPal Payments Standard
+                                pps_ps_basic_settings:
+                                    xpath: //div[fieldset[@id='payment_settings_payments_standart']]
+                                    links:
+                                        pps_ps_basic_settings_section: //a[@id='payment_settings_payments_standart-head']
+                                    fields:
+                                        pps_ps_title: //input[@id='payment_settings_payments_standart_title']
+                                        pps_ps_sort_order: //input[@id='payment_settings_payments_standart_sort_order']
+                                    dropdowns:
+                                        pps_ps_payment_action: //select[@id='payment_settings_payments_standart_payment_action']
+                            -
+                                    #PayPal All-in-one Payment Solutions ==> Payments Standard ==> Basic Settings - PayPal Payments Standard ==> Advanced Settings
+                                pps_ps_basic_settings_advanced:
+                                    xpath: //div[div/a/@id='payment_settings_payments_standart_advanced-head']
+                                    links:
+                                        pps_ps_basic_settings_advanced_section: //a[@id='payment_settings_payments_standart_advanced-head']
+                                    fields:
+                                        pps_ps_summary_text_for_aggregated_cart: //input[@id='payment_settings_payments_standart_advanced_line_items_summary']
+                                    dropdowns:
+                                        pps_ps_payment_applicable_from: //select[@id='payment_settings_payments_standart_advanced_allowspecific']
+                                        pps_ps_sandbox_mode: //select[@id='payment_settings_payments_standart_advanced_sandbox_flag']
+                                        pps_ps_transfer_cart_line_items: //select[@id='payment_settings_payments_standart_advanced_line_items_enabled']
+                                        pps_ps_debug_mode: //select[@id='payment_settings_payments_standart_advanced_debug']
+                                        pps_ps_enable_ssl_verification: //select[@id='payment_settings_payments_standart_advanced_verify_peer']
+                            -
+                                #PayPal All-in-one Payment Solutions ==> Website Payments Pro Payflow Edition (Includes Express Checkout) ==> Required Settings
+                                wpfp_required_settings:
+                                    xpath: //div[fieldset[@id='payment_pp_pe_required_settings']]
+                                    links:
+                                        wpfp_required_settings_section: //a[@id='payment_pp_pe_required_settings-head']
+                                    dropdowns:
+                                        wpfp_enable: //select[@id='payment_pp_pe_required_settings_enable_pp_pe']
+                            -
+                                    #PayPal All-in-one Payment Solutions ==> Website Payments Pro Payflow Edition (Includes Express Checkout) ==> Required Settings ==> Website Payments Pro Payflow Edition and Express Checkout
+                                wpfp_fp_required_settings:
+                                    xpath: //div[fieldset[@id='payment_pp_pe_api_settings']]
+                                    links:
+                                        wpfp_fp_required_settings_section: //a[@id='payment_pp_pe_api_settings-head']
+                                    fields:
+                                        wpfp_email_associated_with_paypal_merchant_account: //input[@id='payment_pp_pe_api_settings_business_account']
+                                        wpfp_fp_partner: //input[@id='payment_pp_pe_api_settings_partner']
+                                        wpfp_fp_vendor: //input[@id='payment_pp_pe_api_settings_vendor']
+                                        wpfp_fp_user: //input[@id='payment_pp_pe_api_settings_user']
+                                        wpfp_fp_password: //input[@id='payment_pp_pe_api_settings_pwd']
+                                        wpfp_fp_proxy_host: //input[@id='payment_pp_pe_api_settings_proxy_host']
+                                        wpfp_fp_proxy_port: //input[@id='payment_pp_pe_api_settings_proxy_port']
+                                    dropdowns:
+                                        wpfp_fp_use_proxy: //select[@id='payment_pp_pe_api_settings_use_proxy']
+                                        wpfp_fp_test_mode: //select[@id='payment_pp_pe_api_settings_sandbox_flag']
+                            -
+                                #PayPal All-in-one Payment Solutions ==> Website Payments Pro Payflow Edition (Includes Express Checkout) => Basic Settings - PayPal Payflow Pro
+                                wpfp_fp_basic_settings:
+                                    xpath: //div[fieldset[@id='payment_settings_pp_pe']]
+                                    links:
+                                        wpfp_fp_basic_settings_section: //a[@id='payment_settings_pp_pe-head']
+                                    fields:
+                                        wpfp_fp_title: //input[@id='payment_settings_pp_pe_title']
+                                        wpfp_fp_sort_order: //input[@id='payment_settings_pp_pe_sort_order']
+                                    dropdowns:
+                                        wpfp_fp_payment_action: //select[@id='payment_settings_pp_pe_payment_action']
+                                    multiselects:
+                                        wpfp_fp_allowed_credit_card: //select[@id='payment_settings_pp_pe_cctypes']
+                            -
+                                   #PayPal All-in-one Payment Solutions ==> Website Payments Pro Payflow Edition (Includes Express Checkout) ==> Basic Settings - PayPal Website Payments Pro Payflow Edition ==> Advanced Settings
+                                wpfp_fp_basic_settings_advanced:
+                                    xpath: //div[div/a/@id='payment_settings_pp_pe_advanced-head']
+                                    links:
+                                        wpfp_fp_basic_settings_advanced_section: //a[@id='payment_settings_pp_pe_advanced-head']
+                                    dropdowns:
+                                        wpfp_fp_payment_applicable_from: //select[@id='payment_settings_pp_pe_advanced_allowspecific']
+                                        wpfp_fp_debug_mode: //select[@id='payment_settings_pp_pe_advanced_debug']
+                                        wpfp_fp_enable_ssl_verification: //select[@id='payment_settings_pp_pe_advanced_verify_peer']
+                                        wpfp_fp_cvv_entry_is_editable: //select[@id='payment_settings_payments_advanced_advanced_csc_editable']
+                                        wpfp_fp_require_cvv_entry: //select[@id='payment_settings_pp_pe_advanced_useccv']
+                                        wpfp_fp_3d_secure_validation: //select[@id='payment_settings_pp_pe_advanced_centinel']
+                                        wpfp_fp_severe_3d_secure_validation: //select[@id='payment_settings_pp_pe_advanced_centinel_is_mode_strict']
+                                    fields:
+                                        wpfp_fp_advanced_centinel_api_url: //input[@id='payment_settings_pp_pe_advanced_centinel_api_url']
+                                    multiselects:
+                                        wpfp_fp_specific_countries_applicable_from: //select[@id='payment_settings_pp_pe_advanced_specificcountry']
+                            -
+                                     #PayPal All-in-one Payment Solutions ==> Payflow Pro(Includes Express Checkout) ==> Basic Settings - PayPal Website Payments Pro Payflow Edition ==> Advanced Settings ==> Settlement Report Settings
+                                wpfp_sr_settings:
+                                    xpath: //div[fieldset[@id='payment_pp_pe_settlement_report']]
+                                    links:
+                                        wpfp_sr_settings_section: //a[@id='payment_pp_pe_settlement_report-head']
+                                    fields:
+                                        wpfp_sr_login: //input[@id='payment_pp_pe_settlement_report_settlement_reports_ftp_login']
+                                        wpfp_sr_password: //input[@id='payment_pp_pe_settlement_report_settlement_reports_ftp_password']
+                                        wpfp_sr_custom_endpoint: //input[@id='payment_pp_pe_settlement_report_settlement_reports_ftp_ip']
+                                        wpfp_sr_custom_path: //input[@id='payment_pp_pe_settlement_report_settlement_reports_ftp_path']
+                                    dropdowns:
+                                        wpfp_sr_sandbox_mode: //select[@id='payment_pp_pe_settlement_report_settlement_reports_ftp_sandbox']
+                                        wpfp_sr_enable_automatic_fetching: //select[@id='payment_pp_pe_settlement_report_settlement_reports_active']
+                                        wpfp_sr_schedule: //select[@id='payment_pp_pe_settlement_report_settlement_reports_schedule']
+                                        wpfp_sr_time_of_day_hour: //tr[@id='row_payment_pp_pe_settlement_report_settlement_reports_time']//select[1]
+                                        wpfp_sr_time_of_day_min: //tr[@id='row_payment_pp_pe_settlement_report_settlement_reports_time']//select[2]
+                                        wpfp_sr_time_of_day_sec: //tr[@id='row_payment_pp_pe_settlement_report_settlement_reports_time']//select[3]
+                            -
+                                 #PayPal All-in-one Payment Solutions ==> Payflow Pro(Includes Express Checkout) ==> Basic Settings - PayPal Website Payments Pro Payflow Edition ==> Advanced Settings ==> Frontend Experience Settings
+                                wpfp_fe_settings:
+                                    xpath: //div[fieldset[@id='payment_pp_pe_frontend']]
+                                    links:
+                                        wpfp_fe_settings_section: //a[@id='payment_pp_pe_frontend-head']
+                                    fields:
+                                        wpfp_fe_page_style: //input[@id='payment_pp_pe_frontend_page_style']
+                                        wpfp_fe_header_image_url: //input[@id='payment_pp_pe_frontend_paypal_hdrimg']
+                                        wpfp_fe_header_background_color: //input[@id='payment_pp_pe_frontend_paypal_hdrbackcolor']
+                                        wpfp_fe_header_border_color: //input[@id='payment_pp_pe_frontend_paypal_hdrbordercolor']
+                                        wpfp_fe_page_background_color: //input[@id='payment_pp_pe_frontend_paypal_payflowcolor']
+                                    dropdowns:
+                                        wpfp_fe_product_logo: //select[@id='payment_pp_pe_frontend_logo']
+                            -
+                                #PayPal All-in-one Payment Solutions ==> Website Payments Pro Payflow Edition (Includes Express Checkout) ==> Basic Settings - PayPal Express Checkout
+                                wpfp_ec_basic_settings:
+                                    xpath: //div[fieldset[@id='payment_settings_pp_pe_express_checkout']]
+                                    links:
+                                        wpfp_ec_basic_settings_section: //a[@id='payment_settings_pp_pe_express_checkout-head']
+                                    fields:
+                                        wpfp_ec_title: //input[@id='payment_settings_pp_pe_express_checkout_title']
+                                        wpfp_ec_sort_order: //input[@id='payment_settings_pp_pe_express_checkout_sort_order']
+                                    dropdowns:
+                                        wpfp_ec_payment_action: //select[@id='payment_settings_pp_pe_express_checkout_payment_action']
+                                        wpfp_ec_shortcut_on_cart: //select[@id='payment_settings_pp_pe_express_checkout_visible_on_cart']
+                                        wpfp_ec_shortcut_on_product: //select[@id='payment_settings_pp_pe_express_checkout_visible_on_product']
+                            -
+                                    #PayPal All-in-one Payment Solutions ==> Website Payments Pro Payflow Edition (Includes Express Checkout) ==> Basic Settings - PayPal Express Checkout ==> Advanced Settings
+                                wpfp_ec_basic_settings_advanced:
+                                    xpath: //div[div/a/@id='payment_pp_pe_express_checkout_advanced-head']
+                                    links:
+                                        wpfp_ec_basic_settings_advanced_section: //a[@id='payment_pp_pe_express_checkout_advanced-head']
+                                    dropdowns:
+                                        wpfp_ec_payment_applicable_from: //select[@id='payment_pp_pe_express_checkout_advanced_allowspecific']
+                                        wpfp_ec_debug_mode: //select[@id='payment_pp_pe_express_checkout_advanced_debug']
+                                        wpfp_ec_enable_ssl_verification: //select[@id='payment_pp_pe_express_checkout_advanced_verify_peer']
+                                        wpfp_ec_transfer_cart_line_items: //select[@id='payment_pp_pe_express_checkout_advanced_line_items_enabled']
+                                    multiselects:
+                                        wpfp_ec_specific_countries_applicable_from: //select[@id='payment_pp_pe_express_checkout_advanced_specificcountry']
+                            -
+                        #PayPal Payment Gateways
+                                paypal_payment_gateways:
+                                    xpath: //div[fieldset[@id='payment_paypal_payment_gateways']]
+                                    links:
+                                        paypal_payment_gateways_section: //a[@id='payment_paypal_payment_gateways-head']
+                                        paypal_payment_gateways_help: //a[text()='Help']
+                                        pfp_learn_more: //strong[contains(text(),'Payflow Pro (Includes Express Checkout)')]//a[@class='link-more']
+                                        pfl_learn_more: //strong[contains(text(),'Payflow Link (Includes Express Checkout)')]//a[@class='link-more']
+                                    buttons:
+                                        pfp_configure: //button[@id='payment_paypal_verisign_with_express_checkout-head'][@class='button']
+                                        pfp_close: //button[@id='payment_paypal_verisign_with_express_checkout-head'][@class='button open']
+                                        pfl_configure: //button[@id='payment_payflow_link-head'][@class='button']
+                                        pfl_close: //button[@id='payment_payflow_link-head'][@class='button open']
+                            -
+                            #PayPal Payment Gateways ==> Payflow Pro (Includes Express Checkout) ==> Required PayPal Settings
+                                pfp_required_settings:
+                                    xpath: //div[fieldset[@id='payment_paypal_payflow_required']]
+                                    links:
+                                        pfp_required_settings_section: //a[@id='payment_paypal_payflow_required-head']
+                                    dropdowns:
+                                        pfp_enable: //select[@id='payment_paypal_payflow_required_enable_paypal_payflow']
+                            -
+                            #PayPal Payment Gateways ==> Payflow Pro (Includes Express Checkout) ==> Required PayPal Settings ==> Payflow Pro and Express Checkout
+                                pfp_fp_required_settings:
+                                    xpath: //div[fieldset[@id='payment_paypal_payflow_api_settings']]
+                                    links:
+                                        pfp_fp_required_settings_section: //a[@id='payment_paypal_payflow_api_settings-head']
+                                    fields:
+                                        pfp_email_associated_with_paypal_merchant_account: //input[@id='payment_paypal_payflow_api_settings_business_account']
+                                        pfp_fp_partner: //input[@id='payment_paypal_payflow_api_settings_partner']
+                                        pfp_fp_vendor: //input[@id='payment_paypal_payflow_api_settings_vendor']
+                                        pfp_fp_user: //input[@id='payment_paypal_payflow_api_settings_user']
+                                        pfp_fp_password: //input[@id='payment_paypal_payflow_api_settings_pwd']
+                                        pfp_fp_proxy_host: //input[@id='payment_paypal_payflow_api_settings_proxy_host']
+                                        pfp_fp_proxy_port: //input[@id='payment_paypal_payflow_api_settings_proxy_port']
+                                    dropdowns:
+                                        pfp_fp_use_proxy: //select[@id='payment_paypal_payflow_api_settings_use_proxy']
+                                        pfp_fp_test_mode: //select[@id='payment_paypal_payflow_api_settings_sandbox_flag']
+                            -
+                                #PayPal Payment Gateways ==> Payflow Pro (Includes Express Checkout) => Basic Settings - PayPal Payflow Pro
+                                pfp_fp_basic_settings:
+                                    xpath: //div[fieldset[@id='payment_settings_paypal_payflow']]
+                                    links:
+                                        pfp_fp_basic_settings_section: //a[@id='payment_settings_paypal_payflow-head']
+                                    fields:
+                                        pfp_fp_title: //input[@id='payment_settings_paypal_payflow_title']
+                                        pfp_fp_sort_order: //input[@id='payment_settings_paypal_payflow_sort_order']
+                                    dropdowns:
+                                        pfp_fp_payment_action: //select[@id='payment_settings_paypal_payflow_payment_action']
+                                    multiselects:
+                                        pfp_fp_allowed_credit_card: //select[@id='payment_settings_paypal_payflow_cctypes']
+                            -
+                                   #PayPal Payment Gateways ==> Payflow Pro (Includes Express Checkout) ==> Basic Settings - PayPal Payflow Pro ==> Advanced Settings
+                                pfp_fp_basic_settings_advanced:
+                                    xpath: //div[div/a/@id='payment_settings_paypal_payflow_advanced-head']
+                                    links:
+                                        pfp_fp_basic_settings_advanced_section: //a[@id='payment_settings_paypal_payflow_advanced-head']
+                                    dropdowns:
+                                        pfp_fp_payment_applicable_from: //select[@id='payment_settings_paypal_payflow_advanced_allowspecific']
+                                        pfp_fp_debug_mode: //select[@id='payment_settings_paypal_payflow_advanced_debug']
+                                        pfp_fp_enable_ssl_verification: //select[@id='payment_settings_paypal_payflow_advanced_verify_peer']
+                                        pfp_fp_cvv_entry_is_editable: //select[@id='payment_settings_payments_advanced_advanced_csc_editable']
+                                        pfp_fp_require_cvv_entry: //select[@id='payment_settings_paypal_payflow_advanced_useccv']
+                                        pfp_fp_3d_secure_validation: //select[@id='payment_settings_paypal_payflow_advanced_centinel']
+                                        pfp_fp_severe_3d_secure_validation: //select[@id='payment_settings_paypal_payflow_advanced_centinel_is_mode_strict']
+                                    fields:
+                                        pfp_fp_advanced_centinel_api_url: //input[@id='payment_settings_paypal_payflow_advanced_centinel_api_url']
+                                    multiselects:
+                                        pfp_fp_specific_countries_applicable_from: //select[@id='payment_settings_paypal_payflow_advanced_specificcountry']
+                            -
+                                     #PayPal Payment Gateways ==> Payflow Pro(Includes Express Checkout) ==> Basic Settings - PayPal Payflow Pro ==> Advanced Settings ==> Settlement Report Settings
+                                pfp_sr_settings:
+                                    xpath: //div[fieldset[@id='payment_paypal_payflow_settlement_report']]
+                                    links:
+                                        pfp_sr_settings_section: //a[@id='payment_paypal_payflow_settlement_report-head']
+                                    fields:
+                                        pfp_sr_login: //input[@id='payment_paypal_payflow_settlement_report_settlement_reports_ftp_login']
+                                        pfp_sr_password: //input[@id='payment_paypal_payflow_settlement_report_settlement_reports_ftp_password']
+                                        pfp_sr_custom_endpoint: //input[@id='payment_paypal_payflow_settlement_report_settlement_reports_ftp_ip']
+                                        pfp_sr_custom_path: //input[@id='payment_paypal_payflow_settlement_report_settlement_reports_ftp_path']
+                                    dropdowns:
+                                        pfp_sr_sandbox_mode: //select[@id='payment_paypal_payflow_settlement_report_settlement_reports_ftp_sandbox']
+                                        pfp_sr_enable_automatic_fetching: //select[@id='payment_paypal_payflow_settlement_report_settlement_reports_active']
+                                        pfp_sr_schedule: //select[@id='payment_paypal_payflow_settlement_report_settlement_reports_schedule']
+                                        pfp_sr_time_of_day_hour: //tr[@id='row_payment_paypal_payflow_settlement_report_settlement_reports_time']//select[1]
+                                        pfp_sr_time_of_day_min: //tr[@id='row_payment_paypal_payflow_settlement_report_settlement_reports_time']//select[2]
+                                        pfp_sr_time_of_day_sec: //tr[@id='row_payment_paypal_payflow_settlement_report_settlement_reports_time']//select[3]
+                            -
+                                 #PayPal Payment Gateways ==> Payflow Pro(Includes Express Checkout) ==> Basic Settings - PayPal Payflow Pro ==> Advanced Settings ==> Frontend Experience Settings
+                                pfp_fe_settings:
+                                    xpath: //div[fieldset[@id='payment_paypal_payflow_frontend']]
+                                    links:
+                                        pfp_fe_settings_section: //a[@id='payment_paypal_payflow_frontend-head']
+                                    fields:
+                                        pfp_fe_page_style: //input[@id='payment_paypal_payflow_frontend_page_style']
+                                        pfp_fe_header_image_url: //input[@id='payment_paypal_payflow_frontend_paypal_hdrimg']
+                                        pfp_fe_header_background_color: //input[@id='payment_paypal_payflow_frontend_paypal_hdrbackcolor']
+                                        pfp_fe_header_border_color: //input[@id='payment_paypal_payflow_frontend_paypal_hdrbordercolor']
+                                        pfp_fe_page_background_color: //input[@id='payment_paypal_payflow_frontend_paypal_payflowcolor']
+                                    dropdowns:
+                                        pfp_fe_product_logo: //select[@id='payment_paypal_payflow_frontend_logo']
+                            -
+                                #PayPal Payment Gateways ==> Payflow Pro(Includes Express Checkout) ==> Basic Settings - PayPal Express Checkout
+                                pfp_ec_basic_settings:
+                                    xpath: //div[fieldset[@id='payment_paypal_payflow_express_checkout']]
+                                    links:
+                                        pfp_ec_basic_settings_section: //a[@id='payment_paypal_payflow_express_checkout-head']
+                                    fields:
+                                        pfp_ec_title: //input[@id='payment_paypal_payflow_express_checkout_title']
+                                        pfp_ec_sort_order: //input[@id='payment_paypal_payflow_express_checkout_sort_order']
+                                    dropdowns:
+                                        pfp_ec_payment_action: //select[@id='payment_paypal_payflow_express_checkout_payment_action']
+                                        pfp_ec_shortcut_on_cart: //select[@id='payment_paypal_payflow_express_checkout_visible_on_cart']
+                                        pfp_ec_shortcut_on_product: //select[@id='payment_paypal_payflow_express_checkout_visible_on_product']
+                            -
+                                    #PayPal Payment Gateways ==> Payflow Pro(Includes Express Checkout) ==> Basic Settings - PayPal Express Checkout ==> Advanced Settings
+                                pfp_ec_basic_settings_advanced:
+                                    xpath: //div[div/a/@id='payment_paypal_payflow_express_checkout_advanced-head']
+                                    links:
+                                        pfp_ec_basic_settings_advanced_section: //a[@id='payment_paypal_payflow_express_checkout_advanced-head']
+                                    dropdowns:
+                                        pfp_ec_payment_applicable_from: //select[@id='payment_paypal_payflow_express_checkout_advanced_allowspecific']
+                                        pfp_ec_debug_mode: //select[@id='payment_paypal_payflow_express_checkout_advanced_debug']
+                                        pfp_ec_enable_ssl_verification: //select[@id='payment_paypal_payflow_express_checkout_advanced_verify_peer']
+                                        pfp_ec_transfer_cart_line_items: //select[@id='payment_paypal_payflow_express_checkout_advanced_line_items_enabled']
+                                    multiselects:
+                                        pfp_ec_specific_countries_applicable_from: //select[@id='payment_paypal_payflow_express_checkout_advanced_specificcountry']
+                            -
+                                #PayPal Payment Gateways ==> Payflow Link (Includes Express Checkout) ==> Required PayPal Settings
+                                pfl_required_settings:
+                                    xpath: //div[fieldset[@id='payment_payflow_link_required']]
+                                    links:
+                                        pfl_required_settings_section: //a[@id='payment_payflow_link_required-head']
+                                    dropdowns:
+                                        pfl_enable: //select[@id='payment_payflow_link_required_enable_payflow_link']
+                                        pfl_ec_enable: //select[@id='payment_payflow_link_required_enable_express_checkout']
+                            -
+                                    #PayPal Payment Gateways ==> Payflow Link (Includes Express Checkout) ==> Required PayPal Settings ==> Payflow Link
+                                pfl_pl_required_settings:
+                                    xpath: //div[fieldset[@id='payment_payflow_link_payflow_link']]
+                                    links:
+                                        pfl_pl_required_settings_section: //a[@id='payment_payflow_link_payflow_link-head']
+                                    fields:
+                                        pfl_pl_partner: //input[@id='payment_payflow_link_payflow_link_partner']
+                                        pfl_pl_vendor: //input[@id='payment_payflow_link_payflow_link_vendor']
+                                        pfl_pl_user: //input[@id='payment_payflow_link_payflow_link_user']
+                                        pfl_pl_password: //input[@id='payment_payflow_link_payflow_link_pwd']
+                                        pfl_pl_proxy_host: //input[@id='payment_payflow_link_payflow_link_proxy_host']
+                                        pfl_pl_proxy_port: //input[@id='payment_payflow_link_payflow_link_proxy_port']
+                                    dropdowns:
+                                        pfl_pl_use_proxy: //select[@id='payment_payflow_link_payflow_link_use_proxy']
+                                        pfl_pl_test_mode: //select[@id='payment_payflow_link_payflow_link_sandbox_flag']
+                            -
+                                    #PayPal Payment Gateways ==> Payflow Link (Includes Express Checkout) ==> Required PayPal Settings ==> Express Checkout
+                                pfl_ec_required_settings:
+                                    xpath: //div[fieldset[@id='payment_payflow_link_express_checkout']]
+                                    links:
+                                        pfl_ec_required_settings_section: //a[@id='payment_payflow_link_express_checkout-head']
+                                    buttons:
+                                    fields:
+                                        pfl_email_associated_with_paypal_merchant_account: //input[@id='payment_payflow_link_express_checkout_business_account']
+                                        pfl_api_username: //input[@id='payment_payflow_link_express_checkout_api_username']
+                                        pfl_api_password: //input[@id='payment_payflow_link_express_checkout_api_password']
+                                        pfl_api_signature: //input[@id='payment_payflow_link_express_checkout_api_signature']
+                                        pfl_api_certificate: //input[@id='payment_payflow_link_express_checkout_api_cert']
+                                        pfl_ec_proxy_host: //input[@id='payment_payflow_link_express_checkout_proxy_host']
+                                        pfl_ec_proxy_port: //input[@id='payment_payflow_link_express_checkout_proxy_port']
+                                    dropdowns:
+                                        pfl_api_authentication_methods: //select[@id='payment_payflow_link_express_checkout_api_authentication']
+                                        pfl_ec_sandbox_mode: //select[@id='payment_payflow_link_express_checkout_sandbox_flag']
+                                        pfl_ec_use_proxy: //select[@id='payment_payflow_link_express_checkout_use_proxy']
+                            -
+                                #PayPal Payment Gateways ==> Payflow Link (Includes Express Checkout) ==> Basic Settings - PayPal Payflow Link
+                                pfl_basic_settings:
+                                    xpath: //div[fieldset[@id='payment_settings_payflow_link']]
+                                    links:
+                                        pfl_basic_settings_section: //a[@id='payment_settings_payflow_link-head']
+                                    fields:
+                                        pfl_pl_title: //input[@id='payment_settings_payflow_link_title']
+                                        pfl_pl_sort_order: //input[@id='payment_settings_payflow_link_sort_order']
+                                    dropdowns:
+                                        pfl_pl_payment_action: //select[@id='payment_settings_payflow_link_payment_action']
+                            -
+                                    #PayPal Payment Gateways ==> Payflow Link (Includes Express Checkout) ==> Basic Settings - PayPal Payflow Link ==> Advanced Settings
+                                pfl_basic_settings_advanced:
+                                    xpath: //div[div/a/@id='payment_settings_payflow_link_advanced-head']
+                                    links:
+                                        pfl_basic_settings_advanced_section: //a[@id='payment_settings_payflow_link_advanced-head']
+                                    dropdowns:
+                                        pfl_pl_payment_applicable_from: //select[@id='payment_settings_payflow_link_advanced_allowspecific']
+                                        pfl_pl_debug_mode: //select[@id='payment_settings_payflow_link_advanced_debug']
+                                        pfl_pl_enable_ssl_verification: //select[@id='payment_settings_payflow_link_advanced_verify_peer']
+                                        pfl_pl_cvv_entry_is_editable: //select[@id='payment_settings_payflow_link_advanced_csc_editable']
+                                        pfl_pl_require_cvv_entry: //select[@id='payment_settings_payflow_link_advanced_csc_required']
+                                        pfl_pl_send_email_confirmation: //select[@id='payment_settings_payflow_link_advanced_email_confirmation']
+                                        pfl_pl_url_method_for_cancel_and_return: //select[@id='payment_settings_payflow_link_advanced_url_method']
+                                    multiselects:
+                                        pfl_pl_specific_countries_applicable_from: //select[@id='payment_settings_payflow_link_advanced_specificcountry']                            
+                            -
+                                        #PayPal Payment Gateways ==> Payflow Link (Includes Express Checkout) ==> Basic Settings - PayPal Payflow Link ==> Advanced Settings ==> Settlement Report Settings
+                                pfl_sr_settings:
+                                    xpath: //div[fieldset[@id='payment_payflow_link_settlement_report']]
+                                    links:
+                                        pfl_sr_settings_section: //a[@id='payment_payflow_link_settlement_report-head']
+                                    fields:
+                                        pfl_sr_login: //input[@id='payment_payflow_link_settlement_report_settlement_reports_ftp_login']
+                                        pfl_sr_password: //input[@id='payment_payflow_link_settlement_report_settlement_reports_ftp_password']
+                                        pfl_sr_custom_endpoint: //input[@id='payment_payflow_link_settlement_report_settlement_reports_ftp_ip']
+                                        pfl_sr_custom_path: //input[@id='payment_payflow_link_settlement_report_settlement_reports_ftp_path']
+                                    dropdowns:
+                                        pfl_sr_sandbox_mode: //select[@id='payment_payflow_link_settlement_report_settlement_reports_ftp_sandbox']
+                                        pfl_sr_enable_automatic_fetching: //select[@id='payment_payflow_link_settlement_report_settlement_reports_active']
+                                        pfl_sr_schedule: //select[@id='payment_payflow_link_settlement_report_settlement_reports_schedule']
+                                        pfl_sr_time_of_day_hour: //tr[@id='row_payment_payflow_link_settlement_report_settlement_reports_time']//select[1]
+                                        pfl_sr_time_of_day_min: //tr[@id='row_payment_payflow_link_settlement_report_settlement_reports_time']//select[2]
+                                        pfl_sr_time_of_day_sec: //tr[@id='row_payment_payflow_link_settlement_report_settlement_reports_time']//select[3]
+                            -
+                                       #PayPal Payment Gateways ==> Payflow Link (Includes Express Checkout) ==> Basic Settings - PayPal Payflow Link ==> Advanced Settings ==> Frontend Experience Settings
+                                pfl_fe_settings:
+                                    xpath: //div[fieldset[@id='payment_payflow_link_frontend']]
+                                    links:
+                                        pfl_fe_settings_section: //a[@id='payment_payflow_link_frontend-head']
+                                    fields:
+                                        pfl_fe_page_style: //input[@id='payment_payflow_link_frontend_page_style']
+                                        pfl_fe_header_image_url: //input[@id='payment_payflow_link_frontend_paypal_hdrimg']
+                                        pfl_fe_header_background_color: //input[@id='payment_payflow_link_frontend_paypal_hdrbackcolor']
+                                        pfl_fe_header_border_color: //input[@id='payment_payflow_link_frontend_paypal_hdrbordercolor']
+                                        pfl_fe_page_background_color: //input[@id='payment_payflow_link_frontend_paypal_payflowcolor']
+                                    dropdowns:
+                                        pfl_fe_product_logo: //select[@id='payment_payflow_link_frontend_logo']
+                            -
+                                #PayPal Payment Gateways ==> Payflow Link (Includes Express Checkout) ==> Basic Settings - PayPal Express Checkout
+                                pfl_ec_basic_settings:
+                                    xpath: //div[fieldset[@id='payment_settings_payflow_link_express_checkout']]
+                                    links:
+                                        pfl_ec_basic_settings_section: //a[@id='payment_settings_payflow_link_express_checkout-head']
+                                    fields:
+                                        pfl_ec_title: //input[@id='payment_settings_payflow_link_express_checkout_title']
+                                        pfl_ec_sort_order: //input[@id='payment_settings_payflow_link_express_checkout_sort_order']
+                                        pfl_ec_authorization_honor_period: //input[@id='payment_settings_payflow_link_express_checkout_authorization_honor_period']
+                                        pfl_ec_order_valid_period: //input[@id='payment_settings_payflow_link_express_checkout_order_valid_period']
+                                        pfl_ec_child_authorization_number: //input[@id='payment_settings_payflow_link_express_checkout_child_authorization_number']
+                                    dropdowns:
+                                        pfl_ec_payment_action: //select[@id='payment_settings_payflow_link_express_checkout_payment_action']
+                                        pfl_ec_shortcut_on_cart: //select[@id='payment_settings_payflow_link_express_checkout_visible_on_cart']
+                                        pfl_ec_shortcut_on_product: //select[@id='payment_settings_payflow_link_express_checkout_visible_on_product']
+                            -
+                                    #PayPal Payment Gateways ==> Payflow Link (Includes Express Checkout) ==> Basic Settings - PayPal Express Checkout ==> Advanced Settings
+                                pfl_ec_basic_settings_advanced:
+                                    xpath: //div[div/a/@id='payment_settings_payflow_link_express_checkout_advanced-head']
+                                    links:
+                                        pfl_ec_basic_settings_advanced_section: //a[@id='payment_settings_payflow_link_express_checkout_advanced-head']
+                                    dropdowns:
+                                        pfl_ec_payment_applicable_from: //select[@id='payment_settings_payflow_link_express_checkout_advanced_allowspecific']
+                                        pfl_ec_debug_mode: //select[@id='payment_settings_payflow_link_express_checkout_advanced_debug']
+                                        pfl_ec_enable_ssl_verification: //select[@id='payment_settings_payflow_link_express_checkout_advanced_verify_peer']
+                                        pfl_ec_transfer_cart_line_items: //select[@id='payment_settings_payflow_link_express_checkout_advanced_line_items_enabled']
+                                        pfl_ec_transfer_shipping_options: //select[@id='payment_settings_payflow_link_express_checkout_advanced_transfer_shipping_options']
+                                        pfl_ec_shortcut_buttons_flavor: //select[@id='payment_settings_payflow_link_express_checkout_advanced_button_flavor']
+                                        pfl_ec_enable_guest_checkout: //select[@id='payment_settings_payflow_link_express_checkout_advanced_solution_type']
+                                        pfl_ec_require_customer_billing_address: //select[@id='payment_settings_payflow_link_express_checkout_advanced_require_billing_address']
+                                        pfl_ec_billing_agreement_signup: //select[@id='payment_settings_payflow_link_express_checkout_advanced_allow_ba_signup']
+                                    multiselects:
+                                        pfl_ec_specific_countries_applicable_from: //select[@id='payment_settings_payflow_link_express_checkout_advanced_specificcountry']
+                            -
+                                        #PayPal Payment Gateways ==> Payflow Link (Includes Express Checkout) ==> Basic Settings - PayPal Payflow Link ==> Advanced Settings ==> PayPal Billing Agreement Settings
+                                pfl_ba_settings:
+                                    xpath: //div[fieldset[@id='payment_payflow_link_billing_agreement']]
+                                    links:
+                                        pfl_ba_settings_section: //a[@id='payment_payflow_link_billing_agreement-head']
+                                    fields:
+                                        pfl_ba_title: //input[@id='payment_payflow_link_billing_agreement_title']
+                                        pfl_ba_sort_order: //input[@id='payment_payflow_link_billing_agreement_sort_order']
+                                    dropdowns:
+                                        pfl_ba_enable: //select[@id='payment_payflow_link_billing_agreement_active']
+                                        pfl_ba_payment_action: //select[@id='payment_payflow_link_billing_agreement_payment_action']
+                                        pfl_ba_payment_applicable_from: //select[@id='payment_payflow_link_billing_agreement_allowspecific']
+                                        pfl_ba_debug_mode: //select[@id='payment_payflow_link_billing_agreement_debug']
+                                        pfl_ba_transfer_cart_line_items: //select[@id='payment_payflow_link_billing_agreement_line_items_enabled']
+                                        pfl_ba_allow_in_agreement_wizard: //select[@id='payment_payflow_link_billing_agreement_allow_billing_agreement_wizard']
+                                    multiselects:
+                                        pfl_ba_specific_countries_applicable_from: //select[@id='payment_billing_agreement_specificcountry']
+                            -
+                        #PayPal Express Checkout
+                                paypal_express_checkout:
+                                    xpath: //div[fieldset[@id='payment_paypal_alternative_payment_methods']]
+                                    links:
+                                        paypal_express_checkout_section: //a[@id='payment_paypal_alternative_payment_methods-head']
+                                        paypal_express_checkout_help: //a[text()='Help']
+                                        pec_learn_more: //strong[contains(text(),'Express Checkout')]//a[@class='link-more']
+                                    buttons:
+                                        pec_configure: //button[@id='payment_express_checkout-head'][@class='button']
+                                        pec_close: //button[@id='payment_express_checkout-head'][@class='button open']
+                            -
+                            #PayPal Express Checkout ==> Required PayPal Settings
+                                pec_required_settings:
+                                    xpath: //div[fieldset[@id='payment_express_checkout_required']]
+                                    links:
+                                        pec_required_settings_section: //a[@id='payment_express_checkout_required-head']
+                                    dropdowns:
+                                        pec_enable: //select[@id='payment_express_checkout_required_enable_express_checkout']
+                            -
+                                #PayPal Express Checkout ==> Required PayPal Settings ==> Express Checkout
+                                pec_ec_required_settings:
+                                    xpath: //div[fieldset[@id='payment_express_checkout_required_express_checkout']]
+                                    links:
+                                        pec_ec_required_settings_section: //a[@id='payment_express_checkout_required_express_checkout-head']
+                                    buttons:
+                                    fields:
+                                        pec_email_associated_with_paypal_merchant_account: //input[@id='payment_express_checkout_required_express_checkout_business_account']
+                                        pec_api_username: //input[@id='payment_express_checkout_required_express_checkout_api_username']
+                                        pec_api_password: //input[@id='payment_express_checkout_required_express_checkout_api_password']
+                                        pec_api_signature: //input[@id='payment_express_checkout_required_express_checkout_api_signature']
+                                        pec_api_certificate: //input[@id='payment_express_checkout_required_express_checkout_api_cert']
+                                        pec_ec_proxy_host: //input[@id='payment_express_checkout_required_express_checkout_proxy_host']
+                                        pec_ec_proxy_port: //input[@id='payment_express_checkout_required_express_checkout_proxy_port']
+                                    dropdowns:
+                                        pec_api_authentication_methods: //select[@id='payment_express_checkout_required_express_checkout_api_authentication']
+                                        pec_ec_sandbox_mode: //select[@id='payment_express_checkout_required_express_checkout_sandbox_flag']
+                                        pec_ec_use_proxy: //select[@id='payment_express_checkout_required_express_checkout_use_proxy']
+                            -
+                            #PayPal Express Checkout ==> Basic Settings - PayPal Express Checkout
+                                pec_ec_basic_settings:
+                                    xpath: //div[fieldset[@id='payment_settings_ec']]
+                                    links:
+                                        pec_ec_basic_settings_section: //a[@id='payment_settings_ec-head']
+                                    fields:
+                                        pec_ec_title: //input[@id='payment_settings_ec_title']
+                                        pec_ec_sort_order: //input[@id='payment_settings_ec_sort_order']
+                                        pec_ec_authorization_honor_period: //input[@id='payment_settings_ec_authorization_honor_period']
+                                        pec_ec_order_valid_period: //input[@id='payment_settings_ec_order_valid_period']
+                                        pec_ec_child_authorization_number: //input[@id='payment_settings_ec_child_authorization_number']
+                                    dropdowns:
+                                        pec_ec_payment_action: //select[@id='payment_settings_ec_payment_action']
+                                        pec_ec_shortcut_on_cart: //select[@id='payment_settings_ec_visible_on_cart']
+                                        pec_ec_shortcut_on_product: //select[@id='payment_settings_ec_visible_on_product']
+                            -
+                                #PayPal Express Checkout ==> Basic Settings - PayPal Express Checkout ==> Advanced Settings
+                                pec_ec_basic_settings_advanced:
+                                    xpath: //div[div/a/@id='payment_settings_ec_advanced-head']
+                                    links:
+                                        pec_ec_basic_settings_advanced_section: //a[@id='payment_settings_ec_advanced-head']
+                                    dropdowns:
+                                        pec_ec_payment_applicable_from: //select[@id='payment_settings_ec_advanced_allowspecific']
+                                        pec_ec_debug_mode: //select[@id='payment_settings_ec_advanced_debug']
+                                        pec_ec_enable_ssl_verification: //select[@id='payment_settings_ec_advanced_verify_peer']
+                                        pec_ec_transfer_cart_line_items: //select[@id='payment_settings_ec_advanced_line_items_enabled']
+                                        pec_ec_transfer_shipping_options: //select[@id='payment_settings_ec_advanced_transfer_shipping_options']
+                                        pec_ec_shortcut_buttons_flavor: //select[@id='payment_settings_ec_advanced_button_flavor']
+                                        pec_ec_enable_guest_checkout: //select[@id='payment_settings_ec_advanced_solution_type']
+                                        pec_ec_require_customer_billing_address: //select[@id='payment_settings_ec_advanced_require_billing_address']
+                                        pec_ec_billing_agreement_signup: //select[@id='payment_settings_ec_advanced_allow_ba_signup']
+                                    multiselects:
+                                        pec_ec_specific_countries_applicable_from: //select[@id='payment_settings_ec_advanced_specificcountry']
+                            -
+                                    #PayPal Express Checkout ==> Basic Settings - PayPal Express Checkout ==> Advanced Settings ==> PayPal Billing Agreement Settings
+                                pec_ba_settings:
+                                    xpath: //div[fieldset[@id='payment_express_checkout_billing_agreement']]
+                                    links:
+                                        pec_ba_settings_section: //a[@id='payment_express_checkout_billing_agreement-head']
+                                    fields:
+                                        pec_ba_title: //input[@id='payment_express_checkout_billing_agreement_title']
+                                        pec_ba_sort_order: //input[@id='payment_express_checkout_billing_agreement_sort_order']
+                                    dropdowns:
+                                        pec_ba_enable: //select[@id='payment_express_checkout_billing_agreement_active']
+                                        pec_ba_payment_action: //select[@id='payment_express_checkout_billing_agreement_payment_action']
+                                        pec_ba_payment_applicable_from: //select[@id='payment_express_checkout_billing_agreement_allowspecific']
+                                        pec_ba_debug_mode: //select[@id='payment_express_checkout_billing_agreement_debug']
+                                        pec_ba_transfer_cart_line_items: //select[@id='payment_express_checkout_billing_agreement_line_items_enabled']
+                                        pec_ba_allow_in_agreement_wizard: //select[@id='payment_express_checkout_billing_agreement_allow_billing_agreement_wizard']
+                                    multiselects:
+                                        pec_ba_specific_countries_applicable_from: //select[@id='payment_express_checkout_billing_agreement_specificcountry']
+                            -
+                                    #PayPal Express Checkout ==> Basic Settings - PayPal Express Checkout ==> Advanced Settings ==> Settlement Report Settings
+                                pec_sr_settings:
+                                    xpath: //div[fieldset[@id='payment_express_checkout_settlement_report']]
+                                    links:
+                                        pec_sr_settings_section: //a[@id='payment_express_checkout_settlement_report-head']
+                                    fields:
+                                        pec_sr_login: //input[@id='payment_express_checkout_settlement_report_settlement_reports_ftp_login']
+                                        pec_sr_password: //input[@id='payment_express_checkout_settlement_report_settlement_reports_ftp_password']
+                                        pec_sr_custom_endpoint: //input[@id='payment_express_checkout_settlement_report_settlement_reports_ftp_ip']
+                                        pec_sr_custom_path: //input[@id='payment_express_checkout_settlement_report_settlement_reports_ftp_path']
+                                    dropdowns:
+                                        pec_sr_sandbox_mode: //select[@id='payment_express_checkout_settlement_report_settlement_reports_ftp_sandbox']
+                                        pec_sr_enable_automatic_fetching: //select[@id='payment_express_checkout_settlement_report_settlement_reports_active']
+                                        pec_sr_schedule: //select[@id='payment_express_checkout_settlement_report_settlement_reports_schedule']
+                                        pec_sr_time_of_day_hour: //tr[@id='row_payment_express_checkout_settlement_report_settlement_reports_time']//select[1]
+                                        pec_sr_time_of_day_min: //tr[@id='row_payment_express_checkout_settlement_report_settlement_reports_time']//select[2]
+                                        pec_sr_time_of_day_sec: //tr[@id='row_payment_express_checkout_settlement_report_settlement_reports_time']//select[3]
+                            -
+                                    #PayPal Express Checkout ==> Basic Settings - PayPal Express Checkout ==> Advanced Settings ==> Frontend Experience Settings
+                                pec_fe_settings:
+                                    xpath: //div[fieldset[@id='payment_express_checkout_frontend']]
+                                    links:
+                                        pec_fe_settings_section: //a[@id='payment_express_checkout_frontend-head']
+                                    fields:
+                                        pec_fe_page_style: //input[@id='payment_express_checkout_frontend_page_style']
+                                        pec_fe_header_image_url: //input[@id='payment_express_checkout_frontend_paypal_hdrimg']
+                                        pec_fe_header_background_color: //input[@id='payment_express_checkout_frontend_paypal_hdrbackcolor']
+                                        pec_fe_header_border_color: //input[@id='payment_express_checkout_frontend_paypal_hdrbordercolor']
+                                        pec_fe_page_background_color: //input[@id='payment_express_checkout_frontend_paypal_payflowcolor']
+                                    dropdowns:
+                                        pec_fe_product_logo: //select[@id='payment_express_checkout_frontend_logo']
+        buttons:
+            active_paypal_method: //div[contains(@class,'section-config pp')][contains(@class,'enabled')]//button[@class='button']
+
+system_configuration_tabs:
+    uimap: *system_configuration_uimap
+
+system_configuration_website:
+    uimap: *system_configuration_uimap
+
+system_configuration_store:
+    uimap: *system_configuration_uimap
+
+system_configuration_country:
+    uimap: *system_configuration_uimap

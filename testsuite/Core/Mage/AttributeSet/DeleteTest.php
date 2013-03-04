@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  tests
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -43,7 +43,6 @@ class Core_Mage_AttributeSet_DeleteTest extends Mage_Selenium_TestCase
     {
         $this->loginAdminUser();
         $this->navigate('manage_attribute_sets');
-        $this->addParameter('id', '0');
     }
 
     /**
@@ -52,7 +51,7 @@ class Core_Mage_AttributeSet_DeleteTest extends Mage_Selenium_TestCase
     public function withoutProducts()
     {
         //Data
-        $setData = $this->loadData('attribute_set', null, 'set_name');
+        $setData = $this->loadDataSet('AttributeSet', 'attribute_set');
         //Steps
         $this->attributeSetHelper()->createAttributeSet($setData);
         //Verifying
@@ -70,10 +69,10 @@ class Core_Mage_AttributeSet_DeleteTest extends Mage_Selenium_TestCase
     public function withProducts()
     {
         //Data
-        $setData = $this->loadData('attribute_set', null, 'set_name');
-        $productData = $this->loadData('simple_product_required',
-                array('product_attribute_set' => $setData['set_name']), array('general_name', 'general_sku'));
-        $searchProduct = $this->loadData('product_search', array('product_sku' => $productData['general_sku']));
+        $setData = $this->loadDataSet('AttributeSet', 'attribute_set');
+        $productData = $this->loadDataSet('Product', 'simple_product_required',
+            array('product_attribute_set' => $setData['set_name']));
+        $search = $this->loadDataSet('Product', 'product_search', array('product_sku' => $productData['general_sku']));
         //Steps
         $this->attributeSetHelper()->createAttributeSet($setData);
         //Verifying
@@ -90,8 +89,7 @@ class Core_Mage_AttributeSet_DeleteTest extends Mage_Selenium_TestCase
         //Verifying
         $this->assertMessagePresent('success', 'success_attribute_set_deleted');
         $this->navigate('manage_products');
-        $xpath = $this->search($searchProduct);
-        $this->assertNull($xpath, 'Product is not deleted');
+        $this->assertNull($this->search($search, 'product_grid'), 'Product is not deleted');
     }
 
     /**

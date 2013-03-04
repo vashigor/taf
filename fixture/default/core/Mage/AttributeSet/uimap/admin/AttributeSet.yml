@@ -21,7 +21,7 @@
 # @package     selenium
 # @subpackage  uimaps
 # @author      Magento Core Team <core@magentocommerce.com>
-# @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+# @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
 # @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 #
 ---
@@ -74,7 +74,7 @@ add_new_attribute_set:
 
 edit_attribute_set:
     mca: catalog_product_set/edit/id/%id%/
-    title: %attributeName% / Manage Attribute Sets / Attributes / Catalog / Magento Admin
+    title: %elementTitle% / Manage Attribute Sets / Attributes / Catalog / Magento Admin
     uimap:
         form: &editAttributeSet
             fieldsets:
@@ -109,7 +109,7 @@ edit_attribute_set:
 
 edit_attribute_set_with_sharp:
     mca: catalog_product_set/edit/id/%id%/#
-    title: %attributeName% / Manage Attribute Sets / Attributes / Catalog / Magento Admin
+    title: %elementTitle% / Manage Attribute Sets / Attributes / Catalog / Magento Admin
     uimap:
         form: *editAttributeSet
         buttons: *editAttributeButtons

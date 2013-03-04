@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  tests
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -43,8 +43,6 @@ class Core_Mage_Tags_BackendDeleteTest extends Mage_Selenium_TestCase
     {
         $this->loginAdminUser();
         $this->navigate('all_tags');
-        $this->assertTrue($this->checkCurrentPage('all_tags'), $this->getParsedMessages());
-        $this->addParameter('storeId', '1');
     }
 
     /**
@@ -61,7 +59,7 @@ class Core_Mage_Tags_BackendDeleteTest extends Mage_Selenium_TestCase
     public function deleteNew()
     {
         //Setup
-        $setData = $this->loadData('backend_new_tag', null, 'tag_name');
+        $setData = $this->loadDataSet('Tag', 'backend_new_tag');
         //Steps
         $this->tagsHelper()->addTag($setData);
         $this->assertTrue($this->checkCurrentPage('all_tags'), $this->getParsedMessages());

@@ -21,7 +21,7 @@
 # @package     selenium
 # @subpackage  test-data
 # @author      Magento Core Team <core@magentocommerce.com>
-# @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+# @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
 # @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 #
 ---
@@ -80,6 +80,18 @@ new_page_all_fields:
                 template: Viewed Products Grid Template
         variable_data:
             variable_1: Base Unsecure URL
+#            variable_2: Base Secure URL
+#            variable_3: General Contact Name
+#            variable_4: General Contact Email
+#            variable_5: Sales Representative Contact Name
+#            variable_6: Sales Representative Contact Email
+#            variable_7: Custom1 Contact Name
+#            variable_8: Custom1 Contact Email
+#            variable_9: Custom2 Contact Name
+#            variable_10: Custom2 Contact Email
+#            variable_11: Store Name
+#            variable_12: Store Contact Telephone
+#            variable_13: Store Contact Telephone
     design:
         layout: 3 columns
         layout_update_xml: %noValue%

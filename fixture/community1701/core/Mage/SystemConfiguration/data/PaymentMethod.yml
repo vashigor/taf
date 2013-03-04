@@ -1,0 +1,651 @@
+#
+# Magento
+#
+# NOTICE OF LICENSE
+#
+# This source file is subject to the Academic Free License (AFL 3.0)
+# that is bundled with this package in the file LICENSE_AFL.txt.
+# It is also available through the world-wide-web at this URL:
+# http://opensource.org/licenses/afl-3.0.php
+# If you did not receive a copy of the license and are unable to
+# obtain it through the world-wide-web, please send an email
+# to license@magentocommerce.com so we can send you a copy immediately.
+#
+# DISCLAIMER
+#
+# Do not edit or add to this file if you wish to upgrade Magento to newer
+# versions in the future. If you wish to customize Magento for your
+# needs please refer to http://www.magentocommerce.com for more information.
+#
+# @category    tests
+# @package     selenium
+# @subpackage  test-data
+# @author      Magento Core Team <core@magentocommerce.com>
+# @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+# @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+#
+---
+################ Test dataset examples(Should be deleted) start
+express_checkout_all_us:
+    configuration_scope: Default Config
+    merchant_country: United States
+    configuration:
+        payment_1:
+            payment_name: pec
+            general_fieldset: paypal_express_checkout
+            fieldset_1:
+                path: pec_required_settings/pec_ec_required_settings
+                data: &ec_required_settings
+                    email_associated_with_paypal_merchant_account: test@example.com
+                    api_authentication_methods: API Signature
+                    api_username: test
+                    api_password: test
+                    api_signature: test
+                    ec_sandbox_mode: Yes
+                    ec_use_proxy: Yes #No
+                    ec_proxy_host: test
+                    ec_proxy_port: test
+            fieldset_2:
+                path: pec_required_settings
+                data:
+                    enable: Yes
+            fieldset_3:
+                path: pec_ec_basic_settings
+                data: &ec_basic_settings
+                    ec_title: PayPal Express Checkout
+                    ec_sort_order: 1
+                    ec_payment_action: Order
+                    ec_shortcut_on_cart: Yes
+                    ec_shortcut_on_product: Yes
+                    ec_authorization_honor_period: 4
+                    ec_order_valid_period: 30
+                    ec_child_authorization_number: 2
+            fieldset_4:
+                path: pec_ec_basic_settings/pec_ec_basic_settings_advanced
+                data: &ec_basic_settings_advanced
+                    ec_payment_applicable_from: All Allowed Countries
+                    ec_specific_countries_applicable_from: %noValue%
+                    ec_debug_mode: Yes
+                    ec_enable_ssl_verification: Yes
+                    ec_transfer_cart_line_items: Yes
+                    ec_transfer_shipping_options: No
+                    ec_shortcut_buttons_flavor: Dynamic
+                    ec_enable_guest_checkout: No
+                    ec_require_customer_billing_address: No
+                    ec_billing_agreement_signup: Never
+            fieldset_5:
+                path: pec_ec_basic_settings/pec_ec_basic_settings_advanced/pec_ba_settings
+                data: &ba_settings
+                    ba_enable: Yes
+                    ba_title: PayPal Billing Agreement
+                    ba_sort_order: 2
+                    ba_payment_action: Authorization
+                    ba_payment_applicable_from: All Allowed Countries
+                    ba_specific_countries_applicable_from: %noValue%
+                    ba_debug_mode: Yes
+                    ba_transfer_cart_line_items: No
+                    ba_allow_in_agreement_wizard: Yes
+            fieldset_6:
+                path: pec_ec_basic_settings/pec_ec_basic_settings_advanced/pec_sr_settings
+                data: &sr_settings
+                    sr_login: test
+                    sr_password: test
+                    sr_sandbox_mode: No
+                    sr_custom_endpoint: test
+                    sr_custom_path: test
+                    sr_enable_automatic_fetching: No
+                    sr_schedule: Daily
+                    sr_time_of_day_hour: 23
+                    sr_time_of_day_min: 58
+                    sr_time_of_day_sec: 59
+            fieldset_7:
+                path: pec_ec_basic_settings/pec_ec_basic_settings_advanced/pec_fe_settings
+                data: &fe_settings
+                    fe_product_logo: Now accepting PayPal (150 X 40)
+                    fe_page_style: test
+                    fe_header_image_url: test
+                    fe_header_background_color: test
+                    fe_header_border_color: test
+                    fe_page_background_color: test
+
+paypal_all_in_one_us_ppa:
+    configuration_scope: Default Config
+    merchant_country: United States
+    configuration:
+        payment_1:
+            payment_name: ppa
+            general_fieldset: paypal_all_in_one
+            fieldset_1:
+                path: ppa_required_settings/ppa_pa_required_settings
+                data:
+                    pa_partner: partner_test_ppa
+                    pa_vendor: vendor_test_ppa
+                    pa_user: user_test_ppa
+                    pa_password: password_test_ppa
+                    pa_use_proxy: Yes #No
+                    pa_proxy_host: test_ppa
+                    pa_proxy_port: 80ppa
+                    pa_test_mode: Yes
+            fieldset_2:
+                path: ppa_required_settings/ppa_ec_required_settings
+                data: *ec_required_settings
+            fieldset_3:
+                path: ppa_required_settings
+                data:
+                    enable: Yes
+            fieldset_4:
+                path: ppa_basic_settings
+                data:
+                    pa_title: Paypal Payments Advanced
+                    pa_sort_order: 1
+                    pa_payment_action: Sale
+            fieldset_5:
+                path: ppa_basic_settings/ppa_basic_settings_advanced
+                data:
+                    pa_payment_applicable_from: All Allowed Countries
+                    pa_specific_countries_applicable_from: %noValue%
+                    pa_debug_mode: Yes
+                    pa_enable_ssl_verification: Yes
+                    pa_cvv_entry_is_editable: Yes
+                    pa_require_cvv_entry: Yes
+                    pa_send_email_confirmation: Yes
+                    pa_url_method_for_cancel_and_return: GET
+            fieldset_6:
+                path: ppa_basic_settings/ppa_basic_settings_advanced/ppa_ba_settings
+                data: *ba_settings
+            fieldset_7:
+                path: ppa_basic_settings/ppa_basic_settings_advanced/ppa_sr_settings
+                data: *sr_settings
+            fieldset_8:
+                path: ppa_basic_settings/ppa_basic_settings_advanced/ppa_fe_settings
+                data: *fe_settings
+            fieldset_9:
+                path: ppa_ec_basic_settings
+                data: *ec_basic_settings
+            fieldset_10:
+                path: ppa_ec_basic_settings/ppa_ec_basic_settings_advanced
+                data: *ec_basic_settings_advanced
+
+paypal_all_in_one_us_ppp:
+    configuration_scope: Default Config
+    merchant_country: United States
+    configuration:
+        payment_1:
+            payment_name: ppp
+            general_fieldset: paypal_all_in_one
+            fieldset_1:
+                path: ppp_required_settings/ppp_pp_required_settings
+                data: *ec_required_settings
+            fieldset_2:
+                path: ppp_required_settings
+                data:
+                    enable: Yes
+            fieldset_3:
+                path: ppp_pp_basic_settings
+                data:
+                    pp_title: Payments Pro
+                    pp_sort_order: 1
+                    pp_payment_action: Sale
+                    pp_allowed_credit_card: all
+            fieldset_4:
+                path: ppp_pp_basic_settings/ppp_pp_basic_settings_advanced
+                data:
+                    pp_payment_applicable_from: All Allowed Countries
+                    pp_specific_countries_applicable_from: %noValue%
+                    pp_debug_mode: Yes
+                    pp_enable_ssl_verification: Yes
+                    pp_transfer_cart_line_items: Yes
+                    pp_require_cvv_entry: Yes
+                    pp_3d_secure_validation: Yes
+                    pp_severe_3d_secure_validation: Yes
+                    pp_advanced_centinel_api_url: test_url_pp
+            fieldset_5:
+                path: ppp_pp_basic_settings/ppp_pp_basic_settings_advanced/ppp_ba_settings
+                data: *ba_settings
+            fieldset_6:
+                path: ppp_pp_basic_settings/ppp_pp_basic_settings_advanced/ppp_sr_settings
+                data: *sr_settings
+            fieldset_7:
+                path: ppp_pp_basic_settings/ppp_pp_basic_settings_advanced/ppp_fe_settings
+                data: *fe_settings
+            fieldset_8:
+                path: ppp_ec_basic_settings
+                data: *ec_basic_settings
+            fieldset_9:
+                path: ppp_ec_basic_settings/ppp_ec_basic_settings_advanced
+                data: *ec_basic_settings_advanced
+
+paypal_all_in_one_us_pps:
+    configuration_scope: Default Config
+    merchant_country: United States
+    configuration:
+        payment_1:
+            payment_name: pps
+            general_fieldset: paypal_all_in_one
+            fieldset_1:
+                path: pps_required_settings
+                data:
+                    email_associated_with_merchant_account: test_ppp@example.com
+                    enable: Yes
+            fieldset_2:
+                path: pps_ps_basic_settings
+                data:
+                    ps_title: PayPal Website Payments Standard
+                    ps_sort_order: 1
+                    ps_payment_action: Sale
+            fieldset_3:
+                path: pps_ps_basic_settings/pps_ps_basic_settings_advanced
+                data:
+                    ps_payment_applicable_from: All Allowed Countries
+                    ps_specific_countries_applicable_from: %noValue%
+                    ps_debug_mode: Yes
+                    ps_transfer_cart_line_items: No
+                    ps_summary_text_for_aggregated_cart: test_text_pps
+                    ps_enable_ssl_verification: Yes
+
+paypal_payment_gateways_us_pfl:
+    configuration_scope: Default Config
+    merchant_country: United States
+    configuration:
+        payment_1:
+            payment_name: pfl
+            general_fieldset: paypal_payment_gateways
+            fieldset_1:
+                path: pfl_required_settings/pfl_pl_required_settings
+                data:
+                    pl_partner: partner_test_pfl
+                    pl_vendor: vendor_test_pfl
+                    pl_user: user_test_pfl
+                    pl_password: password_test_pfl
+                    pl_use_proxy: Yes #No
+                    pl_proxy_host: test_pfl
+                    pl_proxy_port: 80pfl
+                    pl_test_mode: Yes
+            fieldset_2:
+                path: pfl_required_settings/pfl_ec_required_settings
+                data: *ec_required_settings
+            fieldset_3:
+                path: pfl_required_settings
+                data:
+                    enable: Yes
+                    ec_enable: Yes
+            fieldset_4:
+                path: pfl_basic_settings
+                data:
+                    pl_title: Paypal Payflow Link
+                    pl_sort_order: 1
+                    pl_payment_action: Sale
+            fieldset_5:
+                path: pfl_basic_settings/pfl_basic_settings_advanced
+                data:
+                    pl_payment_applicable_from: All Allowed Countries
+                    pl_specific_countries_applicable_from: %noValue%
+                    pl_debug_mode: Yes
+                    pl_enable_ssl_verification: Yes
+                    pl_cvv_entry_is_editable: Yes
+                    pl_require_cvv_entry: Yes
+                    pl_send_email_confirmation: Yes
+                    pl_url_method_for_cancel_and_return: GET
+            fieldset_7:
+                path: pfl_basic_settings/pfl_basic_settings_advanced/pfl_sr_settings
+                data: *sr_settings
+            fieldset_8:
+                path: pfl_basic_settings/pfl_basic_settings_advanced/pfl_fe_settings
+                data: *fe_settings
+            fieldset_9:
+                path: pfl_ec_basic_settings
+                data: *ec_basic_settings
+            fieldset_10:
+                path: pfl_ec_basic_settings/pfl_ec_basic_settings_advanced
+                data: *ec_basic_settings_advanced
+            fieldset_6:
+                path: pfl_ec_basic_settings/pfl_ec_basic_settings_advanced/pfl_ba_settings
+                data: *ba_settings
+
+paypal_payment_gateways_us_pfp:
+    configuration_scope: Default Config
+    merchant_country: United States
+    configuration:
+        payment_1:
+            payment_name: pfp
+            general_fieldset: paypal_payment_gateways
+            fieldset_1:
+                path: pfp_required_settings/pfp_fp_required_settings
+                data:
+                    email_associated_with_paypal_merchant_account: test@example.com
+                    fp_partner: fp_partner
+                    fp_vendor: fp_vendor
+                    fp_user: fp_user
+                    fp_password: fp_password
+                    fp_test_mode: Yes
+                    fp_use_proxy: Yes #No
+                    fp_proxy_host: test
+                    fp_proxy_port: test
+            fieldset_2:
+                path: pfp_required_settings
+                data:
+                    enable: Yes
+            fieldset_3:
+                path: pfp_fp_basic_settings
+                data:
+                    fp_title: Payflow Pro
+                    fp_sort_order: 1
+                    fp_payment_action: Sale
+                    fp_allowed_credit_card: all
+            fieldset_4:
+                path: pfp_fp_basic_settings/pfp_fp_basic_settings_advanced
+                data:
+                    fp_payment_applicable_from: All Allowed Countries
+                    fp_specific_countries_applicable_from: %noValue%
+                    fp_debug_mode: Yes
+                    fp_enable_ssl_verification: Yes
+                    fp_require_cvv_entry: Yes
+                    fp_3d_secure_validation: Yes
+                    fp_severe_3d_secure_validation: Yes
+                    fp_advanced_centinel_api_url: test_url_pp
+            fieldset_5:
+                path: pfp_fp_basic_settings/pfp_fp_basic_settings_advanced/pfp_sr_settings
+                data: *sr_settings
+            fieldset_6:
+                path: pfp_fp_basic_settings/pfp_fp_basic_settings_advanced/pfp_fe_settings
+                data: *fe_settings
+            fieldset_9:
+                path: pfp_ec_basic_settings
+                data: &pro_ec_basic_settings
+                    ec_title: PayPal Express Checkout
+                    ec_sort_order: 1
+                    ec_payment_action: Sale
+                    ec_shortcut_on_cart: Yes
+                    ec_shortcut_on_product: Yes
+            fieldset_10:
+                path: pfp_ec_basic_settings/pfp_ec_basic_settings_advanced
+                data: &pro_ec_basic_settings_advanced
+                    ec_payment_applicable_from: All Allowed Countries
+                    ec_specific_countries_applicable_from: %noValue%
+                    ec_debug_mode: Yes
+                    ec_enable_ssl_verification: Yes
+                    ec_transfer_cart_line_items: Yes
+
+paypal_payment_gateways_uk_wpfp:
+    configuration_scope: Default Config
+    merchant_country: United Kingdom
+    configuration:
+        payment_1:
+            payment_name: wpfp
+            general_fieldset: paypal_all_in_one
+            fieldset_1:
+                path: wpfp_required_settings/wpfp_fp_required_settings
+                data:
+                    email_associated_with_paypal_merchant_account: test@example.com
+                    fp_partner: fp_partner
+                    fp_vendor: fp_vendor
+                    fp_user: fp_user
+                    fp_password: fp_password
+                    fp_test_mode: Yes
+                    fp_use_proxy: Yes #No
+                    fp_proxy_host: test
+                    fp_proxy_port: test
+            fieldset_2:
+                path: wpfp_required_settings
+                data:
+                    enable: Yes
+            fieldset_3:
+                path: wpfp_fp_basic_settings
+                data:
+                    fp_title: Payflow Pro
+                    fp_sort_order: 1
+                    fp_payment_action: Sale
+                    fp_allowed_credit_card: all
+            fieldset_4:
+                path: wpfp_fp_basic_settings/wpfp_fp_basic_settings_advanced
+                data:
+                    fp_payment_applicable_from: All Allowed Countries
+                    fp_specific_countries_applicable_from: %noValue%
+                    fp_debug_mode: Yes
+                    fp_enable_ssl_verification: Yes
+                    fp_require_cvv_entry: Yes
+                    fp_3d_secure_validation: Yes
+                    fp_severe_3d_secure_validation: Yes
+                    fp_advanced_centinel_api_url: test_url_pp
+            fieldset_5:
+                path: wpfp_fp_basic_settings/wpfp_fp_basic_settings_advanced/wpfp_sr_settings
+                data: *sr_settings
+            fieldset_6:
+                path: wpfp_fp_basic_settings/wpfp_fp_basic_settings_advanced/wpfp_fe_settings
+                data: *fe_settings
+            fieldset_9:
+                path: wpfp_ec_basic_settings
+                data: *pro_ec_basic_settings
+            fieldset_10:
+                path: wpfp_ec_basic_settings/wpfp_ec_basic_settings_advanced
+                data: *pro_ec_basic_settings_advanced
+################ Test dataset examples(Should be deleted) End
+
+#<-------------PayPal Direct Payment Payflow Edition------------------------>
+payflowpro_without_3Dsecure:
+    configuration_scope: Default Config
+    merchant_country: United States
+    configuration:
+        payment_1:
+            payment_name: pfp
+            general_fieldset: paypal_payment_gateways
+            fieldset_1: &pfp_fp_required_settings
+                path: pfp_required_settings/pfp_fp_required_settings
+                data:
+                    email_associated_with_paypal_merchant_account:
+                    fp_partner: PayPal
+                    fp_vendor: 'YOUR CREDENTIALS'
+                    fp_user: 'YOUR CREDENTIALS'
+                    fp_password: 'YOUR CREDENTIALS'
+                    fp_test_mode: Yes
+                    fp_use_proxy: No
+            fieldset_2: &pfp_required_settings
+                path: pfp_required_settings
+                data:
+                    enable: Yes
+            fieldset_3: &pfp_fp_basic_settings
+                path: pfp_fp_basic_settings
+                data:
+                    fp_title: Payflow Pro
+                    fp_payment_action: Authorization
+                    fp_allowed_credit_card: all
+            fieldset_4: &pfp_fp_basic_settings_advanced
+                path: pfp_fp_basic_settings/pfp_fp_basic_settings_advanced
+                data:
+                    fp_payment_applicable_from: All Allowed Countries
+                    fp_debug_mode: Yes
+                    fp_enable_ssl_verification: Yes
+                    fp_require_cvv_entry: Yes
+                    fp_3d_secure_validation: No
+            fieldset_5: &pfp_ec_basic_settings
+                path: pfp_ec_basic_settings
+                data:
+                    ec_title: PayPal Express Checkout Payflow Edition
+                    ec_payment_action: Authorization
+                    ec_shortcut_on_cart: Yes
+                    ec_shortcut_on_product: Yes
+            fieldset_6: &pfp_ec_basic_settings_advanced
+                path: pfp_ec_basic_settings/pfp_ec_basic_settings_advanced
+                data:
+                    ec_payment_applicable_from: All Allowed Countries
+                    ec_debug_mode: Yes
+                    ec_enable_ssl_verification: Yes
+                    ec_transfer_cart_line_items: Yes
+
+payflowpro_with_3Dsecure:
+    configuration_scope: Default Config
+    merchant_country: United States
+    configuration:
+        payment_1:
+            payment_name: pfp
+            general_fieldset: paypal_payment_gateways
+            fieldset_1: *pfp_fp_required_settings
+            fieldset_2: *pfp_required_settings
+            fieldset_3: *pfp_fp_basic_settings
+            fieldset_4:
+                path: pfp_fp_basic_settings/pfp_fp_basic_settings_advanced
+                data:
+                    fp_payment_applicable_from: All Allowed Countries
+                    fp_debug_mode: Yes
+                    fp_enable_ssl_verification: Yes
+                    fp_require_cvv_entry: Yes
+                    fp_3d_secure_validation: Yes
+                    fp_severe_3d_secure_validation: No
+                    fp_advanced_centinel_api_url: https://fp_advanced_centinel_api_url/test.asp
+            fieldset_5: *pfp_ec_basic_settings
+            fieldset_6: *pfp_ec_basic_settings_advanced
+
+#<-------------PayPal Direct Payment------------------------>
+paypaldirect_without_3Dsecure:
+    configuration_scope: Default Config
+    merchant_country: United States
+    configuration:
+        payment_1:
+            payment_name: ppp
+            general_fieldset: paypal_all_in_one
+            fieldset_1: &ppp_pp_required_settings
+                path: ppp_required_settings/ppp_pp_required_settings
+                data:
+                    email_associated_with_paypal_merchant_account: 'YOUR CREDENTIALS'
+                    api_authentication_methods: API Signature
+                    api_username: 'YOUR CREDENTIALS'
+                    api_password: 'YOUR CREDENTIALS'
+                    api_signature: 'YOUR CREDENTIALS'
+                    ec_sandbox_mode: Yes
+                    ec_use_proxy: No
+            fieldset_2: &ppp_required_settings
+                path: ppp_required_settings
+                data:
+                    enable: Yes
+            fieldset_3: &ppp_pp_basic_settings
+                path: ppp_pp_basic_settings
+                data:
+                    pp_title: PayPal Direct Payment
+                    pp_payment_action: Authorization
+                    pp_allowed_credit_card: all
+            fieldset_4: &ppp_pp_basic_settings_advanced
+                path: ppp_pp_basic_settings/ppp_pp_basic_settings_advanced
+                data:
+                    pp_payment_applicable_from: All Allowed Countries
+                    pp_debug_mode: Yes
+                    pp_enable_ssl_verification: Yes
+                    pp_transfer_cart_line_items: No
+                    pp_require_cvv_entry: Yes
+                    pp_3d_secure_validation: No
+            fieldset_5: &ppp_ec_basic_settings
+                path: ppp_ec_basic_settings
+                data:
+                    ec_title: PayPal Express Checkout
+                    ec_payment_action: Authorization
+                    ec_shortcut_on_cart: Yes
+                    ec_shortcut_on_product: Yes
+            fieldset_6: &ppp_ec_basic_settings_advanced
+                path: ppp_ec_basic_settings/ppp_ec_basic_settings_advanced
+                data:
+                    ec_payment_applicable_from: All Allowed Countries
+                    ec_debug_mode: Yes
+                    ec_enable_ssl_verification: Yes
+                    ec_transfer_cart_line_items: Yes
+                    ec_transfer_shipping_options: No
+                    ec_shortcut_buttons_flavor: Dynamic
+                    ec_enable_guest_checkout: No
+                    ec_require_customer_billing_address: No
+                    ec_billing_agreement_signup: Never
+
+paypaldirect_with_3Dsecure:
+    configuration_scope: Default Config
+    merchant_country: United States
+    configuration:
+        payment_1:
+            payment_name: ppp
+            general_fieldset: paypal_all_in_one
+            fieldset_1: *ppp_pp_required_settings
+            fieldset_2: *ppp_required_settings
+            fieldset_3: *ppp_pp_basic_settings
+            fieldset_4:
+                path: ppp_pp_basic_settings/ppp_pp_basic_settings_advanced
+                data:
+                    pp_payment_applicable_from: All Allowed Countries
+                    pp_debug_mode: Yes
+                    pp_enable_ssl_verification: Yes
+                    pp_transfer_cart_line_items: No
+                    pp_require_cvv_entry: Yes
+                    pp_3d_secure_validation: Yes
+                    pp_severe_3d_secure_validation: Yes
+                    pp_advanced_centinel_api_url: https://fp_advanced_centinel_api_url/test.asp
+            fieldset_5: *ppp_ec_basic_settings
+            fieldset_6: *ppp_ec_basic_settings_advanced
+
+#<-------------PayPal Direct Payment Payflow Edition------------------------>
+paypaldirectuk_without_3Dsecure:
+    configuration_scope: Default Config
+    merchant_country: United Kingdom
+    configuration:
+        payment_1:
+            payment_name: wpfp
+            general_fieldset: paypal_all_in_one
+            fieldset_1: &wpfp_fp_required_settings
+                path: wpfp_required_settings/wpfp_fp_required_settings
+                data:
+                    email_associated_with_paypal_merchant_account: 'YOUR CREDENTIALS'
+                    fp_partner: PayPalUK
+                    fp_vendor: 'YOUR CREDENTIALS'
+                    fp_user: 'YOUR CREDENTIALS'
+                    fp_password: 'YOUR CREDENTIALS'
+                    fp_test_mode: Yes
+                    fp_use_proxy: No
+            fieldset_2: &wpfp_required_settings
+                path: wpfp_required_settings
+                data:
+                    enable: Yes
+            fieldset_3: &wpfp_fp_basic_settings
+                path: wpfp_fp_basic_settings
+                data:
+                    fp_title: PayPal Direct Payment Payflow Edition
+                    fp_payment_action: Authorization
+                    fp_allowed_credit_card: all
+            fieldset_4: &wpfp_fp_basic_settings_advanced
+                path: wpfp_fp_basic_settings/wpfp_fp_basic_settings_advanced
+                data:
+                    fp_payment_applicable_from: All Allowed Countries
+                    fp_debug_mode: Yes
+                    fp_enable_ssl_verification: Yes
+                    fp_require_cvv_entry: Yes
+                    fp_3d_secure_validation: No
+            fieldset_5: &wpfp_ec_basic_settings
+                path: wpfp_ec_basic_settings
+                data:
+                    ec_title: PayPal Express Checkout Payflow Edition
+                    ec_payment_action: Authorization
+                    ec_shortcut_on_cart: Yes
+                    ec_shortcut_on_product: Yes
+            fieldset_6: &wpfp_ec_basic_settings_advanced
+                path: wpfp_ec_basic_settings/wpfp_ec_basic_settings_advanced
+                data:
+                    ec_payment_applicable_from: All Allowed Countries
+                    ec_debug_mode: Yes
+                    ec_enable_ssl_verification: Yes
+                    ec_transfer_cart_line_items: Yes
+
+paypaldirectuk_with_3Dsecure:
+    configuration_scope: Default Config
+    merchant_country: United Kingdom
+    configuration:
+        payment_1:
+            payment_name: wpfp
+            general_fieldset: paypal_all_in_one
+            fieldset_1: *wpfp_fp_required_settings
+            fieldset_2: *wpfp_required_settings
+            fieldset_3: *wpfp_fp_basic_settings
+            fieldset_4:
+                path: wpfp_fp_basic_settings/wpfp_fp_basic_settings_advanced
+                data:
+                    fp_payment_applicable_from: All Allowed Countries
+                    fp_debug_mode: Yes
+                    fp_enable_ssl_verification: Yes
+                    fp_require_cvv_entry: Yes
+                    fp_3d_secure_validation: Yes
+                    fp_severe_3d_secure_validation: No
+                    fp_advanced_centinel_api_url: https://fp_advanced_centinel_api_url/test.asp
+            fieldset_5: *wpfp_ec_basic_settings
+            fieldset_6: *wpfp_ec_basic_settings_advanced

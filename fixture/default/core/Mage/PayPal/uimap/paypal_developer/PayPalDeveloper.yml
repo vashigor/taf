@@ -21,7 +21,7 @@
 # @package     selenium
 # @subpackage  test-data
 # @author      Magento Core Team <core@magentocommerce.com>
-# @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+# @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
 # @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 #
 ---
@@ -110,16 +110,18 @@ paypal_developer_logged_in:
                                         cancel: //input[@type='submit' and @value='Cancel']
                             -
                                 account_details:
-                                    xpath: //tr[@class='detail'][contains(.,'%accountEmail%')]/following::tr[1]//table[@id='actData']
+                                    xpath: //tr[@class='detail'][contains(.,'%accountEmail%')]/following::tr[1]
                                     links:
                                         view_details: //a[span='View Details']
                                     pageelements:
-                                        country: "//tr[td='Country:']//td[3]"
-                                        business_name: "//tr[td='Business Name:']//td[3]"
-                                        credit_card: "//tr[td='Credit Card:']//td[3]"
-                                        bank_account: "//tr[td='Bank Account:']//td[3]"
-                                        balance: "//tr[td='Balance:']//td[3]"
-                                        notes: "//tr[td='Notes:']//td[3]"
+                                        account_details_table: //table[@id='actData']
+                                        account_details_line: //table[@id='actData']//tr
+                                        country: "//table[@id='actData']//tr[td='Country:']//td[3]"
+                                        business_name: "//table[@id='actData']//tr[td='Business Name:']//td[3]"
+                                        credit_card: "//table[@id='actData']//tr[td='Credit Card:']//td[3]"
+                                        bank_account: "//table[@id='actData']//tr[td='Bank Account:']//td[3]"
+                                        balance: "//table[@id='actData']//tr[td='Balance:']//td[3]"
+                                        notes: "//table[@id='actData']//tr[td='Notes:']//td[3]"
                 -
                     test_email:
                         xpath: //*[@id='nav-menu']//a[text()='Test Email']
@@ -131,6 +133,7 @@ paypal_developer_logged_in:
                                 account_api_credentials:
                                     xpath: //*[@id='detData']/tbody[contains(.,'%accountEmail%')]
                                     pageelements:
+                                        account_api_credentials_line: //tr
                                         api_username: "//tr[td='API Username:']//td[2]"
                                         api_password: "//tr[td='API Password:']//td[2]"
                                         signature: "//tr[td='Signature:']//td[2]"
@@ -175,6 +178,11 @@ developer_test_account_2:
     title: PayPal Sandbox - Sandbox
     uimap: *developerForm
 
+developer_created_test_account:
+    mca: cgi-bin/devscr?cmd=_sandbox-acct-session&account_created=1
+    title: PayPal Sandbox - Sandbox
+    uimap: *developerForm
+
 developer_test_account_us:
     mca: us/cgi-bin/devscr?cmd=_sandbox-acct-session
     title: PayPal Sandbox - Sandbox
@@ -185,7 +193,17 @@ developer_created_test_account_us:
     title: PayPal Sandbox - Sandbox
     uimap: *developerForm
 
+developer_created_test_account_us_failed:
+    mca: us/cgi-bin/devscr?cmd=_sandbox-acct-session&account_created=1&bank_failed=1&cc_failed=1
+    title: PayPal Sandbox - Sandbox
+    uimap: *developerForm
+
 developer_api_credentials:
+    mca: cgi-bin/devscr?cmd=_certs-session
+    title: PayPal Sandbox - Test Certificates
+    uimap: *developerForm
+
+developer_api_credentials_us:
     mca: us/cgi-bin/devscr?cmd=_certs-session
     title: PayPal Sandbox - Test Certificates
     uimap: *developerForm

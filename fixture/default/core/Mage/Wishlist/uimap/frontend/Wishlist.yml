@@ -21,7 +21,7 @@
 # @package     selenium
 # @subpackage  uimaps
 # @author      Magento Core Team <core@magentocommerce.com>
-# @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+# @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
 # @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 #
 ---
@@ -60,6 +60,7 @@ my_wishlist:
                             price_including_tax: //tr[contains(.,'%productName%') and not(*//p[@class='special-price'])]//span[@class='price-including-tax']/span[normalize-space(text())='%price%']
                             price_special_excluding_tax: //tr[contains(.,'%productName%')]//p[@class='special-price']/span[@class='price-excluding-tax']/span[normalize-space(text())='%price%']
                             price_special_inlcuding_tax: //tr[contains(.,'%productName%')]//p[@class='special-price']/span[@class='price-including-tax']/span[normalize-space(text())='%price%']
+                            #price_as_low_as:  TODO - cannot add because of the current bug MAGE-4112
                             ex_price_regular: //tr[contains(.,'%productName%')]//span[@class='regular-price']/span[@class='price']
                             ex_price_old: //tr[contains(.,'%productName%')]//p[@class='old-price']/span[@class='price']
                             ex_price_special: //tr[contains(.,'%productName%')]//p[@class='special-price']/span[@class='price']
@@ -67,6 +68,7 @@ my_wishlist:
                             ex_price_including_tax: //tr[contains(.,'%productName%') and not(*//p[@class='special-price'])]//span[@class='price-including-tax']/span[@class='price']
                             ex_price_special_excluding_tax: //tr[contains(.,'%productName%')]//p[@class='special-price']/span[@class='price-excluding-tax']/span[@class='price']
                             ex_price_special_inlcuding_tax: //tr[contains(.,'%productName%')]//p[@class='special-price']/span[@class='price-including-tax']/span[@class='price']
+                            #ex_price_as_low_as:  TODO - cannot add because of the current bug MAGE-4112
                             added_on: //tr[contains(.,'%productName%')]//span[@class='nobr']
         messages: &wishlistMessages
             successfully_added_product: //li[normalize-space(@class)='success-msg' and contains(.,'%productName% has been added to your wishlist.')]
@@ -93,7 +95,7 @@ my_wishlist_index:
 
 wishlist_configure_product:
     mca: wishlist/index/configure/id/%id%/
-    title: %productName%
+    title: %elementTitle%
     uimap:
         form:   &productPage
             fieldsets:

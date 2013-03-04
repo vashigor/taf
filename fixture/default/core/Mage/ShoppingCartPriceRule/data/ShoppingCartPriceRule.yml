@@ -21,7 +21,7 @@
 # @package     selenium
 # @subpackage  test-data
 # @author      Magento Core Team <core@magentocommerce.com>
-# @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+# @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
 # @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 #
 ---
@@ -148,7 +148,7 @@ test_shopping_cart_rule:
         uses_per_coupon: 15
         uses_per_customer: 15
         from_date: %currentDate%
-        to_date: %currentDate%
+        to_date: %nextWeek%
         priority: 10
         public_in_rss_feed: No
 #    conditions: *allConditions
@@ -205,29 +205,29 @@ specific_category_condition: &specificCategory
 
 scpr_required_fields:
     info:
-        rule_name: test_shopping_cart_rule
+        rule_name: test_shopping_cart_rule_%randomize%
         status: Inactive
         websites: Main Website
         customer_groups: NOT LOGGED IN, General, Wholesale, Retailer
         coupon: Specific Coupon
-        coupon_code: test_code
+        coupon_code: test_code_%randomize%
     actions:
         apply: Percent of product price discount
         discount_amount: 15
 
 scpr_all_fields:
     info:
-        rule_name: test_shopping_cart_rule
+        rule_name: test_shopping_cart_rule_%randomize%
         description: description for test shopping cart rule
         status: Inactive
         websites: Main Website
         customer_groups: NOT LOGGED IN, General, Wholesale, Retailer
         coupon: Specific Coupon
-        coupon_code: test_code
+        coupon_code: test_code_%randomize%
         uses_per_coupon: 15
         uses_per_customer: 15
         from_date: %currentDate%
-        to_date: %currentDate%
+        to_date: %nextWeek%
         priority: 10
         public_in_rss_feed: No
     conditions: %noValue%
@@ -258,7 +258,7 @@ scpr_percent_of_product_price_discount:
         uses_per_coupon: 15
         uses_per_customer: 15
         from_date: %currentDate%
-        to_date: %currentDate%
+        to_date: %nextWeek%
         priority: 10
         public_in_rss_feed: No
     conditions: *specificCategory
@@ -314,7 +314,7 @@ scpr_fixed_amount_discount:
         uses_per_coupon: 15
         uses_per_customer: 15
         from_date: %currentDate%
-        to_date: %currentDate%
+        to_date: %nextWeek%
         priority: 10
         public_in_rss_feed: No
     conditions: *specificCategory
@@ -369,7 +369,7 @@ scpr_fixed_amount_discount_for_whole_cart:
         uses_per_coupon: 15
         uses_per_customer: 15
         from_date: %currentDate%
-        to_date: %currentDate%
+        to_date: %nextWeek%
         priority: 10
         public_in_rss_feed: No
     conditions: *specificCategory

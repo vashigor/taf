@@ -23,7 +23,7 @@
  * @package     selenium unit tests
  * @subpackage  Mage_PHPUnit
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 class Mage_Selenium_Helper_FileTest extends Mage_PHPUnit_TestCase
@@ -69,7 +69,7 @@ class Mage_Selenium_Helper_FileTest extends Mage_PHPUnit_TestCase
     public function testLoadYamlFileException()
     {
         $fileHelper = new Mage_Selenium_Helper_File($this->_config);
-        $this->assertFalse($fileHelper->loadYamlFile(SELENIUM_TESTS_BASEDIR . DIRECTORY_SEPARATOR . 'phpunit.xml.dist'));
+        $this->assertFalse($fileHelper->loadYamlFile(SELENIUM_TESTS_BASEDIR . DIRECTORY_SEPARATOR . 'phpunit.xml'));
     }
 
     /**

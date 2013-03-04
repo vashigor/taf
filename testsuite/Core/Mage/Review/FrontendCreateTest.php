@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  tests
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -108,7 +108,6 @@ class Core_Mage_Review_FrontendCreateTest extends Mage_Selenium_TestCase
      *
      * @test
      * @depends preconditionsForTests
-     * @TestlinkId TL-MAGE-440
      * @skipTearDown
      */
     public function addReviewByGuest($data)
@@ -153,7 +152,6 @@ class Core_Mage_Review_FrontendCreateTest extends Mage_Selenium_TestCase
      *
      * @test
      * @depends preconditionsForTests
-     * @TestlinkId TL-MAGE-457
      */
     public function addReviewByGuestWithRating($data)
     {
@@ -197,7 +195,6 @@ class Core_Mage_Review_FrontendCreateTest extends Mage_Selenium_TestCase
      *
      * @test
      * @depends preconditionsForTests
-     * @TestlinkId TL-MAGE-456
      * @skipTearDown
      */
     public function addReviewByLoggedCustomer($data)
@@ -243,7 +240,6 @@ class Core_Mage_Review_FrontendCreateTest extends Mage_Selenium_TestCase
      * @test
      * @dataProvider withEmptyRequiredFieldsDataProvider
      * @depends preconditionsForTests
-     *
      * @skipTearDown
      */
     public function withEmptyRequiredFields($emptyFieldName, $data)
@@ -284,7 +280,6 @@ class Core_Mage_Review_FrontendCreateTest extends Mage_Selenium_TestCase
      * @test
      * @dataProvider frontendReviewSpecialCharactersDataProvider
      * @depends preconditionsForTests
-     *
      * @skipTearDown
      */
     public function frontendReviewSpecialCharacters($reviewData, $data)

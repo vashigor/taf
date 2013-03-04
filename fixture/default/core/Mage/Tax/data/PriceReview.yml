@@ -21,17 +21,17 @@
 # @package     selenium
 # @subpackage  test-data
 # @author      Magento Core Team <core@magentocommerce.com>
-# @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+# @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
 # @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 #
 ---
 #<-----------------------------Preconditions----------------------------------->
 simple_product_for_prices_validation_1:
     product_attribute_set: Default
-    general_name: Simple Product For Prices Validation
+    general_name: Simple Product For Prices Validation(%randomize%)
     general_description: Description for Simple Product
     general_short_description: Short Description for Simple Product
-    general_sku: simple_sku_price_validation
+    general_sku: simple_sku_price_validation_%randomize%
     general_weight: 18.56
     general_status: Enabled
     general_visibility: Catalog, Search
@@ -46,10 +46,10 @@ simple_product_for_prices_validation_1:
 
 simple_product_for_prices_validation_2:
     product_attribute_set: Default
-    general_name: Simple Product For Prices Validation
+    general_name: Simple Product For Prices Validation(%randomize%)
     general_description: Description for Simple Product
     general_short_description: Short Description for Simple Product
-    general_sku: simple_sku_price_validation
+    general_sku: simple_sku_price_validation_%randomize%
     general_weight: 18.56
     general_status: Enabled
     general_visibility: Catalog, Search
@@ -64,10 +64,10 @@ simple_product_for_prices_validation_2:
 
 simple_product_for_prices_validation_3:
     product_attribute_set: Default
-    general_name: Simple Product For Prices Validation
+    general_name: Simple Product For Prices Validation(%randomize%)
     general_description: Description for Simple Product
     general_short_description: Short Description for Simple Product
-    general_sku: simple_sku_price_validation
+    general_sku: simple_sku_price_validation_%randomize%
     general_weight: 18.56
     general_status: Enabled
     general_visibility: Catalog, Search
@@ -85,15 +85,15 @@ customer_account_for_prices_validation:
     group: General
     first_name: First Name
     last_name: Last Name
-    email: test_user_%randomize%@example.com
-    password: passw0rd
+    email: test_user_%randomize%@unknown-domain.com
+    password: 123123q
 
 customer_account_address_for_prices_validation:
     first_name: First Name
     last_name: Last Name
-    street_address_line_1: 10401 Any Street
-    street_address_line_2: Suite 1
-    city: Any City
+    street_address_line_1: 10441 Jefferson Blvd
+    street_address_line_2: Suite 200
+    city: Culver City
     country: United States
     state: California
     zip_code: 90232
@@ -6056,9 +6056,9 @@ estimate_shipping:
 billing_data_for_price_review: &billingAddress
     billing_first_name: First Name
     billing_last_name: Last Name
-    billing_street_address_line_1: 10401 Any Street
-    billing_street_address_line_2: Suite 1
-    billing_city: Any City
+    billing_street_address_line_1: 10441 Jefferson Blvd
+    billing_street_address_line_2: Suite 200
+    billing_city: Culver City
     billing_country: United States
     billing_state: California
     billing_zip_code: 90232

@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  tests
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -63,11 +63,11 @@ class Core_Mage_Store_Store_DeleteTest extends Mage_Selenium_TestCase
     public function deleteWithoutStoreView()
     {
         //Preconditions
-        $storeData = $this->loadData('generic_store');
+        $storeData = $this->loadDataSet('Store', 'generic_store');
         $this->storeHelper()->createStore($storeData, 'store');
         $this->assertMessagePresent('success', 'success_saved_store');
         //Data
-        $deleteStoreData = array('store_name' =>$storeData['store_name']);
+        $deleteStoreData = array('store_name' => $storeData['store_name']);
         //Steps
         $this->storeHelper()->deleteStore($deleteStoreData);
     }
@@ -90,14 +90,15 @@ class Core_Mage_Store_Store_DeleteTest extends Mage_Selenium_TestCase
     public function deletableWithStoreView()
     {
         //Preconditions
-        $storeData = $this->loadData('generic_store');
-        $storeViewData = $this->loadData('generic_store_view', array('store_name' => $storeData['store_name']));
+        $storeData = $this->loadDataSet('Store', 'generic_store');
+        $storeViewData =
+            $this->loadDataSet('StoreView', 'generic_store_view', array('store_name' => $storeData['store_name']));
         $this->storeHelper()->createStore($storeData, 'store');
         $this->assertMessagePresent('success', 'success_saved_store');
         $this->storeHelper()->createStore($storeViewData, 'store_view');
         $this->assertMessagePresent('success', 'success_saved_store_view');
         //Data
-        $deleteStoreData = array('store_name' =>$storeData['store_name']);
+        $deleteStoreData = array('store_name' => $storeData['store_name']);
         //Steps
         $this->storeHelper()->deleteStore($deleteStoreData);
     }

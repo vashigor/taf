@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  tests
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -60,7 +60,7 @@ class Core_Mage_Tax_ProductTaxClass_CreateTest extends Mage_Selenium_TestCase
     public function withRequiredFieldsOnly()
     {
         //Data
-        $productTaxClassData = $this->loadData('new_product_tax_class');
+        $productTaxClassData = $this->loadDataSet('Tax', 'new_product_tax_class');
         //Steps
         $this->taxHelper()->createTaxItem($productTaxClassData, 'product_class');
         //Verifying
@@ -80,9 +80,10 @@ class Core_Mage_Tax_ProductTaxClass_CreateTest extends Mage_Selenium_TestCase
      * <p>Expected Result:</p>
      * <p>Product Tax class Core_Mage_should not be created, error message appears</p>
      *
-     * @depends withRequiredFieldsOnly
      * @param array $productTaxClassData
+     *
      * @test
+     * @depends withRequiredFieldsOnly
      */
     public function withNameThatAlreadyExists($productTaxClassData)
     {
@@ -107,7 +108,7 @@ class Core_Mage_Tax_ProductTaxClass_CreateTest extends Mage_Selenium_TestCase
     public function withEmptyName()
     {
         //Data
-        $productTaxClassData = $this->loadData('new_product_tax_class', array('product_class_name' => ''));
+        $productTaxClassData = $this->loadDataSet('Tax', 'new_product_tax_class', array('product_class_name' => ''));
         //Steps
         $this->taxHelper()->createTaxItem($productTaxClassData, 'product_class');
         //Verifying

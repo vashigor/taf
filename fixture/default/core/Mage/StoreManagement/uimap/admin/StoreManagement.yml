@@ -21,7 +21,7 @@
 # @package     selenium
 # @subpackage  uimaps
 # @author      Magento Core Team <core@magentocommerce.com>
-# @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+# @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
 # @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 #
 --- #Manage Stores and related pages
@@ -46,6 +46,8 @@ manage_stores:
                             website_name: //input[@name='website_title']
                             store_name: //input[@name='group_title']
                             store_view_name: //input[@name='store_title']
+                        pageelements:
+                            cell_store_link: //table[@id]/tbody/tr[%rowIndex%]/td[%cellIndex%]/a
         buttons:
             create_website: //button[span='Create Website']
             create_store: //button[span='Create Store']

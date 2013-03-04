@@ -21,7 +21,7 @@
 # @package     selenium
 # @subpackage  test-data
 # @author      Magento Core Team <core@magentocommerce.com>
-# @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+# @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
 # @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 #
 ---
@@ -38,7 +38,7 @@ associated_attributes: &associatedAttributes
     Gift Options: %noValue%
 
 attribute_set:
-    set_name: test_attribute_set
+    set_name: test_attribute_set_%randomize%
     based_on: Default
     new_groups: %noValue%
     associated_attributes: *associatedAttributes

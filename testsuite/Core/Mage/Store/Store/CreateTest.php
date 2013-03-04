@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  tests
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -59,7 +59,7 @@ class Core_Mage_Store_Store_CreateTest extends Mage_Selenium_TestCase
     public function navigation()
     {
         $this->assertTrue($this->controlIsPresent('button', 'create_store'),
-                'There is no "Create Store" button on the page');
+            'There is no "Create Store" button on the page');
         $this->clickButton('create_store');
         $this->assertTrue($this->controlIsPresent('button', 'back'), 'There is no "Back" button on the page');
         $this->assertTrue($this->controlIsPresent('button', 'save_store'), 'There is no "Save" button on the page');
@@ -81,7 +81,7 @@ class Core_Mage_Store_Store_CreateTest extends Mage_Selenium_TestCase
     public function withRequiredFieldsOnly()
     {
         //Steps
-        $this->storeHelper()->createStore('generic_store', 'store');
+        $this->storeHelper()->createStore('Store/generic_store', 'store');
         //Verifying
         $this->assertMessagePresent('success', 'success_saved_store');
     }
@@ -102,12 +102,11 @@ class Core_Mage_Store_Store_CreateTest extends Mage_Selenium_TestCase
      * @test
      * @dataProvider withRequiredFieldsEmptyDataProvider
      * @depends withRequiredFieldsOnly
-     *
      */
     public function withRequiredFieldsEmpty($emptyField, $fieldType)
     {
         //Data
-        $storeData = $this->loadData('generic_store', array($emptyField => '%noValue%'));
+        $storeData = $this->loadDataSet('Store', 'generic_store', array($emptyField => '%noValue%'));
         //Steps
         $this->storeHelper()->createStore($storeData, 'store');
         //Verifying
@@ -125,7 +124,7 @@ class Core_Mage_Store_Store_CreateTest extends Mage_Selenium_TestCase
     {
         return array(
             array('store_name', 'field'),
-            array('root_category', 'dropdown'),
+            array('root_category', 'dropdown')
         );
     }
 
@@ -141,13 +140,12 @@ class Core_Mage_Store_Store_CreateTest extends Mage_Selenium_TestCase
      *
      * @test
      * @depends withRequiredFieldsOnly
-     *
      */
     public function withLongValues()
     {
         //Data
-        $storeData = $this->loadData('generic_store',
-                array('store_name' => $this->generate('string', 255, ':alnum:')));
+        $storeData = $this->loadDataSet('Store', 'generic_store',
+            array('store_name' => $this->generate('string', 255, ':alnum:')));
         //Steps
         $this->storeHelper()->createStore($storeData, 'store');
         //Verifying
@@ -171,8 +169,8 @@ class Core_Mage_Store_Store_CreateTest extends Mage_Selenium_TestCase
     public function withSpecialCharactersInName()
     {
         //Data
-        $storeData = $this->loadData('generic_store',
-                array('store_name' => $this->generate('string', 32, ':punct:')));
+        $storeData = $this->loadDataSet('Store', 'generic_store',
+            array('store_name' => $this->generate('string', 32, ':punct:')));
         //Steps
         $this->storeHelper()->createStore($storeData, 'store');
         //Verifying

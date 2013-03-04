@@ -21,7 +21,7 @@
 # @package     selenium
 # @subpackage  test-data
 # @author      Magento Core Team <core@magentocommerce.com>
-# @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+# @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
 # @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 #
 ---
@@ -437,6 +437,7 @@ simple_product_required:
     general_status: Enabled
     general_visibility: Catalog, Search
     prices_price: 9.99
+    prices_special_price: %noValue%
     prices_tax_class: None
     inventory_qty: %noValue%
 
@@ -603,6 +604,7 @@ virtual_product_required:
     general_status: Enabled
     general_visibility: Catalog, Search
     prices_price: 99.99
+    prices_special_price: %noValue%
     prices_tax_class: None
     inventory_qty: %noValue%
 
@@ -625,10 +627,10 @@ virtual_product_visible:
 
 virtual_product:
     product_attribute_set: Default
-    general_name: Virtual Product
+    general_name: Virtual Product(%randomize%)
     general_description: Description for Virtual Product
     general_short_description: Short Description for Virtual Product
-    general_sku: virtual_sku
+    general_sku: virtual_sku_%randomize%
     general_news_from: %currentDate%
     general_news_to: %currentDate%
     general_url_key: virtual-product-url-key
@@ -756,17 +758,18 @@ dynamic_bundle_required:
     general_weight_type: Dynamic
     general_status: Enabled
     general_visibility: Catalog, Search
+    prices_special_price: %noValue%
     bundle_items_data:
         item_1: %noValue%
 
 # Product that has all needed fields set to be visible in frontend.
 dynamic_bundle_visible:
     product_attribute_set: Default
-    general_name: Bundle(Dynamic) Product Visible
+    general_name: Bundle(Dynamic) Product Visible(%randomize%)
     general_description: Description for Bundle(Dynamic) Product Visible
     general_short_description: Short Description for Bundle(Dynamic) Product Visible
     general_sku_type: Dynamic
-    general_sku: bundle_dynamic_visible_sku.req
+    general_sku: bundle_dynamic_visible_sku.req_%randomize%
     general_weight_type: Dynamic
     general_status: Enabled
     general_visibility: Catalog, Search
@@ -789,6 +792,7 @@ fixed_bundle_required: &bundle
     general_visibility: Catalog, Search
     prices_price_type: Fixed
     prices_price: 12.55
+    prices_special_price: %noValue%
     prices_tax_class: None
     bundle_items_data:
         item_1: %noValue%
@@ -798,11 +802,11 @@ bundle_product_required: *bundle
 # Product that has all needed fields set to be visible in frontend.
 fixed_bundle_visible:
     product_attribute_set: Default
-    general_name: Bundle(Fixed) Product Visible
+    general_name: Bundle(Fixed) Product Visible(%randomize%)
     general_description: Description for Bundle(Fixed) Product Visible
     general_short_description: Short Description for Bundle(Fixed) Product Product Visible
     general_sku_type: Fixed
-    general_sku: bundle_fixed_visible_sku.req
+    general_sku: bundle_fixed_visible_sku_%randomize%
     general_weight_type: Fixed
     general_weight: 0.999
     general_status: Enabled
@@ -1042,10 +1046,10 @@ duplicate_dynamic_bundle:
 
 grouped_product_required:
     product_attribute_set: Default
-    general_name: Grouped Product Required
+    general_name: Grouped Product Required(%randomize%)
     general_description: Description for Grouped Product Required
     general_short_description: Short Description for Grouped Product Required
-    general_sku: grouped_sku.req
+    general_sku: grouped_sku.req_%randomize%
     general_status: Enabled
     general_visibility: Catalog, Search
     associated_grouped_data: *associatedProductsGroupedData
@@ -1053,10 +1057,10 @@ grouped_product_required:
 # Product that has all needed fields set to be visible in frontend.
 grouped_product_visible:
     product_attribute_set: Default
-    general_name: Grouped Product Visible
+    general_name: Grouped Product Visible(%randomize%)
     general_description: Description for Grouped Product Visible
     general_short_description: Short Description for Grouped Product Visible
-    general_sku: grouped_visible_sku.req
+    general_sku: grouped_visible_sku.req_%randomize%
     general_status: Enabled
     general_visibility: Catalog, Search
     inventory_stock_availability: In Stock
@@ -1066,10 +1070,10 @@ grouped_product_visible:
 
 grouped_product:
     product_attribute_set: Default
-    general_name: Grouped Product
+    general_name: Grouped Product(%randomize%)
     general_description: Description for Grouped Product
     general_short_description: Short Description for Grouped Product
-    general_sku: grouped_sku
+    general_sku: grouped_sku_%randomize%
     general_news_from: %currentDate%
     general_news_to: %currentDate%
     general_url_key: grouped-product-url-key
@@ -1161,16 +1165,17 @@ configurable_product_required:
     general_status: Enabled
     general_visibility: Catalog, Search
     prices_price: 14.95
+    prices_special_price: %noValue%
     prices_tax_class: None
 
 # Product that has all needed fields set to be visible in frontend.
 configurable_product_visible:
     product_attribute_set: Default
     configurable_attribute_title: %noValue%
-    general_name: Configurable Product Visible
+    general_name: Configurable Product Visible(%randomize%)
     general_description: Description for Configurable Product Visible
     general_short_description: Short Description for Configurable Product Visible
-    general_sku: configurable_visible_sku.req
+    general_sku: configurable_visible_sku.req_%randomize%
     general_status: Enabled
     general_visibility: Catalog, Search
     prices_price: 18.95
@@ -1183,10 +1188,10 @@ configurable_product_visible:
 configurable_product:
     product_attribute_set: Default
     configurable_attribute_title: %noValue%
-    general_name: Configurable Product
+    general_name: Configurable Product(%randomize%)
     general_description: Description for Configurable Product
     general_short_description: Short Description for Configurable Product
-    general_sku: configurable_sku
+    general_sku: configurable_sku_%randomize%
     general_news_from: %currentDate%
     general_news_to: %currentDate%
     general_url_key: configurable-product-url-key
@@ -1277,13 +1282,14 @@ duplicate_configurable:
 
 downloadable_product_required:
     product_attribute_set: Default
-    general_name: Downloadable Product Required
+    general_name: Downloadable Product Required(%randomize%)
     general_description: Description for Downloadable Product Required
     general_short_description: Short Description for Downloadable Product Required
-    general_sku: downloadable_sku.req
+    general_sku: downloadable_sku.req_%randomize%
     general_status: Enabled
     general_visibility: Catalog, Search
     prices_price: 99.99
+    prices_special_price: %noValue%
     prices_tax_class: None
     inventory_qty: %noValue%
 
@@ -1306,10 +1312,10 @@ downloadable_product_visible:
 
 downloadable_product:
     product_attribute_set: Default
-    general_name: Downloadable Product
+    general_name: Downloadable Product(%randomize%)
     general_description: Description for Downloadable Product
     general_short_description: Short Description for Downloadable Product
-    general_sku: downloadable_sku
+    general_sku: downloadable_sku_%randomize%
     general_news_from: %currentDate%
     general_news_to: %currentDate%
     general_url_key: downloadable-product-url-key
@@ -1699,14 +1705,14 @@ custom_options_to_add_to_shopping_cart:
         options_to_choose:
             custom_option_day: 15
             custom_option_month: 10
-            custom_option_year: 2012
+            custom_option_year: 2013
     option_8:
         parameters:
             title: Custom Options Date & Time
         options_to_choose:
             custom_option_day: 15
             custom_option_month: 10
-            custom_option_year: 2012
+            custom_option_year: 2013
             custom_option_hour: 10
             custom_option_minute: 10
             custom_option_day_part: PM
@@ -1810,10 +1816,10 @@ grouped_options_to_add_to_shopping_cart:
 
 simple_multi_checkout_options:
     product_attribute_set: Default
-    general_name: %randomize%_Simple Multi Checkout Options
+    general_name: Simple Multi Checkout Options(%randomize%)
     general_description: Description for Simple Multi Checkout Options
     general_short_description: Short Description for Simple Multi Checkout Options
-    general_sku: %randomize%_simple_multi_checkout_options_sku.req
+    general_sku: simple_multi_checkout_options_sku.req_%randomize%
     general_weight: 1.14
     general_status: Enabled
     general_visibility: Catalog, Search
@@ -1831,10 +1837,10 @@ simple_multi_checkout_options:
 
 virtual_multi_checkout_options:
     product_attribute_set: Default
-    general_name: %randomize%_Virtual Product Options
+    general_name: Virtual Product Options(%randomize%)
     general_description: Description for Virtual Multi Checkout Options
     general_short_description: Short Description for Virtual Multi Checkout Options
-    general_sku: %randomize%_virtual_multi_checkout_options_sku.req
+    general_sku: virtual_multi_checkout_options_sku.req_%randomize%
     general_status: Enabled
     general_visibility: Catalog, Search
     prices_price: 18.99
@@ -1851,10 +1857,10 @@ virtual_multi_checkout_options:
 
 downloadable_multi_checkout:
     product_attribute_set: Default
-    general_name: %randomize%_Downloadable Product Visible Multi Checkout
+    general_name: Downloadable Product Visible Multi Checkout(%randomize%)
     general_description: Description for Downloadable Product Visible
     general_short_description: Short Description for Downloadable Product Visible
-    general_sku: %randomize%_downloadable_visible_multi_checkout_sku.req
+    general_sku: downloadable_visible_multi_checkout_sku.req_%randomize%
     general_status: Enabled
     general_visibility: Catalog, Search
     prices_price: 98.99
@@ -1886,10 +1892,10 @@ downloadable_multi_checkout:
 
 downloadable_product_visible_multi_checkout:
     product_attribute_set: Default
-    general_name: Downloadable Multi Checkout Visible
+    general_name: Downloadable Multi Checkout Visible(%randomize%)
     general_description: Description for Downloadable Product Visible
     general_short_description: Short Description for Downloadable Product Visible
-    general_sku: downloadable_visible_sku.req
+    general_sku: downloadable_visible_sku.req_%randomize%
     general_status: Enabled
     general_visibility: Catalog, Search
     prices_price: 98.99

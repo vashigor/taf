@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  tests
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -51,6 +51,7 @@ class Core_Mage_Product_Linking_VirtualLinkingTest extends Mage_Selenium_TestCas
      */
     public function preconditionsForTests()
     {
+        $forLinking = array();
         $linking = $this->productHelper()->createVirtualProduct();
         foreach (self::$productTypes as $product) {
             $method = 'create' . ucfirst($product) . 'Product';
@@ -94,10 +95,10 @@ class Core_Mage_Product_Linking_VirtualLinkingTest extends Mage_Selenium_TestCas
         $this->navigate('manage_products');
         $this->productHelper()->openProduct($search);
         $this->productHelper()->unselectAssociatedProduct($assignType);
-        $this->clickButton('reset');
-        $this->openTab($assignType);
         $this->productHelper()->assignProduct($assign, $assignType);
         $this->saveAndContinueEdit('button', 'save_and_continue_edit');
+        $this->assertSame($assignType, $this->_getActiveTabUimap()->getTabId(),
+            'Wrong Tab is opened after saving product');
         $this->productHelper()->isAssignedProduct($assign, $assignType);
         $this->assertEmptyVerificationErrors();
         $this->clearInvalidedCache();
@@ -145,10 +146,10 @@ class Core_Mage_Product_Linking_VirtualLinkingTest extends Mage_Selenium_TestCas
         $this->navigate('manage_products');
         $this->productHelper()->openProduct($search);
         $this->productHelper()->unselectAssociatedProduct($assignType);
-        $this->clickButton('reset');
-        $this->openTab($assignType);
         $this->productHelper()->assignProduct($assign, $assignType);
         $this->saveAndContinueEdit('button', 'save_and_continue_edit');
+        $this->assertSame($assignType, $this->_getActiveTabUimap()->getTabId(),
+            'Wrong Tab is opened after saving product');
         $this->productHelper()->isAssignedProduct($assign, $assignType);
         $this->assertEmptyVerificationErrors();
         $this->clearInvalidedCache();
@@ -199,10 +200,10 @@ class Core_Mage_Product_Linking_VirtualLinkingTest extends Mage_Selenium_TestCas
         $this->navigate('manage_products');
         $this->productHelper()->openProduct($search);
         $this->productHelper()->unselectAssociatedProduct($assignType);
-        $this->clickButton('reset');
-        $this->openTab($assignType);
         $this->productHelper()->assignProduct($assign, $assignType);
         $this->saveAndContinueEdit('button', 'save_and_continue_edit');
+        $this->assertSame($assignType, $this->_getActiveTabUimap()->getTabId(),
+            'Wrong Tab is opened after saving product');
         $this->productHelper()->isAssignedProduct($assign, $assignType);
         $this->assertEmptyVerificationErrors();
         $this->clearInvalidedCache();
@@ -257,10 +258,10 @@ class Core_Mage_Product_Linking_VirtualLinkingTest extends Mage_Selenium_TestCas
         $this->navigate('manage_products');
         $this->productHelper()->openProduct($search);
         $this->productHelper()->unselectAssociatedProduct($assignType);
-        $this->clickButton('reset');
-        $this->openTab($assignType);
         $this->productHelper()->assignProduct($assign, $assignType);
         $this->saveAndContinueEdit('button', 'save_and_continue_edit');
+        $this->assertSame($assignType, $this->_getActiveTabUimap()->getTabId(),
+            'Wrong Tab is opened after saving product');
         $this->productHelper()->isAssignedProduct($assign, $assignType);
         $this->assertEmptyVerificationErrors();
         $this->clearInvalidedCache();
@@ -317,10 +318,10 @@ class Core_Mage_Product_Linking_VirtualLinkingTest extends Mage_Selenium_TestCas
         $this->navigate('manage_products');
         $this->productHelper()->openProduct($search);
         $this->productHelper()->unselectAssociatedProduct($assignType);
-        $this->clickButton('reset');
-        $this->openTab($assignType);
         $this->productHelper()->assignProduct($assign, $assignType);
         $this->saveAndContinueEdit('button', 'save_and_continue_edit');
+        $this->assertSame($assignType, $this->_getActiveTabUimap()->getTabId(),
+            'Wrong Tab is opened after saving product');
         $this->productHelper()->isAssignedProduct($assign, $assignType);
         $this->assertEmptyVerificationErrors();
         $this->clearInvalidedCache();
@@ -379,10 +380,10 @@ class Core_Mage_Product_Linking_VirtualLinkingTest extends Mage_Selenium_TestCas
         $this->navigate('manage_products');
         $this->productHelper()->openProduct($search);
         $this->productHelper()->unselectAssociatedProduct($assignType);
-        $this->clickButton('reset');
-        $this->openTab($assignType);
         $this->productHelper()->assignProduct($assign, $assignType);
         $this->saveAndContinueEdit('button', 'save_and_continue_edit');
+        $this->assertSame($assignType, $this->_getActiveTabUimap()->getTabId(),
+            'Wrong Tab is opened after saving product');
         $this->productHelper()->isAssignedProduct($assign, $assignType);
         $this->assertEmptyVerificationErrors();
         $this->clearInvalidedCache();

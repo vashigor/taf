@@ -21,7 +21,7 @@
 # @package     selenium
 # @subpackage  test-data
 # @author      Magento Core Team <core@magentocommerce.com>
-# @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+# @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
 # @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 #
 ---
@@ -52,7 +52,7 @@ login: &login
     checkout_method: login
     additional_data:
         email_address: %noValue%
-        password: passw0rd
+        password: 123123q
 ################################################################################
 #                                                                              #
 #                                 Billing Address                              #
@@ -194,8 +194,8 @@ billing_with_register_req_physical_withshipping: &billingWithRegisterReqWithShip
     billing_zip_code: 90064
     billing_telephone: (091)019-019(billing.req)
     billing_fax: %noValue%
-    billing_password: passw0rd
-    billing_confirm_password: passw0rd
+    billing_password: 123123q
+    billing_confirm_password: 123123q
     ship_to_this_address: Yes
     ship_to_different_address: %noValue%
 
@@ -214,8 +214,8 @@ billing_with_register_req_physical: &billingWithRegisterReq
     billing_zip_code: 90064
     billing_telephone: (091)019-019(billing.req)
     billing_fax: %noValue%
-    billing_password: passw0rd
-    billing_confirm_password: passw0rd
+    billing_password: 123123q
+    billing_confirm_password: 123123q
     ship_to_this_address: %noValue%
     ship_to_different_address: Yes
 
@@ -234,8 +234,8 @@ billing_with_register_req_virtual: &billingWithRegisterReqVirtual
     billing_zip_code: 90064
     billing_telephone: (091)019-019(billing.req)
     billing_fax: %noValue%
-    billing_password: passw0rd
-    billing_confirm_password: passw0rd
+    billing_password: 123123q
+    billing_confirm_password: 123123q
 
 billing_with_register_long_values: &billingWithRegisterLongValues
     billing_address_choice: New Address
@@ -251,8 +251,8 @@ billing_with_register_long_values: &billingWithRegisterLongValues
     billing_zip_code: %longValue255%
     billing_telephone: %longValue255%
     billing_fax: %longValue255%
-    billing_password: passw0rd
-    billing_confirm_password: passw0rd
+    billing_password: 123123q
+    billing_confirm_password: 123123q
     ship_to_this_address: %noValue%
     ship_to_different_address: Yes
 
@@ -270,8 +270,8 @@ billing_with_register_long_values: &billingWithRegisterSpecialValues
     billing_zip_code: %specialValue32%
     billing_telephone: %specialValue32%
     billing_fax: %specialValue32%
-    billing_password: passw0rd
-    billing_confirm_password: passw0rd
+    billing_password: 123123q
+    billing_confirm_password: 123123q
     ship_to_this_address: %noValue%
     ship_to_different_address: Yes
 
@@ -290,8 +290,8 @@ billing_with_register_withshipping_usa: &billingWithRegisterWithShippingUsa
     billing_zip_code: 90064
     billing_telephone: (091)019-019(billing.req)
     billing_fax: %noValue%
-    billing_password: passw0rd
-    billing_confirm_password: passw0rd
+    billing_password: 123123q
+    billing_confirm_password: 123123q
     ship_to_this_address: Yes
     ship_to_different_address: %noValue%
 
@@ -310,8 +310,8 @@ billing_with_register_withshipping_france: &billingWithRegisterWithShippingFranc
     billing_zip_code: 24100
     billing_telephone: 06 88 07 44 27
     billing_fax: %noValue%
-    billing_password: passw0rd
-    billing_confirm_password: passw0rd
+    billing_password: 123123q
+    billing_confirm_password: 123123q
     ship_to_this_address: Yes
     ship_to_different_address: %noValue%
 

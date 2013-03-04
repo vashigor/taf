@@ -21,7 +21,7 @@
 # @package     selenium
 # @subpackage  test-data
 # @author      Magento Core Team <core@magentocommerce.com>
-# @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+# @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
 # @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 #
 ---
@@ -43,7 +43,7 @@ attribute_search_data:
 product_attribute_textfield: &productAttributeTextfield
 # properties:
     catalog_input_type_for_store_owner: Text Field
-    attribute_code: attr_textfield_code
+    attribute_code: attr_textfield_%randomize%
     scope: %noValue%
     default_text_field_value: %noValue%
     unique_value: %noValue%
@@ -60,7 +60,7 @@ product_attribute_textfield: &productAttributeTextfield
     used_in_product_listing: %noValue%
     used_for_sorting_in_product_listing: %noValue%
 # manage_labels_options:
-    admin_title: Text_Field_Admin
+    admin_title: Text_Field_Admin_%randomize%
     store_view_titles:
         Default Store View: Text_Field_StoreView
 
@@ -68,7 +68,7 @@ product_attribute_textfield: &productAttributeTextfield
 product_attribute_textarea: &productAttributeTextarea
 # properties:
     catalog_input_type_for_store_owner: Text Area
-    attribute_code: attr_textarea_code
+    attribute_code: attr_textarea_%randomize%
     scope: %noValue%
     default_text_area_value: %noValue%
     unique_value: %noValue%
@@ -84,7 +84,7 @@ product_attribute_textarea: &productAttributeTextarea
     visible_on_product_view_page_on_frontend: %noValue%
     used_in_product_listing: %noValue%
 # manage_labels_options:
-    admin_title: Text_Area_Admin
+    admin_title: Text_Area_Admin_%randomize%
     store_view_titles:
         Default Store View: Text_Area_StoreView
 
@@ -92,7 +92,7 @@ product_attribute_textarea: &productAttributeTextarea
 product_attribute_date: &productAttributeDate
 # properties:
     catalog_input_type_for_store_owner: Date
-    attribute_code: attr_date_code
+    attribute_code: attr_date_%randomize%
     scope: %noValue%
     default_date_value: %noValue%
     unique_value: %noValue%
@@ -107,7 +107,7 @@ product_attribute_date: &productAttributeDate
     used_in_product_listing: %noValue%
     used_for_sorting_in_product_listing: %noValue%
 # manage_labels_options:
-    admin_title: Date_Admin
+    admin_title: Date_Admin_%randomize%
     store_view_titles:
         Default Store View: Date_Store_View
 
@@ -115,7 +115,7 @@ product_attribute_date: &productAttributeDate
 product_attribute_yesno: &productAttributeYesno
 # properties:
     catalog_input_type_for_store_owner: Yes/No
-    attribute_code: attr_yesno_code
+    attribute_code: attr_yesno_%randomize%
     scope: %noValue%
     default_yesno_value: %noValue%
     unique_value: %noValue%
@@ -130,7 +130,7 @@ product_attribute_yesno: &productAttributeYesno
     used_in_product_listing: %noValue%
     used_for_sorting_in_product_listing: %noValue%
 # manage_labels_options:
-    admin_title: Yes/No_Admin
+    admin_title: Yes/No_Admin_%randomize%
     store_view_titles:
         Default Store View: Yes/No_StoreView
 
@@ -138,7 +138,7 @@ product_attribute_yesno: &productAttributeYesno
 product_attribute_multiselect: &productAttributeMultiselect
     # properties:
     catalog_input_type_for_store_owner: Multiple Select
-    attribute_code: attr_multiselect_code
+    attribute_code: attr_multiselect_%randomize%
     scope: %noValue%
     unique_value: %noValue%
     values_required: %noValue%
@@ -154,12 +154,12 @@ product_attribute_multiselect: &productAttributeMultiselect
     used_in_product_listing: %noValue%
     position: %noValue%
     # manage_labels_options:
-    admin_title: Multiple_Select_Admin
+    admin_title: Multiple_Select_Admin_%randomize%
 
 product_attribute_multiselect_with_options: &productAttributeMultiselectWithOptions
     # properties:
     catalog_input_type_for_store_owner: Multiple Select
-    attribute_code: attr_multiselect_code
+    attribute_code: attr_multiselect_%randomize%
     scope: %noValue%
     unique_value: %noValue%
     values_required: %noValue%
@@ -175,7 +175,7 @@ product_attribute_multiselect_with_options: &productAttributeMultiselectWithOpti
     used_in_product_listing: %noValue%
     position: %noValue%
     # manage_labels_options:
-    admin_title: Multiple_Select_Admin
+    admin_title: Multiple_Select_%randomize%
     store_view_titles:
         Default Store View: Multiple_Select_Storeview
     option_1:
@@ -203,7 +203,7 @@ product_attribute_multiselect_with_options: &productAttributeMultiselectWithOpti
 # Test Datasets for Add New Dropdown type Product Attribute
 product_attribute_dropdown: &productAttributeDropdown
     catalog_input_type_for_store_owner: Dropdown
-    attribute_code: attr_dropdown_code
+    attribute_code: attr_dropdown_%randomize%
     scope: Store View
     unique_value: %noValue%
     values_required: %noValue%
@@ -220,12 +220,12 @@ product_attribute_dropdown: &productAttributeDropdown
     used_in_product_listing: Yes
     used_for_sorting_in_product_listing: %noValue%
     position: %noValue%
-    admin_title: Dropdown_Admin
+    admin_title: Dropdown_Admin_%randomize%
 
 product_attribute_dropdown_with_options: &productAttributeDropdownWithOptions
     # Properties Tab:
     catalog_input_type_for_store_owner: Dropdown
-    attribute_code: attr_dropdown_code_%randomize%
+    attribute_code: attr_dropdown_%randomize%
     scope: Global
     unique_value: %noValue%
     values_required: %noValue%
@@ -272,7 +272,7 @@ product_attribute_dropdown_with_options: &productAttributeDropdownWithOptions
 product_attribute_price: &productAttributePrice
 # properties:
     catalog_input_type_for_store_owner: Price
-    attribute_code: attr_price_code
+    attribute_code: attr_price_%randomize%
     default_price_value: %noValue%
     unique_value: %noValue%
     values_required: %noValue%
@@ -289,7 +289,7 @@ product_attribute_price: &productAttributePrice
     used_for_sorting_in_product_listing: %noValue%
     position: %noValue%
 # manage_labels_options:
-    admin_title: Price_Admin
+    admin_title: Price_Admin_%randomize%
     store_view_titles:
         Default Store View: Price_StoreView
 
@@ -297,12 +297,12 @@ product_attribute_price: &productAttributePrice
 product_attribute_mediaimage: &productAttributeMediaimage
 # properties:
     catalog_input_type_for_store_owner: Media Image
-    attribute_code: attr_mediaimage_code
+    attribute_code: attr_mediaimage_%randomize%
     scope: %noValue%
     apply_to: %noValue%
     apply_product_types: %noValue%
 # manage_labels_options:
-    admin_title: Media_Image_Admin
+    admin_title: Media_Image_Admin_%randomize%
     store_view_titles:
         Default Store View: Media_Image_Storeview
 
@@ -310,11 +310,11 @@ product_attribute_mediaimage: &productAttributeMediaimage
 product_attribute_fpt:
 # properties:
     catalog_input_type_for_store_owner: Fixed Product Tax
-    attribute_code: attr_fpt_code
+    attribute_code: attr_fpt_code_%randomize%
     apply_to: %noValue%
     apply_product_types: %noValue%
 # manage_labels_options:
-    admin_title: Fixed_Product_Tax_Admin
+    admin_title: Fixed_Product_Tax_Admin_%randomize%
     store_view_titles:
         Default Store View: Fixed_Product_Tax_Storeview
 

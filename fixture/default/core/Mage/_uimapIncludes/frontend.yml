@@ -20,7 +20,7 @@
 # @package     selenium
 # @subpackage  uimaps
 # @author      Magento Core Team <core@magentocommerce.com>
-# @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+# @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
 # @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 #
 ---
@@ -46,7 +46,35 @@ frontend_header:
                         xpath:
                         pageelements:
                             qtyElementsInTable: //td[@class='pager']//span[contains(@id,'total-count')]
+                            qty_elements_in_specific_table: "%tableHeadXpath%//td[@class='pager']//span[contains(@id,'total-count')]"
                             fieldNameWithValidationMessage: "/ancestor::*[1]/preceding-sibling::*[1]/descendant-or-self::*[string-length(text())>1]"
+                            dropdown_option: "%dropdownXpath%//option"
+                            dropdown_option_text: "%dropdownXpath%//option[normalize-space(text())='%optionText%']"
+                            dropdown_option_index: "%dropdownXpath%//option[%index%]"
+                            dropdown_option_selected: "%dropdownXpath%//option[@selected='selected']"
+                            dropdown_option_text_selected: "%dropdownXpath%//option[normalize-space(text())='%optionText%'][@selected='selected']"
+                            dropdown_group_option_text: "%dropdownXpath%/optgroup[@label='%optionGroup%']/option[normalize-space(text())='%optionText%']";
+                            table_in_fieldset: "%fieldsetXpath%//table[@id]"
+                            table_header_cell_name: //a[span[text()='%cellName%']]
+                            table_line: "%tableHeadXpath%/tr"
+                            table_column: "%tableHeadXpath%//th"
+                            table_column_index: "%tableHeadXpath%//th[%index%]"
+                            table_column_index_colspan: "%tableHeadXpath%//th[%index%][@colspan]"
+                            table_head_first: "%tableHeadXpath%/tr[contains(@class,'first')]"
+                            table_head_cell_index_option_text: "//tr[@class='filter']/th[%cellIndex%]//option[normalize-space(text())='%optionText%']"
+                            table_line_cell_index: "%tableLineXpath%//td[%cellIndex%]"
+                            table_line_index_cell_index: "%tableLineXpath%[%lineIndex%]//td[%cellIndex%]"
+                            table_line_index_cell_index_with_input_value: "%tableLineXpath%[%lineIndex%]//td[%cellIndex%]/input[@value]"
+                            table_line_index_cell_index_options: "%tableLineXpath%[%lineIndex%]//td[%cellIndex%]//*[@class='item-options']"
+                            table_line_index_cell_index_product_name: "%tableLineXpath%[%lineIndex%]//td[%cellIndex%]//*[@class='product-name']"
+                            table_line_input:  "%tableLineXpath%/input"
+                            element_index: "%elementXpath%[%index%]"
+                            element_not_disabled_style: "%elementXpath%[not(contains(@style,'display:') and contains(@style,'none'))]"
+                            element_with_disabled_style: "%elementXpath%[contains(@style,'display:') and contains(@style,'none')]"
+                            element_not_disabled: "%elementXpath%[not(@disabled)]"
+                            element_with_class_active: "%elementXpath%[contains(@class,'active')]"
+                            element_with_class_not_active: "%elementXpath%[not(contains(@class,'active'))]"
+                            element_by_id: "//*[@id='%elementId%']"
         messages:
             success_registration: //li[normalize-space(@class)='success-msg' and contains(.,'Thank you for registering with')]
             general_notice: "//*/descendant::*[normalize-space(@class)='notice-msg'][string-length(.)>1]"

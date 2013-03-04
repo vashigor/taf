@@ -21,14 +21,14 @@
 # @package     selenium
 # @subpackage  uimaps
 # @author      Magento Core Team <core@magentocommerce.com>
-# @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+# @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
 # @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 #
 ---
 #
 category_page_before_reindex:
     mca: %categoryUrl%.html
-    title: %categoryTitle%
+    title: %elementTitle%
     uimap: &categoryUIMap
         form: &categoryPage
             fieldsets:
@@ -126,17 +126,17 @@ category_page_before_reindex:
 
 category_page_after_reindex:
     mca: catalog/category/view/s/%categoryUrl%/id/%id%/
-    title: %categoryTitle%
+    title: %elementTitle%
     uimap: *categoryUIMap
 
 sub_category_page_before_reindex:
     mca: %rotCategoryUrl%/%categoryUrl%.html
-    title: %categoryTitle%
+    title: %elementTitle%
     uimap: *categoryUIMap
 
 category_page_index:
     mca: %categoryUrl%.html%categoryParam%
-    title: %categoryTitle%
+    title: %elementTitle%
     uimap:
         form: *categoryPage
         messages: *categoryPageMessages

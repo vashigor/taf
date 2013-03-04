@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  tests
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -42,19 +42,24 @@ class Core_Mage_AttributeSet_Helper extends Mage_Selenium_TestCase
      */
     public function createAttributeSet(array $attrSet)
     {
-        $attrSet = $this->arrayEmptyClear($attrSet);
         $groups = (isset($attrSet['new_groups'])) ? $attrSet['new_groups'] : array();
         $associatedAttr = (isset($attrSet['associated_attributes'])) ? $attrSet['associated_attributes'] : array();
 
         $this->clickButton('add_new_set');
         $this->fillForm($attrSet);
-        $this->addParameter('attributeName', $attrSet['set_name']);
+        $this->addParameter('elementTitle', $attrSet['set_name']);
         $this->saveForm('save_attribute_set');
 
         $this->addNewGroup($groups);
         $this->addAttributeToSet($associatedAttr);
         if ($groups || $associatedAttr) {
-            $this->saveForm('save_attribute_set');
+            $waitCondition =
+                array($this->_getMessageXpath('general_error'), $this->_getMessageXpath('general_validation'),
+                      $this->_getControlXpath('fieldset', 'attribute_sets_grid',
+                          $this->getUimapPage('admin', 'manage_attribute_sets')));
+            $this->clickButton('save_attribute_set', false);
+            $this->waitForElement($waitCondition);
+            $this->validatePage();
         }
     }
 
@@ -72,8 +77,7 @@ class Core_Mage_AttributeSet_Helper extends Mage_Selenium_TestCase
         }
         foreach ($attrGroup as $value) {
             $this->addParameter('folderName', $value);
-            $groupXpath = $this->_getControlXpath('link', 'group_folder');
-            if (!$this->isElementPresent($groupXpath)) {
+            if (!$this->controlIsPresent('link', 'group_folder')) {
                 $this->answerOnNextPrompt($value);
                 $this->clickButton('add_group', false);
                 $this->getPrompt();
@@ -99,16 +103,16 @@ class Core_Mage_AttributeSet_Helper extends Mage_Selenium_TestCase
             $this->addParameter('folderName', $groupName);
             foreach ($attributeCode as $value) {
                 $this->addParameter('attributeName', $value);
-                $elFrom = $this->_getControlXpath('link', 'unassigned_attribute');
-                $elTo = $this->_getControlXpath('link', 'group_folder');
-                if (!$this->isElementPresent($elTo)) {
+                if (!$this->controlIsPresent('link', 'group_folder')) {
                     $this->addNewGroup($groupName);
                 }
-                if (!$this->isElementPresent($elFrom)) {
+                if (!$this->controlIsPresent('link', 'unassigned_attribute')) {
                     $this->fail("Attribute with title '$value' does not exist");
                 }
                 $this->moveElementOverTree('link', 'unassigned_attribute', 'fieldset', 'unassigned_attributes');
                 $this->moveElementOverTree('link', 'group_folder', 'fieldset', 'groups_content');
+                $elFrom = $this->_getControlXpath('link', 'unassigned_attribute');
+                $elTo = $this->_getControlXpath('link', 'group_folder');
                 $this->clickAt($elFrom, '1,1');
                 $this->clickAt($elTo, '1,1');
                 $this->mouseDownAt($elFrom, '1,1');
@@ -128,12 +132,12 @@ class Core_Mage_AttributeSet_Helper extends Mage_Selenium_TestCase
         if (is_array($setName) and isset($setName['set_name'])) {
             $setName = $setName['set_name'];
         }
-        $this->addParameter('attributeName', $setName);
+        $this->addParameter('elementTitle', $setName);
         $searchData = $this->loadDataSet('AttributeSet', 'search_attribute_set', array('set_name' => $setName));
 
         if ($this->getCurrentPage() !== 'manage_attribute_sets') {
             $this->navigate('manage_attribute_sets');
         }
-        $this->searchAndOpen($searchData);
+        $this->searchAndOpen($searchData, 'attribute_sets_grid');
     }
 }

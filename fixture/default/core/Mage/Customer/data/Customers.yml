@@ -21,7 +21,7 @@
 # @package     selenium
 # @subpackage  test-data
 # @author      Magento Core Team <core@magentocommerce.com>
-# @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+# @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
 # @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 #
 ---
@@ -33,8 +33,8 @@ customer_account_register:
     first_name: First name
     last_name: Last name
     email: test_frontend_%randomize%@unknown-domain.com
-    password: passw0rd
-    password_confirmation: passw0rd
+    password: 123123q
+    password_confirmation: 123123q
 
 #*******************************************************
 #*       Data for system configuration(Backend)        *
@@ -63,7 +63,7 @@ generic_customer_account:
     gender: %noValue%
     send_welcome_email: %noValue%
     send_from: %noValue%
-    password: passw0rd
+    password: 123123q
     auto_generated_password: %noValue%
 
 all_fields_customer_account:
@@ -75,12 +75,12 @@ all_fields_customer_account:
     last_name: Last Name
     suffix: Suffix
     email: test_admin_%randomize%@unknown-domain.com
-    date_of_birth: 12/12/1983
-    tax_vat_number: 000000
+    date_of_birth: 12/12/83
+    tax_vat_number: 123123
     gender: Male
     send_welcome_email: Yes
     send_from: Default Store View
-    password: passw0rd
+    password: 123123q
     auto_generated_password: No
 
 #Test data for Customer Addresses
@@ -91,9 +91,9 @@ generic_address:
     last_name: Last Name
     suffix: %noValue%
     company: %noValue%
-    street_address_line_1: 10401 Any Street
-    street_address_line_2: Suite 1
-    city: Any City
+    street_address_line_1: 10441 Jefferson Blvd
+    street_address_line_2: Suite 200
+    city: Culver City
     country: United States
     state: California
     region: %noValue%
@@ -103,6 +103,38 @@ generic_address:
     default_billing_address: %noValue%
     default_shipping_address: %noValue%
 
+long_values_address:
+    prefix: %longValue255%
+    first_name: %longValue255%
+    middle_name: %longValue255%
+    last_name: %longValue255%
+    suffix: %longValue255%
+    company: %longValue255%
+    street_address_line_1: %longValue255%
+    street_address_line_2: %longValue255%
+    city: %longValue255%
+    country: Ukraine
+    region: %longValue255%
+    zip_code: %longValue255%
+    telephone: %longValue255%
+    fax: %longValue255%
+
+special_char_address:
+    prefix: %specialValue32%
+    first_name: %specialValue32%
+    middle_name: %specialValue32%
+    last_name: %specialValue32%
+    suffix: %specialValue32%
+    company: %specialValue32%
+    street_address_line_1: %specialValue32%
+    street_address_line_2: %specialValue32%
+    city: %specialValue32%
+    country: Ukraine
+    region: %specialValue32%
+    zip_code: %specialValue32%
+    telephone: %specialValue32%
+    fax: %specialValue32%
+
 all_fields_address:
     prefix: Prefix
     first_name: First Name
@@ -110,9 +142,9 @@ all_fields_address:
     last_name: Last Name
     suffix: Suffix
     company: Magento
-    street_address_line_1: 10401 Any Street
-    street_address_line_2: Suite 1
-    city: Any City
+    street_address_line_1: 10441 Jefferson Blvd
+    street_address_line_2: Suite 200
+    city: Culver City
     country: United States
     state: California
     region: %noValue%

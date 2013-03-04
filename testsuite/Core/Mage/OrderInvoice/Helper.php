@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  tests
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -43,7 +43,6 @@ class Core_Mage_OrderInvoice_Helper extends Mage_Selenium_TestCase
      */
     public function createInvoiceAndVerifyProductQty($captureType = null, $invoiceData = array())
     {
-        $invoiceData = $this->arrayEmptyClear($invoiceData);
         $verify = array();
         $this->clickButton('invoice');
         foreach ($invoiceData as $options) {
@@ -53,36 +52,40 @@ class Core_Mage_OrderInvoice_Helper extends Mage_Selenium_TestCase
                 if ($sku) {
                     $verify[$sku] = $productQty;
                     $this->addParameter('sku', $sku);
-                    $this->fillForm(array('qty_to_invoice' => $productQty));
+                    $this->fillField('qty_to_invoice', $productQty);
                 }
             }
         }
         if ($captureType) {
-            $this->fillForm(array('amount' => $captureType));
+            $this->fillDropdown('amount', $captureType);
         }
         if (!$verify) {
-            $productCount = $this->getXpathCount($this->_getControlXpath('fieldset', 'product_line_to_invoice'));
+            $productCount = $this->getControlCount('fieldset', 'product_line_to_invoice');
             for ($i = 1; $i <= $productCount; $i++) {
                 $this->addParameter('productNumber', $i);
-                $skuXpath = $this->_getControlXpath('field', 'product_sku');
                 $qtyXpath = $this->_getControlXpath('field', 'product_qty');
-                $prodSku = trim(preg_replace('/SKU:|\\n/', '', $this->getText($skuXpath)));
-                if ($this->isElementPresent($qtyXpath . "/input")) {
-                    $prodQty = $this->getAttribute($qtyXpath . '/input/@value');
+                $prodSku = $this->getControlAttribute('field', 'product_sku', 'text');
+                $prodSku = trim(preg_replace('/SKU:|\\n/', '', $prodSku));
+                $this->addParameter('tableLineXpath', $qtyXpath);
+                if ($this->controlIsPresent('pageelement', 'table_line_input')) {
+                    $prodQty = $this->getControlAttribute('pageelement', 'table_line_input', 'selectedValue');
                 } else {
-                    $prodQty = $this->getText($qtyXpath);
+                    $prodQty = $this->getControlAttribute('field', 'product_qty', 'text');
                 }
                 $verify[$prodSku] = $prodQty;
             }
         }
-        $buttonXpath = $this->_getControlXpath('button', 'update_qty');
-        if ($this->isElementPresent($buttonXpath . "[not(@disabled)]")) {
-            $this->click($buttonXpath);
+        $this->addParameter('elementXpath', $this->_getControlXpath('button', 'update_qty'));
+        if ($this->controlIsPresent('pageelement', 'element_not_disabled')) {
+            $this->clickButton('update_qty', false);
             $this->pleaseWait();
         }
         $this->clickButton('submit_invoice', false);
         $this->waitForNewPage();
         $this->validatePage();
+        //@TODO
+        //Remove workaround for getting fails, not skipping tests if payment methods are inaccessible
+        $this->paypalHelper()->verifyMagentoPayPalErrors();
         $this->assertMessagePresent('success', 'success_creating_invoice');
         foreach ($verify as $productSku => $qty) {
             if ($qty == '%noValue%') {
@@ -90,9 +93,8 @@ class Core_Mage_OrderInvoice_Helper extends Mage_Selenium_TestCase
             }
             $this->addParameter('sku', $productSku);
             $this->addParameter('invoicedQty', $qty);
-            $xpathInvoiced = $this->_getControlXpath('field', 'qty_invoiced');
-            $this->assertTrue($this->isElementPresent($xpathInvoiced),
-                    'Qty of invoiced products is incorrect at the orders form');
+            $this->assertTrue($this->controlIsPresent('field', 'qty_invoiced'),
+                'Qty of invoiced products is incorrect at the orders form');
         }
     }
 
@@ -104,16 +106,18 @@ class Core_Mage_OrderInvoice_Helper extends Mage_Selenium_TestCase
     public function openInvoice($searchData)
     {
         if (is_string($searchData)) {
-            $searchData = $this->loadData($searchData);
+            $elements = explode('/', $searchData);
+            $fileName = (count($elements) > 1) ? array_shift($elements) : '';
+            $searchData = $this->loadDataSet($fileName, implode('/', $elements));
         }
-        $searchData = $this->arrayEmptyClear($searchData);
         $xpathTR = $this->search($searchData, 'sales_invoice_grid');
         $this->assertNotEquals(null, $xpathTR, 'Invoice is not found');
-        $text = $this->getText($xpathTR . '//td[' . $this->getColumnIdByName('Invoice #') . ']');
-        $this->addParameter('invoiceId', '#' . $text);
+        $cellId = $this->getColumnIdByName('Invoice #');
+        $this->addParameter('tableLineXpath', $xpathTR);
+        $this->addParameter('cellIndex', $cellId);
+        $param = $this->getControlAttribute('pageelement', 'table_line_cell_index', 'text');
+        $this->addParameter('elementTitle', '#' . $param);
         $this->addParameter('id', $this->defineIdFromTitle($xpathTR));
-        $this->click($xpathTR . "//a[text()='View']");
-        $this->waitForPageToLoad($this->_browserTimeoutPeriod);
-        $this->validatePage();
+        $this->clickControl('pageelement', 'table_line_cell_index');
     }
 }

@@ -20,7 +20,7 @@
 # @package     selenium
 # @subpackage  uimaps
 # @author      Magento Core Team <core@magentocommerce.com>
-# @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+# @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
 # @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 #
 ---
@@ -114,14 +114,15 @@ manage_sales_orders:
             not_valid_hostname: //li[normalize-space(@class)='error-msg' and contains(.,"appears to be a DNS hostname but cannot match against hostname schema for TLD")]
             hostname_not_valid: //li[normalize-space(@class)='error-msg' and contains(.,'appears to be a local network name but local network names are not allowed')]
             not_valid_email: //*[text()='Please enter a valid email address. For example johndoe@domain.com.']
+            order_id: "//*[contains(@class,'head-sales-order')][contains(text(), 'Order #')]"
             #confirmation
             confirmation_to_procced: This will create an offline refund. To create an online refund, open an invoice and create credit memo for it. Do you wish to proceed?
             confirmation_for_edit: Are you sure? This order will be canceled and a new one will be created instead
             confirmation_for_cancel: Are you sure you want to cancel this order?
             confirmation_to_void: Are you sure you want to void the payment?
+            confirmation_to_send_email: Are you sure you want to send order email to customer?
             #not verified
             authorizenet_online_invoice_error: //li[normalize-space(@class)='error-msg' and contains(.,'Order was not released from holding status.')]
-
             invalid_card_number: "%fieldXpath%/following-sibling::*[text()='Please enter a valid credit card number.' and not(contains(@style,'display: none;'))]"
             failed_print_packingslips: //li[normalize-space(@class)='error-msg' and contains(.,'There are no printable documents related to selected orders.')]
             failed_print_credit_memos: //li[normalize-space(@class)='error-msg' and contains(.,'There are no printable documents related to selected orders.')]
@@ -132,7 +133,7 @@ manage_sales_orders:
 create_order_for_new_customer:
     mca: sales_order_create/
     title: New Order / Orders / Sales / Magento Admin
-    uimap:
+    uimap: &create_order_for_new_customer
         form:
             fieldsets: &newOrderForNewCustomerFieldsets
                 -
@@ -175,16 +176,18 @@ create_order_for_new_customer:
                             qty_to_add: %productXpath%//input[@name='qty']
                         links:
                             configure: %productXpath%//a[text()='Configure']
+                            disabled_configure: %productXpath%//a[text()='Configure'][@disabled]
                 -
                     order_items_ordered: &orderItemsOrdered
                         xpath: //div[@id='order-items']
                         pageelements:
                             product_table_head: //table[@class='data order-tables']/thead
                             product_table_tfoot: //*[@id='order-items_grid']/table/tfoot
-                            product_line:  //table[@class='data order-tables']/tbody
+                            product_line: //table[@class='data order-tables']/tbody
                         buttons:
                             add_products: //button[span='Add Products']
                             configure: //tr[td/@class='first'][contains(.,'%sku%')]//button[span='Configure']
+                            disabled_configure: //tr[td/@class='first'][contains(.,'%sku%')]//button[span='Configure'][@disabled]
                             update_items_and_quantity: //button[contains(span, 'Update Items and Qty')]
                         checkboxes:
                             custom_price_use: //tr[td/@class='first'][contains(.,'%sku%')]//div[label='Custom Price*']/input
@@ -312,6 +315,10 @@ create_order_for_new_customer:
                         xpath: //div[div/h4[contains(text(),'Order Totals')]]
                         pageelements:
                             price_totals: //*[@id='order-totals']//tbody
+                            price_totals_line: //*[@id='order-totals']//tbody/descendant::tr
+                            price_totals_line_index: //*[@id='order-totals']//tbody/descendant::tr[%index%]
+                            price_totals_line_index_name: //*[@id='order-totals']//tbody/descendant::tr[%index%]/*[1]
+                            price_totals_line_index_value: //*[@id='order-totals']//tbody/descendant::tr[%index%]/*[2]
                             total_subtotal_excluding_tax: //tr[normalize-space(td)='Subtotal (Excl. Tax)']/td[span='%price%']
                             total_subtotal_including_tax: //tr[normalize-space(td)='Subtotal (Incl. Tax)']/td[span='%price%']
                             total_subtotal: //tr[normalize-space(td)='Subtotal']/td[span='%price%']
@@ -354,8 +361,8 @@ create_order_for_new_customer:
                         radiobuttons:
                             option_radio: //dt[contains(label,'%optionTitle%')]//following-sibling::dd[1]//li[contains(span/label,'%optionParameter%')]//input[@type='radio']
                         buttons:
-                            ok: //button[contains(span, 'OK')]
-                            cancel: //button[span[contains(text(),'Cancel')]]
+                            composite_configure_ok: //button[contains(span, 'OK')]
+                            composite_configure_cancel: //button[span[contains(text(),'Cancel')]]
                 -
                     gift_options: &giftMessage
                         xpath: //div[div/h4[contains(text(),'Gift Options for')]]
@@ -363,6 +370,8 @@ create_order_for_new_customer:
                             from: //input[@name='current_item_giftmessage_sender']
                             to: //input[@name='current_item_giftmessage_recipient']
                             message: //textarea[@name='current_item_giftmessage_message']
+                        pageelements:
+                            product_gift_message_block: //div[@class='giftcard-send-form' and contains(.,'Gift Message')]
                         buttons:
                             ok: //button[span='OK']
                             cancel: //button[span='Cancel']
@@ -373,10 +382,18 @@ create_order_for_new_customer:
                             from_order_level: //input[contains(@name, '[sender]')]
                             to_order_level: //input[contains(@name, '[recipient]')]
                             message_order_level: //textarea[contains(@name, '[message]')]
+                        pageelements:
+                            order_gift_message_block: //div[@class='giftmessage-order-create box-left' and contains(.,'Gift Message for the Entire Order')]
         buttons:
             back: //button[span='Back']
             cancel: //button[span='Cancel']
+            submit_order: //button[span='Submit Order']
         messages: *orderMessages
+
+reorder_create_new_order:
+    mca: sales_order_create/reorder/order_id/%id%
+    title: New Order / Orders / Sales / Magento Admin
+    uimap: &create_order_for_new_customer
 
 create_order_for_existing_customer:
     mca: sales_order_create/index/customer_id/%id%/
@@ -427,7 +444,7 @@ create_order_for_existing_customer:
 
 view_order:
     mca: sales_order/view/order_id/%id%/
-    title: %order_id% / Orders / Sales / Magento Admin
+    title: %elementTitle% / Orders / Sales / Magento Admin
     uimap:
         form: &orderView
             tabs:
@@ -465,7 +482,7 @@ view_order:
                                         gift_options: //tbody[@class][tr[contains(.,'%sku%')]]//a[text()='Gift Options']
                                     pageelements:
                                         product_table_head: //table[@class='data order-tables']/thead
-                                        product_line:  //table[@class='data order-tables']/tbody
+                                        product_line: //table[@class='data order-tables']/tbody
                             -
                                 gift_options: *giftMessage
                             -
@@ -487,6 +504,10 @@ view_order:
                                     xpath: //div[@class='order-totals']
                                     pageelements:
                                         price_totals: //div[@class='order-totals']/table
+                                        price_totals_line: //div[@class='order-totals']/table/descendant::tr
+                                        price_totals_line_index: //div[@class='order-totals']/table/descendant::tr[%index%]
+                                        price_totals_line_index_name: //div[@class='order-totals']/table/descendant::tr[%index%]/*[1]
+                                        price_totals_line_index_value: //div[@class='order-totals']/table/descendant::tr[%index%]/*[2]
                                         total_subtotal: //tr[normalize-space(td)='Subtotal']/td[span='%price%']
                                         total_subtotal_excl_tax: //tr[normalize-space(td)='Subtotal (Excl.Tax)']/td[span='%price%']
                                         total_subtotal_incl_tax: //tr[normalize-space(td)='Subtotal (Incl.Tax)']/td[span='%price%']

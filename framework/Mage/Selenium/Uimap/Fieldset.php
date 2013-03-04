@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  Mage_Selenium
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -49,13 +49,14 @@ class Mage_Selenium_Uimap_Fieldset extends Mage_Selenium_Uimap_Abstract
     public function  __construct($fieldsetId, array &$fieldsetContainer)
     {
         $this->_fieldsetId = $fieldsetId;
-        $this->_xPath = isset($fieldsetContainer['xpath'])
-            ? $fieldsetContainer['xpath']
-            : '';
+        $this->_xPath = isset($fieldsetContainer['xpath']) ? $fieldsetContainer['xpath'] : '';
         $this->_parseContainerArray($fieldsetContainer);
         if ($this->_xPath != '' && isset($this->_elements)) {
             $parent = $this->_xPath;
-            foreach ($this->_elements as $elementData) {
+            foreach ($this->_elements as $elementsType => $elementData) {
+                if ($elementsType == 'required') {
+                    continue;
+                }
                 foreach ($elementData as $elementName => $elementXpath) {
                     if (preg_match('|^' . preg_quote($parent) . '|', $elementXpath)) {
                         continue;
@@ -68,16 +69,28 @@ class Mage_Selenium_Uimap_Fieldset extends Mage_Selenium_Uimap_Abstract
     }
 
     /**
+     * Get Fieldset ID
+     * @return string
+     */
+    public function getFieldsetId()
+    {
+        return $this->_fieldsetId;
+    }
+
+    /**
      * Get Fieldset elements
+     *
+     * @param null|Mage_Selenium_Helper_Params $paramsDecorator
+     *
      * @return array
      */
-    public function getFieldsetElements()
+    public function getFieldsetElements($paramsDecorator = null)
     {
         $elementsArray = array();
         foreach ($this->_elements as $elementType => $elementData) {
             foreach ($elementData as $elementName => $elementValue) {
                 $type = preg_replace('/(e)?s$/', '', $elementType);
-                $elementsArray[$type][$elementName] = $elementValue;
+                $elementsArray[$type][$elementName] = $this->_applyParamsToString($elementValue, $paramsDecorator);
             }
         }
         return $elementsArray;

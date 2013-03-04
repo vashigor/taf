@@ -21,14 +21,14 @@
 # @package     selenium
 # @subpackage  uimaps
 # @author      Magento Core Team <core@magentocommerce.com>
-# @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+# @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
 # @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 #
 ---
 # Poll Manager page
 poll_manager:
     mca: poll/
-    click_xpath: //div[@class='nav-bar']//a[span='Polls']
+    click_xpath: //ul[@id='nav']//a[contains(@href, '/poll/')]
     title: Polls / CMS / Magento Admin
     uimap:
         form: &searchPoll
@@ -110,7 +110,7 @@ new_poll:
 # Edit Poll page
 edit_poll:
     mca: poll/edit/id/%id%/
-    title: %pollName% / Polls / CMS / Magento Admin
+    title: %elementTitle% / Polls / CMS / Magento Admin
     uimap:
         form:
             tabs:

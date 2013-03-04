@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  tests
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -58,11 +58,9 @@ class Core_Mage_CmsPolls_Helper extends Mage_Selenium_TestCase
      */
     public function createPoll(array $pollData)
     {
-        $pollData = $this->arrayEmptyClear($pollData);
         $answers = (isset($pollData['assigned_answers_set'])) ? $pollData['assigned_answers_set'] : array();
         $this->clickButton('add_new_poll');
-        if (!$this->controlIsPresent('multiselect', 'visible_in')
-                && isset($pollData['visible_in'])) {
+        if (!$this->controlIsPresent('multiselect', 'visible_in') && isset($pollData['visible_in'])) {
             unset($pollData['visible_in']);
         }
         $this->fillForm($pollData, 'poll_information');
@@ -77,26 +75,25 @@ class Core_Mage_CmsPolls_Helper extends Mage_Selenium_TestCase
      */
     public function openPoll(array $searchPollData)
     {
-        $searchPollData = $this->arrayEmptyClear($searchPollData);
-        if (!$this->controlIsPresent('dropdown', 'filter_visible_in')
-                && isset($searchPollData['filter_visible_in'])) {
+        if (!$this->controlIsPresent('dropdown', 'filter_visible_in') && isset($searchPollData['filter_visible_in'])) {
             unset($searchPollData['filter_visible_in']);
         }
-
         $xpathTR = $this->search($searchPollData, 'poll_grid');
         $this->assertNotEquals(null, $xpathTR, 'Poll is not found');
-        $id = $this->getColumnIdByName('Poll Question');
-        $this->addParameter('pollName', $this->getText($xpathTR . "//td[$id]"));
+        $cellId = $this->getColumnIdByName('Poll Question');
+        $this->addParameter('tableLineXpath', $xpathTR);
+        $this->addParameter('cellIndex', $cellId);
+        $param = $this->getControlAttribute('pageelement', 'table_line_cell_index', 'text');
+        $this->addParameter('elementTitle', $param);
         $this->addParameter('id', $this->defineIdFromTitle($xpathTR));
-        $this->click($xpathTR);
-        $this->waitForPageToLoad($this->_browserTimeoutPeriod);
-        $this->validatePage();
+        $this->clickControl('pageelement', 'table_line_cell_index');
     }
 
     /**
      * Check if Poll exists on frontend
      *
      * @param string $pollTitle "Poll Question"
+     *
      * @return boolean Return TRUE if poll is visible on the page
      */
     public function frontCheckPoll($pollTitle)
@@ -120,7 +117,7 @@ class Core_Mage_CmsPolls_Helper extends Mage_Selenium_TestCase
     public function setPollState($searchPollData, $state)
     {
         $this->openPoll($searchPollData);
-        $this->fillForm(array('poll_status' => $state), 'poll_information');
+        $this->fillDropdown('poll_status', $state);
         $this->saveForm('save_poll');
     }
 
@@ -129,15 +126,16 @@ class Core_Mage_CmsPolls_Helper extends Mage_Selenium_TestCase
      */
     public function closeAllPolls()
     {
-        $xpathTR = $this->search(array('filter_status' => 'Open'));
-        $id = $this->getColumnIdByName('Poll Question');
-        while ($this->isElementPresent($xpathTR)) {
-            $this->addParameter('pollName', $this->getText($xpathTR . "//td[$id]"));
+        $xpathTR = $this->search(array('filter_status' => 'Open'), 'poll_grid');
+        $cellId = $this->getColumnIdByName('Poll Question');
+        $this->addParameter('tableLineXpath', $xpathTR);
+        $this->addParameter('cellIndex', $cellId);
+        while ($this->controlIsPresent('pageelement', 'table_line_cell_index')) {
+            $param = $this->getControlAttribute('pageelement', 'table_line_cell_index', 'text');
+            $this->addParameter('elementTitle', $param);
             $this->addParameter('id', $this->defineIdFromTitle($xpathTR));
-            $this->click($xpathTR);
-            $this->waitForPageToLoad($this->_browserTimeoutPeriod);
-            $this->validatePage();
-            $this->fillForm(array('poll_status' => 'Closed'), 'poll_information');
+            $this->clickControl('pageelement', 'table_line_cell_index');
+            $this->fillDropdown('poll_status', 'Closed');
             $this->saveForm('save_poll');
         }
     }
@@ -149,20 +147,20 @@ class Core_Mage_CmsPolls_Helper extends Mage_Selenium_TestCase
      */
     public function checkPollData($pollData)
     {
-        if (!$this->controlIsPresent('multiselect', 'visible_in')
-                && isset($pollData['visible_in'])) {
+        if (!$this->controlIsPresent('multiselect', 'visible_in') && isset($pollData['visible_in'])) {
             unset($pollData['visible_in']);
         }
         $answers = (isset($pollData['assigned_answers_set'])) ? $pollData['assigned_answers_set'] : array();
 
         $this->assertTrue($this->verifyForm($pollData, 'poll_information'), $this->getParsedMessages());
 
-        $answersXpath = $this->_getControlXpath('fieldset', 'assigned_answers_set');
-        $answersCount = $this->getXpathCount($answersXpath);
+        $answersCount = $this->getControlCount('fieldset', 'assigned_answers_set');
         if (count($answers) == $answersCount) {
             $i = 1;
             foreach ($answers as $value) {
-                $attId = $this->getAttribute($answersXpath . "[$i]@id");
+                $this->addParameter('index', $i);
+                $this->addParameter('elementXpath', $this->_getControlXpath('fieldset', 'assigned_answers_set'));
+                $attId = $this->getControlAttribute('pageelement', 'element_index', 'id');
                 $answerId = explode("_", $attId);
                 $this->addParameter('answerId', end($answerId));
                 $this->assertTrue($this->verifyForm($value, 'poll_answers'), $this->getParsedMessages());
@@ -194,8 +192,7 @@ class Core_Mage_CmsPolls_Helper extends Mage_Selenium_TestCase
     {
         $this->addParameter('pollTitle', $pollTitle);
         $this->addParameter('answer', $pollAnswer);
-        if ($this->controlIsPresent('pageelement', 'poll_title')
-                && $this->controlIsPresent('radiobutton', 'vote')) {
+        if ($this->controlIsPresent('pageelement', 'poll_title') && $this->controlIsPresent('radiobutton', 'vote')) {
             $this->clickControl('radiobutton', 'vote', false);
             $this->clickButton('vote');
         } else {

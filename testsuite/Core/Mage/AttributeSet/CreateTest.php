@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  tests
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -43,7 +43,6 @@ class Core_Mage_AttributeSet_CreateTest extends Mage_Selenium_TestCase
     {
         $this->loginAdminUser();
         $this->navigate('manage_attribute_sets');
-        $this->addParameter('id', '0');
     }
 
     /**
@@ -57,12 +56,11 @@ class Core_Mage_AttributeSet_CreateTest extends Mage_Selenium_TestCase
      *
      * @return string
      * @test
-     *
      */
     public function basedOnDefault()
     {
         //Data
-        $setData = $this->loadData('attribute_set', null, 'set_name');
+        $setData = $this->loadDataSet('AttributeSet', 'attribute_set');
         //Steps
         $this->attributeSetHelper()->createAttributeSet($setData);
         //Verifying
@@ -85,12 +83,11 @@ class Core_Mage_AttributeSet_CreateTest extends Mage_Selenium_TestCase
      *
      * @test
      * @depends basedOnDefault
-     *
      */
     public function withNameThatAlreadyExists($attributeSetName)
     {
         //Data
-        $setData = $this->loadData('attribute_set', array('set_name' => $attributeSetName));
+        $setData = $this->loadDataSet('AttributeSet', 'attribute_set', array('set_name' => $attributeSetName));
         //Steps
         $this->attributeSetHelper()->createAttributeSet($setData);
         //Verifying
@@ -108,12 +105,11 @@ class Core_Mage_AttributeSet_CreateTest extends Mage_Selenium_TestCase
      *
      * @test
      * @depends basedOnDefault
-     *
      */
     public function withEmptyName()
     {
         //Data
-        $setData = $this->loadData('attribute_set', array('set_name' => ''));
+        $setData = $this->loadDataSet('AttributeSet', 'attribute_set', array('set_name' => ''));
         //Steps
         $this->attributeSetHelper()->createAttributeSet($setData);
         //Verifying
@@ -133,12 +129,12 @@ class Core_Mage_AttributeSet_CreateTest extends Mage_Selenium_TestCase
      *
      * @test
      * @depends basedOnDefault
-     *
      */
     public function withLongValues()
     {
         //Data
-        $setData = $this->loadData('attribute_set', array('set_name' => $this->generate('string', 255, ':alnum:')));
+        $setData = $this->loadDataSet('AttributeSet', 'attribute_set',
+            array('set_name' => $this->generate('string', 255, ':alnum:')));
         $attributeSetSearch['set_name'] = $setData['set_name'];
         //Steps
         $this->attributeSetHelper()->createAttributeSet($setData);
@@ -160,12 +156,12 @@ class Core_Mage_AttributeSet_CreateTest extends Mage_Selenium_TestCase
      *
      * @test
      * @depends basedOnDefault
-     *
      */
     public function withSpecialCharacters()
     {
         //Data
-        $setData = $this->loadData('attribute_set', array('set_name' => $this->generate('string', 32, ':punct:')));
+        $setData = $this->loadDataSet('AttributeSet', 'attribute_set',
+            array('set_name' => $this->generate('string', 32, ':punct:')));
         $setData['set_name'] = preg_replace('/<|>/', '', $setData['set_name']);
         $attributeSetSearch['set_name'] = $setData['set_name'];
         //Steps
@@ -199,8 +195,8 @@ class Core_Mage_AttributeSet_CreateTest extends Mage_Selenium_TestCase
     {
         //Data
         $groupName = $this->generate('string', 5, ':lower:') . '_test_group';
-        $attrData = $this->loadData('product_attributes', null, array('attribute_code', 'admin_title'));
-        $setData = $this->loadData('attribute_set', null, 'set_name');
+        $attrData = $this->loadDataSet('ProductAttribute', 'product_attributes');
+        $setData = $this->loadDataSet('AttributeSet', 'attribute_set');
         $attrCodes = array();
         foreach ($attrData as $value) {
             if (is_array($value) && array_key_exists('attribute_code', $value)) {
@@ -239,12 +235,11 @@ class Core_Mage_AttributeSet_CreateTest extends Mage_Selenium_TestCase
      *
      * @test
      * @depends addUserProductAttributesToNewGroup
-     *
      */
     public function basedOnCustom($setData)
     {
         //Data
-        $setDataCustom = $this->loadData('attribute_set', array('based_on' => $setData['set_name']), 'set_name');
+        $setDataCustom = $this->loadDataSet('AttributeSet', 'attribute_set', array('based_on' => $setData['set_name']));
         //Steps
         $this->attributeSetHelper()->createAttributeSet($setDataCustom);
         //Verifying

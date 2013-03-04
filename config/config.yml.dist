@@ -21,7 +21,7 @@
 # @package     selenium
 # @subpackage  configuration
 # @author      Magento Core Team <core@magentocommerce.com>
-# @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+# @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
 # @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 #
 ---
@@ -36,13 +36,13 @@ browsers:
          browser: '*googlechrome'
          host: 'localhost'
          port: 4444
-         timeout: 40
+         timeout: 60
     firefox: &firefox
          name: 'Firefox'
          browser: '*chrome'
          host: 'localhost'
          port: 4444
-         timeout: 40
+         timeout: 60
     iexplorer: &iexplorer
          name: 'Internet Explorer'
          browser: '*iexplore'
@@ -111,22 +111,4 @@ applications:
                 uimap_path: 'paypal_developer'
                 login: 'paypal_developer_login'
                 password: 'paypal_developer_password'
-    other_app: &other_app
-        fallbackOrderFixture: 'other_app, default'
-        fallbackOrderHelper: 'Other_app, Core'
-        areas:
-            admin:
-                url: 'http://www.localhost.com/magento_enterprise/admin/'
-                base_page_uimap: 'log_in_to_admin'
-                uimap_path: 'admin'
-                login: 'admin_login'
-                password: 'admin_password'
-            frontend:
-                url: 'http://www.localhost.com/magento_enterprise/'
-                base_page_uimap: 'home_page'
-                uimap_path: 'frontend'
-                login: ''
-                password: ''
-            paypal_sandbox: *paypalSandbox
-            paypal_developer: *paypalDeveloper
     default: *mage

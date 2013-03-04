@@ -21,7 +21,7 @@
 # @package     selenium
 # @subpackage  test-data
 # @author      Magento Core Team <core@magentocommerce.com>
-# @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+# @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
 # @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 #
 ---
@@ -45,13 +45,13 @@ backend_base_tag:
     tag_status: Approved
 
 backend_new_tag:
-    tag_name: tag_name
+    tag_name: tag_name_%randomize%
     tag_status: Approved
     base_popularity: %noValue%
     switch_store: %noValue%
 
 backend_new_tag_with_product:
-    tag_name: tag_name
+    tag_name: tag_name_%randomize%
     tag_status: Approved
     base_popularity: %noValue%
     switch_store: Default Store View

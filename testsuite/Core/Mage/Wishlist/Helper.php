@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  tests
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -55,17 +55,22 @@ class Core_Mage_Wishlist_Helper extends Mage_Selenium_TestCase
      * Adds product to wishlist from the product details page.
      *
      * @param string $productName
-     * @param string $categoryPath
      * @param array $options
      */
-    public function frontAddProductToWishlistFromProductPage($productName, $categoryPath = null, $options = array())
+    public function frontAddProductToWishlistFromProductPage($productName, $options = array())
     {
-        $this->productHelper()->frontOpenProduct($productName, $categoryPath);
+        $this->productHelper()->frontOpenProduct($productName);
         if (!empty($options)) {
             $this->productHelper()->frontFillBuyInfo($options);
         }
         $this->addParameter('productName', $productName);
-        $this->clickControl('link', 'add_to_wishlist');
+        $waitConditions = array($this->getBasicXpathMessagesExcludeCurrent('success'),
+                                $this->_getControlXpath('fieldset', 'log_in_customer',
+                                    $this->getUimapPage('frontend', 'customer_login')));
+        $this->clickControl('link', 'add_to_wishlist', false);
+        $this->waitForElement($waitConditions);
+        $this->addParameter('id', $this->defineIdFromUrl());
+        $this->validatePage();
     }
 
     /**

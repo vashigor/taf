@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  tests
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -102,15 +102,13 @@ class Core_Mage_CheckoutMultipleAddresses_WithRegistration_ShippingMethodsTest e
      * @test
      * @dataProvider shipmentDataProvider
      * @depends preconditionsForTests
-     *
      */
     public function withSimpleProducts($shipment, $testData)
     {
         //Data
         $shippingMethod = $this->loadDataSet('Shipping', 'shipping_' . $shipment);
         $checkoutData = $this->loadDataSet('MultipleAddressesCheckout', 'multiple_with_register',
-                                           array('shipping' => $shippingMethod),
-                                           $testData['products1']);
+            array('shipping' => $shippingMethod), $testData['products1']);
         $shippingSettings = $this->loadDataSet('ShippingMethod', $shipment . '_enable');
         //Setup
         $this->navigate('system_configuration');
@@ -138,14 +136,12 @@ class Core_Mage_CheckoutMultipleAddresses_WithRegistration_ShippingMethodsTest e
      * @test
      * @dataProvider shipmentDataProvider
      * @depends preconditionsForTests
-     *
      */
     public function withSimpleAndVirtualProducts($shipment, $testData)
     {
         $shippingMethod = $this->loadDataSet('Shipping', 'shipping_' . $shipment);
-        $checkoutData = $this->loadDataSet('MultipleAddressesCheckout', 'multiple_with_register',
-                                           array('shipping' => $shippingMethod),
-                                           $testData['products2']);
+        $checkoutData = $this->loadDataSet('MultipleAddressesCheckout', 'multiple_with_register_virtual',
+            array('shipping' => $shippingMethod), $testData['products2']);
         $shippingSettings = $this->loadDataSet('ShippingMethod', $shipment . '_enable');
         //Setup
         $this->navigate('system_configuration');
@@ -169,19 +165,19 @@ class Core_Mage_CheckoutMultipleAddresses_WithRegistration_ShippingMethodsTest e
 
     /**
      * @param array $testData
+     * @param string $dataSet
      * @param string $productTypes
      *
      * @test
      * @dataProvider productTypesProvider
      * @depends preconditionsForTests
      */
-    public function withDhlMethod($productTypes, $testData)
+    public function withDhlMethod($productTypes, $dataSet, $testData)
     {
         //Data
         $shippingMethod = $this->loadDataSet('Shipping', 'shipping_dhl');
-        $checkoutData = $this->loadDataSet('MultipleAddressesCheckout', 'multiple_with_register_france',
-                                           array('shipping' => $shippingMethod),
-                                           $testData[$productTypes]);
+        $checkoutData = $this->loadDataSet('MultipleAddressesCheckout', $dataSet, array('shipping' => $shippingMethod),
+            $testData[$productTypes]);
         $shippingSettings = $this->loadDataSet('ShippingMethod', 'dhl_enable');
         $shippingOrigin = $this->loadDataSet('ShippingSettings', 'shipping_settings_usa');
         $this->navigate('system_configuration');
@@ -195,8 +191,8 @@ class Core_Mage_CheckoutMultipleAddresses_WithRegistration_ShippingMethodsTest e
     public function productTypesProvider()
     {
         return array(
-            array('products1'),
-            array('products2'),
+            array('products1', 'multiple_with_register_france'),
+            array('products2', 'multiple_with_register_france_virtual')
         );
     }
 }

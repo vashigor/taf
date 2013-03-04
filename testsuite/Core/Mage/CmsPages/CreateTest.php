@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  tests
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -39,14 +39,13 @@ class Core_Mage_CmsPages_CreateTest extends Mage_Selenium_TestCase
     {
         $this->loginAdminUser();
         $this->navigate('manage_stores');
-        $this->storeHelper()->createStore('generic_store_view', 'store_view');
+        $this->storeHelper()->createStore('StoreView/generic_store_view', 'store_view');
         $this->assertMessagePresent('success', 'success_saved_store_view');
     }
 
     protected function assertPreconditions()
     {
         $this->loginAdminUser();
-        $this->addParameter('id', '0');
     }
 
     /**
@@ -59,9 +58,9 @@ class Core_Mage_CmsPages_CreateTest extends Mage_Selenium_TestCase
     public function preconditionsForTests()
     {
         //Data
-        $category = $this->loadData('sub_category_required');
-        $product = $this->loadData('simple_product_visible',
-                array('categories' => $category['parent_category'] . '/' . $category['name']));
+        $category = $this->loadDataSet('Category', 'sub_category_required');
+        $product = $this->loadDataSet('Product', 'simple_product_visible',
+            array('categories' => $category['parent_category'] . '/' . $category['name']));
         //Steps
         $this->navigate('manage_categories', false);
         $this->categoryHelper()->checkCategoriesPage();
@@ -74,10 +73,8 @@ class Core_Mage_CmsPages_CreateTest extends Mage_Selenium_TestCase
         //Verifying
         $this->assertMessagePresent('success', 'success_saved_product');
 
-        return array(
-            'category_path' => $product['categories'],
-            'filter_sku' => $product['general_sku'],
-        );
+        return array('category_path' => $product['categories'],
+                     'filter_sku'    => $product['general_sku'],);
     }
 
     /**
@@ -94,7 +91,7 @@ class Core_Mage_CmsPages_CreateTest extends Mage_Selenium_TestCase
     public function withRequiredFields()
     {
         //Data
-        $pageData = $this->loadData('new_cms_page_req');
+        $pageData = $this->loadDataSet('CmsPage', 'new_cms_page_req');
         //Steps
         $this->navigate('manage_cms_pages');
         $this->cmsPagesHelper()->createCmsPage($pageData);
@@ -114,14 +111,14 @@ class Core_Mage_CmsPages_CreateTest extends Mage_Selenium_TestCase
      * <p>Page is created successfully</p>
      *
      * @param array $data
+     *
      * @test
      * @depends preconditionsForTests
-     *
      */
     public function withAllFields($data)
     {
         //Data
-        $pageData = $this->loadData('new_page_all_fields', $data);
+        $pageData = $this->loadDataSet('CmsPage', 'new_page_all_fields', $data);
         //Steps
         $this->navigate('manage_cms_pages');
         $this->cmsPagesHelper()->createCmsPage($pageData);
@@ -145,14 +142,14 @@ class Core_Mage_CmsPages_CreateTest extends Mage_Selenium_TestCase
      * @test
      * @dataProvider withEmptyRequiredFieldsDataProvider
      * @depends withRequiredFields
-     *
      */
     public function withEmptyRequiredFields($fieldName, $fieldType, $messCount)
     {
         //Data
-        $pageData = $this->loadData('new_cms_page_req', array($fieldName => '%noValue%'));
+        $pageData = $this->loadDataSet('CmsPage', 'new_cms_page_req', array($fieldName => '%noValue%'));
         if ($fieldName == 'widget_type') {
-            $this->overrideData('widget_1', array($fieldName => '-- Please Select --'), $pageData);
+            $this->overrideDataByCondition('widget_1', array($fieldName => '-- Please Select --'), $pageData,
+                'byFieldKey');
         }
 
         //Steps
@@ -194,7 +191,6 @@ class Core_Mage_CmsPages_CreateTest extends Mage_Selenium_TestCase
      *
      * @test
      * @depends withRequiredFields
-     *
      */
     public function withExistUrlKey($pageData)
     {
@@ -219,12 +215,11 @@ class Core_Mage_CmsPages_CreateTest extends Mage_Selenium_TestCase
      * @test
      * @dataProvider withWrongUrlKeyDataProvider
      * @depends withRequiredFields
-     *
      */
     public function withWrongUrlKey($urlValue, $messageType)
     {
         //Data
-        $pageData = $this->loadData('new_cms_page_req', array('url_key' => $urlValue));
+        $pageData = $this->loadDataSet('CmsPage', 'new_cms_page_req', array('url_key' => $urlValue));
         //Steps
         $this->navigate('manage_cms_pages');
         $this->cmsPagesHelper()->createCmsPage($pageData);
@@ -258,14 +253,13 @@ class Core_Mage_CmsPages_CreateTest extends Mage_Selenium_TestCase
      * @test
      * @dataProvider withSpecialValueInFieldsDataProvider
      * @depends withRequiredFields
-     *
      */
     public function withSpecialValueInFields($fieldData)
     {
         //Data
-        $pageData = $this->loadData('new_cms_page_req', $fieldData);
-        $search = $this->loadData('search_cms_page',
-                array('filter_url_key' => $pageData['page_information']['url_key']));
+        $pageData = $this->loadDataSet('CmsPage', 'new_cms_page_req', $fieldData);
+        $search = $this->loadDataSet('CmsPage', 'search_cms_page',
+            array('filter_url_key' => $pageData['page_information']['url_key']));
         //Steps
         $this->navigate('manage_cms_pages');
         $this->cmsPagesHelper()->createCmsPage($pageData);

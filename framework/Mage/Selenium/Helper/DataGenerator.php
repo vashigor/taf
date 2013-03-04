@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  Mage_Selenium
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -39,15 +39,13 @@ class Mage_Selenium_Helper_DataGenerator extends Mage_Selenium_Helper_Abstract
      * PCRE classes used for data generation
      * @var array
      */
-    protected $_chars = array(
-        ':alnum:'       => 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
-        ':alpha:'       => 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
-        ':digit:'       => '0123456789',
-        ':lower:'       => 'abcdefghijklmnopqrstuvwxyz',
-        ':upper:'       => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
-        ':punct:'       => '!@#$%^&*()_+=-[]{}\\|";:/?.>,<',
-        'invalid-email' => '()[]\\;:,<>@'
-    );
+    protected $_chars = array(':alnum:'       => 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
+                              ':alpha:'       => 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
+                              ':digit:'       => '01234567890123456789012345678901234567890123456789',
+                              ':lower:'       => 'abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz',
+                              ':upper:'       => 'ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZ',
+                              ':punct:'       => '!@#$%^&*()_+=-[]{}\\|";:/?.>,<',
+                              'invalid-email' => '()[]\\;:,<>@');
 
     /**
      * Email domain used for auto generated values
@@ -199,6 +197,7 @@ class Mage_Selenium_Helper_DataGenerator extends Mage_Selenium_Helper_Abstract
         $string = $prefix;
         if (!empty($chars)) {
             $charsLength = strlen($chars);
+            $chars = str_shuffle($chars);
             mt_srand((double)microtime() * 100000);
             for ($i = 0; $i < $length; $i++) {
                 $string .= $chars[mt_rand(0, $charsLength - 1)];

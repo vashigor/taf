@@ -21,7 +21,7 @@
 # @package     selenium
 # @subpackage  test-data
 # @author      Magento Core Team <core@magentocommerce.com>
-# @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+# @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
 # @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 #
 ---
@@ -138,8 +138,22 @@ multiple_login: &login
 #                    Order Data with Register Customer                         #
 #                                                                              #
 ################################################################################
+products_to_add_with_qty: &products_to_add_with_qty
+    product_1:
+        product_name: %product_1%
+        options:
+            option_1:
+                options_to_choose:
+                    product_qty: 2
+    product_2:
+        product_name: %product_2%
+        options:
+            option_1:
+                options_to_choose:
+                    product_qty: 2
+
 multiple_with_register:
-    products_to_add:
+    products_to_add: &products_to_add
         product_1:
             product_name: %product_1%
             options: %option_product_1%
@@ -147,7 +161,7 @@ multiple_with_register:
             product_name: %product_2%
             options: %option_product_2%
     checkout_as_customer: *register
-    general_customer_data:
+    general_customer_data: &general_customer_data_register
         first_name: %randomize%_first_name
         last_name: %randomize%_last_name
         email: multiple_checkout_%randomize%@unknown-domain.com
@@ -164,7 +178,7 @@ multiple_with_register:
         password: 123123q
         password_confirmation: 123123q
     shipping_data: &shipping_data
-        address_data_1:
+        address_data_1: &shipping_address_data_1
             address:
                 first_name: John
                 last_name: Doe
@@ -181,10 +195,11 @@ multiple_with_register:
             products:
                 product_1:
                     product_name: %product_1%
-                    product_qty: 2
+                    product_qty: 1
             shipping:
                 shipping_service: Flat Rate
                 shipping_method: Fixed
+            gift_options: %gift_options_address1%
         address_data_2:
             address:
                 first_name: Chuck
@@ -202,10 +217,11 @@ multiple_with_register:
             products:
                 product_1:
                     product_name: %product_2%
-                    product_qty: 2
+                    product_qty: 1
             shipping:
                 shipping_service: Flat Rate
                 shipping_method: Fixed
+            gift_options: %gift_options_address2%
     payment_data: &payment_data
         billing_address:
                 first_name: Charlie
@@ -220,83 +236,82 @@ multiple_with_register:
                 region: %noValue%
                 zip_code: 90064
                 country: United States
+                set_default_billing_address: Yes
+                set_default_shipping_address: Yes
         payment:
             payment_method: Check / Money order
 
-multiple_with_register_france:
-    products_to_add:
-        product_1:
-            product_name: %product_1%
-            options: %option_product_1%
-        product_2:
-            product_name: %product_2%
-            options: %option_product_2%
+multiple_with_register_virtual:
+    products_to_add: *products_to_add
     checkout_as_customer: *register
-    general_customer_data:
-        first_name: %randomize%_first_name
-        last_name: %randomize%_last_name
-        email: multiple_checkout_%randomize%@unknown-domain.com
-        sign_up_newsletter: No
-        company: %noValue%
-        telephone: 732-757-2923
-        street_address_1: street_address_%randomize%
-        street_address_2: suite %randomize%
-        city: Los Angelos
-        state: California
-        region: %noValue%
-        zip_code: 90064
-        country: United States
-        password: 123123q
-        password_confirmation: 123123q
+    general_customer_data: *general_customer_data_register
+    shipping_data: &shipping_data_virtual
+        address_data_1: *shipping_address_data_1
+        address_data_2:
+            products:
+                product_1:
+                    product_name: %product_2%
+                    product_qty: 1
+            gift_options: %gift_options_address2%
+    payment_data: *payment_data
+
+multiple_with_register_france:
+    products_to_add: *products_to_add
+    checkout_as_customer: *register
+    general_customer_data: *general_customer_data_register
     shipping_data: &shipping_data_france
         address_data_1:
             address: *shipping_france_1
             products:
                 product_1:
                     product_name: %product_1%
-                    product_qty: 2
+                    product_qty: 1
             shipping:
                 shipping_service: Flat Rate
                 shipping_method: Fixed
+            gift_options: %gift_options_address1%
         address_data_2:
             address: *shipping_france_2
             products:
                 product_1:
                     product_name: %product_2%
-                    product_qty: 2
+                    product_qty: 1
             shipping:
                 shipping_service: Flat Rate
                 shipping_method: Fixed
-    payment_data:
-        billing_address:
-                first_name: Charlie
-                last_name: Pane
-                company: %noValue%
-                telephone: 732-757-2923
-                fax: %noValue%
-                street_address_1: street_address_3
-                street_address_2: suite 3
-                city: Los Angelos
-                state: California
-                region: %noValue%
-                zip_code: 90064
-                country: United States
-        payment:
-            payment_method: Check / Money order
+            gift_options: %gift_options_address2%
+    payment_data: *payment_data
+
+multiple_with_register_france_virtual:
+    products_to_add: *products_to_add
+    checkout_as_customer: *register
+    general_customer_data: *general_customer_data_register
+    shipping_data: &shipping_data_france_virtual
+        address_data_1:
+            address: *shipping_france_1
+            products:
+                product_1:
+                    product_name: %product_1%
+                    product_qty: 1
+            shipping:
+                shipping_service: Flat Rate
+                shipping_method: Fixed
+            gift_options: %gift_options_address1%
+        address_data_2:
+            products:
+                product_1:
+                    product_name: %product_2%
+                    product_qty: 1
+            gift_options: %gift_options_address2%
+    payment_data: *payment_data
 ################################################################################
 #                                                                              #
 #               Order Data for Signed in  Customer                             #
 #                                                                              #
 ################################################################################
 multiple_with_signed_in:
-    products_to_add:
-        product_1:
-            product_name: %product_1%
-            options: %option_product_1%
-        product_2:
-            product_name: %product_2%
-            options: %option_product_2%
-    general_customer_data:
+    products_to_add: *products_to_add
+    general_customer_data: &general_customer_data_signed_in
         first_name: %randomize%_first_name
         last_name: %randomize%_last_name
         company: %noValue%
@@ -312,28 +327,22 @@ multiple_with_signed_in:
     shipping_data: *shipping_data
     payment_data: *payment_data
 
+multiple_with_signed_in_virtual:
+    products_to_add: *products_to_add
+    general_customer_data: *general_customer_data_signed_in
+    shipping_data: *shipping_data_virtual
+    payment_data: *payment_data
+
 multiple_with_signed_in_france:
-    products_to_add:
-        product_1:
-            product_name: %product_1%
-            options: %option_product_1%
-        product_2:
-            product_name: %product_2%
-            options: %option_product_2%
-    general_customer_data:
-        first_name: %randomize%_first_name
-        last_name: %randomize%_last_name
-        company: %noValue%
-        telephone: 732-757-2923
-        fax: %noValue%
-        street_address_1: street_address_%randomize%
-        street_address_2: suite %randomize%
-        city: Los Angelos
-        state: California
-        region: %noValue%
-        zip_code: 90064
-        country: United States
+    products_to_add: *products_to_add
+    general_customer_data: *general_customer_data_signed_in
     shipping_data: *shipping_data_france
+    payment_data: *payment_data
+
+multiple_with_signed_in_france_virtual:
+    products_to_add: *products_to_add
+    general_customer_data: *general_customer_data_signed_in
+    shipping_data: *shipping_data_france_virtual
     payment_data: *payment_data
 ################################################################################
 #                                                                              #
@@ -341,15 +350,9 @@ multiple_with_signed_in_france:
 #                                                                              #
 ################################################################################
 multiple_with_login:
-    products_to_add:
-        product_1:
-            product_name: %product_1%
-            options: %option_product_1%
-        product_2:
-            product_name: %product_2%
-            options: %option_product_2%
+    products_to_add: *products_to_add
     checkout_as_customer: *login
-    general_customer_data:
+    general_customer_data: &general_customer_data_login
         first_name: %randomize%_first_name
         last_name: %randomize%_last_name
         company: %noValue%
@@ -365,27 +368,23 @@ multiple_with_login:
     shipping_data: *shipping_data
     payment_data: *payment_data
 
-multiple_with_login_france:
-    products_to_add:
-        product_1:
-            product_name: %product_1%
-            options: %option_product_1%
-        product_2:
-            product_name: %product_2%
-            options: %option_product_2%
+multiple_with_login_virtual:
+    products_to_add: *products_to_add
     checkout_as_customer: *login
-    general_customer_data:
-        first_name: %randomize%_first_name
-        last_name: %randomize%_last_name
-        company: %noValue%
-        telephone: 732-757-2923
-        fax: %noValue%
-        street_address_1: street_address_%randomize%
-        street_address_2: suite %randomize%
-        city: Los Angelos
-        state: California
-        region: %noValue%
-        zip_code: 90064
-        country: United States
+    general_customer_data: *general_customer_data_login
+    shipping_data: *shipping_data_virtual
+    payment_data: *payment_data
+
+multiple_with_login_france:
+    products_to_add: *products_to_add
+    checkout_as_customer: *login
+    general_customer_data: *general_customer_data_login
     shipping_data: *shipping_data_france
+    payment_data: *payment_data
+
+multiple_with_login_france_virtual:
+    products_to_add: *products_to_add
+    checkout_as_customer: *login
+    general_customer_data: *general_customer_data_login
+    shipping_data: *shipping_data_france_virtual
     payment_data: *payment_data

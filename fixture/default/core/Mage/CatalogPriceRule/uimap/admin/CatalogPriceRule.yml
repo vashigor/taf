@@ -20,7 +20,7 @@
 # @package     selenium
 # @subpackage  uimaps
 # @author      Magento Core Team <core@magentocommerce.com>
-# @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+# @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
 # @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 #
 ---
@@ -51,6 +51,7 @@ manage_catalog_price_rules:
                             filter_date_expired_to: //input[@name='to_date[to]']
                         pageelements:
                             grid_head: //div[@id='promo_catalog_grid']//tr[@class='headings']
+                            rule_grid: //*[@id='promo_catalog_grid_table']
                             price_rule: //table[@id]/tbody/tr
         buttons:
             add_new_rule: //button[span='Add New Rule']
@@ -66,7 +67,6 @@ manage_catalog_price_rules:
             invalid_sub_discount_amount: "//div[@id='advice-validate-not-negative-number-rule_sub_discount_amount' and not(contains(@style,'display: none;'))]"
             empty_required_field: "//div[@id='advice-required-entry-%fieldId%' and not(contains(@style,'display: none;'))]"
             confirmation_for_delete: Are you sure you want to do this?
-            no_price_rules: //*[@id='promo_catalog_grid_table']//tr[td='No records found.']
 
 add_new_rule:
     mca: promo_catalog/new/
@@ -105,6 +105,8 @@ add_new_rule:
                                     dropdowns:
                                         select_conditions_aggregator: //select[@name='rule[conditions][1][aggregator]']
                                         select_conditions_value: //select[@name='rule[conditions][1][value]']
+                                    pageelements:
+                                        apply_for_rule_condition_row: /ul/li
                             -
                                 rule_condition_item:
                                     xpath: //ul[@id='conditions__%condition%__children']
@@ -114,11 +116,16 @@ add_new_rule:
                                         condition_value: //ul[@id='conditions__%condition%__children']/li[%key%]/span[contains(.//@name,'value')]/a
                                         condition_aggregator: //ul[@id='conditions__%condition%__children']/li[%key%]/span[.//select[contains(@name,'aggregator')]]/a
                                         condition_attribute: //ul[@id='conditions__%condition%__children']/li[%key%]/span[.//select[contains(@name,'attribute')]]/a
-                                        open_chosser: //ul[@id='conditions__%condition%__children']/li[%key%]//img[contains(@src,'rule_chooser_trigger')]
+                                        open_chooser: //ul[@id='conditions__%condition%__children']/li[%key%]//img[contains(@src,'rule_chooser_trigger')]
                                         confirm_choice: //ul[@id='conditions__%condition%__children']/li[%key%]//img[contains(@src,'rule_component_apply')]
-                                        root_category: //ul/div/li[contains(div/a/span,'%rootName%')]
-                                        sub_category: //*[@id='%parentCategoryId%']/ancestor::li/ul/li[contains(div/a/span,'%subName%') and not(div/a/span/@id='%parentCategoryId%')]
-                                        expand_category: //*[@id='%parentCategoryId%']/ancestor::div/img[contains(@class,'x-tree-elbow-plus') or contains(@class,'x-tree-elbow-end-plus')]
+                                        rule_condition_item_root_category: //ul/div/li[contains(div/a/span,'%rootName%')]
+                                        rule_condition_item_sub_category: //*[@id='%parentCategoryId%']/ancestor::li/ul/li[contains(div/a/span,'%subName%') and not(div/a/span/@id='%parentCategoryId%')]
+                                        rule_condition_item_expand_category: //*[@id='%parentCategoryId%']/ancestor::div/img[contains(@class,'x-tree-elbow-plus') or contains(@class,'x-tree-elbow-end-plus')]
+                                    pageelements:
+                                        rule_condition_item_category_text: %categoryXpath%/div/a/span
+                                        rule_condition_item_category_index_text: %categoryXpath%[%index%]/div/a/span
+                                        rule_condition_item_category_index_link: %categoryXpath%[%index%]/div/a
+                                        rule_condition_item_row: /li
                                     dropdowns:
                                         select_condition_new_child: /li[%key%]//span[contains(.//@src,'rule_component_add')]//select
                                         select_condition_operator: /li[%key%]/span[contains(.//@name,'operator')]//select

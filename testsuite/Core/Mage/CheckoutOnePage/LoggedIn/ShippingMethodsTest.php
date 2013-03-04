@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  tests
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -68,20 +68,25 @@ class Core_Mage_CheckoutOnePage_LoggedIn_ShippingMethodsTest extends Mage_Seleni
     /**
      * <p>Creating Simple product</p>
      *
-     * @return string
+     * @return array
      * @test
      */
     public function preconditionsForTests()
     {
         //Data
         $simple = $this->loadDataSet('Product', 'simple_product_visible');
-        //Steps
+        $userData = $this->loadDataSet('Customers', 'generic_customer_account');
+
+        //Steps and Verification
         $this->navigate('manage_products');
         $this->productHelper()->createProduct($simple);
-        //Verification
         $this->assertMessagePresent('success', 'success_saved_product');
+        $this->navigate('manage_customers');
+        $this->customerHelper()->createCustomer($userData);
+        $this->assertMessagePresent('success', 'success_saved_customer');
 
-        return $simple['general_name'];
+        return array('simple' => $simple['general_name'],
+                     'user'   => array('email' => $userData['email'], 'password' => $userData['password']));
     }
 
     /**
@@ -109,22 +114,19 @@ class Core_Mage_CheckoutOnePage_LoggedIn_ShippingMethodsTest extends Mage_Seleni
      * @param string $shipping
      * @param string $shippingOrigin
      * @param string $shippingDestination
-     * @param string $simpleSku
+     * @param array $testData
      *
      * @test
      * @dataProvider shipmentDataProvider
      * @depends preconditionsForTests
-     *
      */
-    public function differentShippingMethods($shipping, $shippingOrigin, $shippingDestination, $simpleSku)
+    public function differentShippingMethods($shipping, $shippingOrigin, $shippingDestination, $testData)
     {
         //Data
-        $userData = $this->loadDataSet('Customers', 'customer_account_register');
         $shippingMethod = $this->loadDataSet('ShippingMethod', $shipping . '_enable');
         $shippingData = $this->loadDataSet('Shipping', 'shipping_' . $shipping);
         $checkoutData = $this->loadDataSet('OnePageCheckout', 'signedin_flatrate_checkmoney_' . $shippingDestination,
-                                           array('general_name' => $simpleSku,
-                                                'shipping_data' => $shippingData));
+            array('general_name' => $testData['simple'], 'shipping_data' => $shippingData));
         //Steps
         $this->navigate('system_configuration');
         if ($shippingOrigin) {
@@ -132,12 +134,7 @@ class Core_Mage_CheckoutOnePage_LoggedIn_ShippingMethodsTest extends Mage_Seleni
             $this->systemConfigurationHelper()->configure($config);
         }
         $this->systemConfigurationHelper()->configure($shippingMethod);
-        $this->logoutCustomer();
-        $this->navigate('customer_login');
-        $this->customerHelper()->registerCustomer($userData);
-        //Verifying
-        $this->assertMessagePresent('success', 'success_registration');
-        //Steps
+        $this->customerHelper()->frontLoginCustomer($testData['user']);
         $this->checkoutOnePageHelper()->frontCreateCheckout($checkoutData);
         //Verification
         $this->assertMessagePresent('success', 'success_checkout');

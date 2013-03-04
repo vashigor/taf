@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  tests
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -52,8 +52,8 @@ class Core_Mage_Rating_DeleteTest extends Mage_Selenium_TestCase
     public function preconditionsForTests()
     {
         //Data
-        $simpleData = $this->loadData('simple_product_visible');
-        $storeView = $this->loadData('generic_store_view');
+        $simpleData = $this->loadDataSet('Product', 'simple_product_visible');
+        $storeView = $this->loadDataSet('StoreView', 'generic_store_view');
         //Steps
         $this->navigate('manage_stores');
         $this->storeHelper()->createStore($storeView, 'store_view');
@@ -65,7 +65,8 @@ class Core_Mage_Rating_DeleteTest extends Mage_Selenium_TestCase
         //Verification
         $this->assertMessagePresent('success', 'success_saved_product');
 
-        return array('store' => $storeView['store_view_name'], 'sku' => $simpleData['general_sku']);
+        return array('store' => $storeView['store_view_name'],
+                     'sku'   => $simpleData['general_sku']);
     }
 
     /**
@@ -83,19 +84,19 @@ class Core_Mage_Rating_DeleteTest extends Mage_Selenium_TestCase
      *
      * @test
      * @depends preconditionsForTests
-     *
      */
     public function deleteRatingUsedInReview($data)
     {
-        $rating = $this->loadData('default_rating', array('visible_in' => $data['store']));
-        $review = $this->loadData('review_required_with_rating',
-                array('rating_name' => $rating['default_value'],
-                      'visible_in'  => $data['store'],
-                      'filter_sku'  => $data['sku']));
-        $searchRating = $this->loadData('search_rating',
-                array('filter_rating_name' => $rating['default_value']));
-        $searchReview = $this->loadData('search_review_admin',
-                array('filter_nickname' => $review['nickname'], 'filter_product_sku' => $data['sku']));
+        $rating = $this->loadDataSet('ReviewAndRating', 'default_rating', array('visible_in' => $data['store']));
+        $review = $this->loadDataSet('ReviewAndRating', 'review_required_with_rating',
+            array('rating_name' => $rating['default_value'],
+                  'visible_in'  => $data['store'],
+                  'filter_sku'  => $data['sku']));
+        $searchRating = $this->loadDataSet('ReviewAndRating', 'search_rating',
+            array('filter_rating_name' => $rating['default_value']));
+        $searchReview = $this->loadDataSet('ReviewAndRating', 'search_review_admin',
+            array('filter_nickname'    => $review['nickname'],
+                  'filter_product_sku' => $data['sku']));
         //Steps
         $this->navigate('manage_ratings');
         $this->ratingHelper()->createRating($rating);
@@ -132,8 +133,9 @@ class Core_Mage_Rating_DeleteTest extends Mage_Selenium_TestCase
      */
     public function deleteRatingNotUsedInReview()
     {
-        $rating = $this->loadData('rating_required_fields');
-        $search = $this->loadData('search_rating', array('filter_rating_name' => $rating['default_value']));
+        $rating = $this->loadDataSet('ReviewAndRating', 'rating_required_fields');
+        $search = $this->loadDataSet('ReviewAndRating', 'search_rating',
+            array('filter_rating_name' => $rating['default_value']));
         //Steps
         $this->navigate('manage_ratings');
         $this->ratingHelper()->createRating($rating);

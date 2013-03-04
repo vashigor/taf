@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  tests
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -43,9 +43,10 @@ class Core_Mage_CmsWidgets_Helper extends Mage_Selenium_TestCase
     public function createWidget($widgetData)
     {
         if (is_string($widgetData)) {
-            $widgetData = $this->loadData($widgetData);
+            $elements = explode('/', $widgetData);
+            $fileName = (count($elements) > 1) ? array_shift($elements) : '';
+            $widgetData = $this->loadDataSet($fileName, implode('/', $elements));
         }
-        $widgetData = $this->arrayEmptyClear($widgetData);
         $settings = (isset($widgetData['settings'])) ? $widgetData['settings'] : array();
         $frontProperties = (isset($widgetData['frontend_properties'])) ? $widgetData['frontend_properties'] : array();
         $layoutUpdates = (isset($widgetData['layout_updates'])) ? $widgetData['layout_updates'] : array();
@@ -54,7 +55,8 @@ class Core_Mage_CmsWidgets_Helper extends Mage_Selenium_TestCase
         $this->clickButton('add_new_widget_instance');
         $this->fillWidgetSettings($settings);
         if (array_key_exists('assign_to_store_views', $frontProperties)
-                && !$this->controlIsPresent('multiselect', 'assign_to_store_views')) {
+            && !$this->controlIsPresent('multiselect', 'assign_to_store_views')
+        ) {
             unset($frontProperties['assign_to_store_views']);
         }
         $this->fillForm($frontProperties, 'frontend_properties');
@@ -76,8 +78,9 @@ class Core_Mage_CmsWidgets_Helper extends Mage_Selenium_TestCase
     public function fillWidgetSettings(array $settings)
     {
         if ($settings) {
-            $xpath = $this->_getControlXpath('dropdown', 'type');
-            $type = $this->getValue($xpath . '/option[text()="' . $settings['type'] . '"]');
+            $this->addParameter('dropdownXpath', $this->_getControlXpath('dropdown', 'type'));
+            $this->addParameter('optionText', $settings['type']);
+            $type = $this->getControlAttribute('pageelement', 'dropdown_option_text', 'value');
             $this->addParameter('type', str_replace('/', '-', $type));
             $packageTheme = array_map('trim', (explode('/', $settings['design_package_theme'])));
             $this->addParameter('package', $packageTheme[0]);
@@ -85,9 +88,7 @@ class Core_Mage_CmsWidgets_Helper extends Mage_Selenium_TestCase
             $this->fillForm($settings);
         }
         $this->clickButton('continue', false);
-        if ($this->isAlertPresent()) {
-            $this->fail($this->getAlert());
-        }
+        $this->assertTrue($this->checkoutOnePageHelper()->verifyNotPresetAlert());
         $this->waitForPageToLoad($this->_browserTimeoutPeriod);
         $this->validatePage('add_widget_options');
     }
@@ -102,13 +103,13 @@ class Core_Mage_CmsWidgets_Helper extends Mage_Selenium_TestCase
         $count = 0;
         foreach ($layoutData as $value) {
             $this->clickButton('add_layout_update', false);
-            $this->addParameter('index', $count);
-            $xpath = $this->_getControlXpath('dropdown', 'select_display_on');
-            $layoutName = $this->getValue($xpath . '//option[text()="' . $value['select_display_on'] . '"]');
+            $this->addParameter('layoutIndex', $count);
+            $this->addParameter('dropdownXpath', $this->_getControlXpath('dropdown', 'select_display_on'));
+            $this->addParameter('optionText', $value['select_display_on']);
+            $layoutName = $this->getControlAttribute('pageelement', 'dropdown_option_text', 'value');
             $this->addParameter('layout', $layoutName);
             $this->addParameter('widgetParam', "//div[@id='" . $layoutName . '_ids_' . $count++ . "']");
             $this->fillForm($value);
-            $xpathOptionsAll = $this->_getControlXpath('radiobutton', 'all_categories_products_radio');
             if (array_key_exists('choose_options', $value)) {
                 if (preg_match('/anchor_categories/', $layoutName)) {
                     $this->chooseLayoutOptions($value['choose_options'], 'categories');
@@ -116,8 +117,8 @@ class Core_Mage_CmsWidgets_Helper extends Mage_Selenium_TestCase
                     $this->chooseLayoutOptions($value['choose_options']);
                 }
             } else {
-                if ($this->isElementPresent($xpathOptionsAll)) {
-                    $this->check($xpathOptionsAll);
+                if ($this->controlIsPresent('radiobutton', 'all_categories_products_radio')) {
+                    $this->fillRadiobutton('all_categories_products_radio', 'Yes');
                 }
             }
         }
@@ -169,15 +170,15 @@ class Core_Mage_CmsWidgets_Helper extends Mage_Selenium_TestCase
      */
     public function openWidget(array $searchWidget)
     {
-        $searchWidget = $this->arrayEmptyClear($searchWidget);
         $xpathTR = $this->search($searchWidget, 'cms_widgets_grid');
         $this->assertNotEquals(null, $xpathTR, 'Widget is not found');
         $cellId = $this->getColumnIdByName('Widget Instance Title');
-        $this->addParameter('widgetName', $this->getText($xpathTR . '//td[' . $cellId . ']'));
+        $this->addParameter('tableLineXpath', $xpathTR);
+        $this->addParameter('cellIndex', $cellId);
+        $param = $this->getControlAttribute('pageelement', 'table_line_cell_index', 'text');
+        $this->addParameter('elementTitle', $param);
         $this->addParameter('id', $this->defineIdFromTitle($xpathTR));
-        $this->click($xpathTR);
-        $this->waitForPageToLoad($this->_browserTimeoutPeriod);
-        $this->validatePage();
+        $this->clickControl('pageelement', 'table_line_cell_index');
     }
 
     /**

@@ -21,7 +21,7 @@
 # @package     selenium
 # @subpackage  uimaps
 # @author      Magento Core Team <core@magentocommerce.com>
-# @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+# @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
 # @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 #
 ---
@@ -222,6 +222,7 @@ create_tax_rate:
                             tax_title: //td[%storeNumber%]/input
                         pageelements:
                             tax_title_header: //table[@class='form-list']//tbody/tr[@class='dynamic-grid']/th
+                            tax_title_header_index: //table[@class='form-list']//tbody/tr[@class='dynamic-grid']/th[%index%]
         buttons:
             back: //button[span='Back']
             reset: //button[span='Reset']
@@ -319,6 +320,7 @@ manage_tax_rule:
                         pageelements:
                             grid_head: //*[@id='taxRuleGrid_table']/thead/tr[@class='headings']
                             rules_table: //*[@id='taxRuleGrid_table']/tbody
+                            rule_line: //*[@id='taxRuleGrid_table']/tbody//tr[@title]
         buttons:
             add_rule: //button[span='Add New Tax Rule']
         messages:

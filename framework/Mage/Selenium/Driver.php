@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  Mage_Selenium
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -42,21 +42,20 @@ class Mage_Selenium_Driver extends PHPUnit_Extensions_SeleniumTestCase_Driver
      */
     protected $_logHandle = null;
 
-    /**
-     * Stop browser session
-     * @return mixed
-     */
     public function stop()
     {
-        $traceFunctionNames = array();
-        foreach (debug_backtrace() as $line) {
-            $traceFunctionNames[] = $line['function'];
+    }
+
+    /**
+     * Stop browser session
+     */
+    public function stopBrowserSession()
+    {
+        if (!isset($this->sessionId)) {
+            return;
         }
-        if (in_array('__destruct', $traceFunctionNames)) {
-            parent::stop();
-        } elseif (!$this->testCase->frameworkConfig['shareSession'] && !in_array('stopSession', $traceFunctionNames)) {
-            parent::stop();
-        }
+        $this->doCommand('testComplete');
+        $this->sessionId = NULL;
     }
 
     /**
@@ -65,14 +64,15 @@ class Mage_Selenium_Driver extends PHPUnit_Extensions_SeleniumTestCase_Driver
      *
      * @param string $command Command for send to Selenium RC server
      * @param array $arguments Array of arguments to command
+     * @param array $namedArguments
      *
-     * @return string
      * @throws Exception
+     * @return string
      */
-    protected function doCommand($command, array $arguments = array())
+    protected function doCommand($command, array $arguments = array(), array $namedArguments = array())
     {
         try {
-            $response = parent::doCommand($command, $arguments);
+            $response = parent::doCommand($command, $arguments, $namedArguments);
             // Add command logging
             if (!empty($this->_logHandle)) {
                 fputs($this->_logHandle, self::udate('H:i:s.u') . "\n");
@@ -112,13 +112,8 @@ class Mage_Selenium_Driver extends PHPUnit_Extensions_SeleniumTestCase_Driver
      */
     public function getBrowserSettings()
     {
-        return array(
-            'name'           => $this->name,
-            'browser'        => $this->browser,
-            'host'           => $this->host,
-            'port'           => $this->port,
-            'timeout'        => $this->seleniumTimeout,
-        );
+        return array('timeout' => $this->seleniumTimeout, 'name' => $this->name, 'browser' => $this->browser,
+                     'host'    => $this->host, 'port' => $this->port);
     }
 
     /**

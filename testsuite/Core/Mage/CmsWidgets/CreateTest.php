@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  tests
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -38,93 +38,35 @@ class Core_Mage_CmsWidgets_CreateTest extends Mage_Selenium_TestCase
     protected function assertPreconditions()
     {
         $this->loginAdminUser();
-        $this->addParameter('id', '0');
     }
 
     /**
-     * <p>Preconditions</p>
-     * <p>Creates Category to use during tests</p>
-     * @test
-     * @return string
-     */
-    public function createCategory()
-    {
-        //Data
-        $categoryData = $this->loadData('sub_category_required');
-        //Steps
-        $this->navigate('manage_categories', false);
-        $this->categoryHelper()->checkCategoriesPage();
-        $this->categoryHelper()->createCategory($categoryData);
-        //Verification
-        $this->assertMessagePresent('success', 'success_saved_category');
-        $this->categoryHelper()->checkCategoriesPage();
-
-        return $categoryData['parent_category'] . '/' . $categoryData['name'];
-    }
-
-    /**
-     * <p>Preconditions</p>
-     * <p>Creates Attribute (dropdown) to use during tests</p>
-     * @test
      * @return array
-     */
-    public function createAttribute()
-    {
-        $attrData = $this->loadData('product_attribute_dropdown_with_options', null,
-                                    array('admin_title', 'attribute_code'));
-        $associatedAttributes = $this->loadData('associated_attributes',
-                                                array('General' => $attrData['attribute_code']));
-        $this->navigate('manage_attributes');
-        $this->productAttributeHelper()->createAttribute($attrData);
-        $this->assertMessagePresent('success', 'success_saved_attribute');
-        $this->navigate('manage_attribute_sets');
-        $this->attributeSetHelper()->openAttributeSet();
-        $this->attributeSetHelper()->addAttributeToSet($associatedAttributes);
-        $this->saveForm('save_attribute_set');
-        $this->assertMessagePresent('success', 'success_attribute_set_saved');
-
-        return $attrData;
-    }
-
-    /**
-     * Create required products for testing
-     * @depends createCategory
-     * @depends createAttribute
      * @test
-     *
-     * @param $category
-     * @param $attrData
-     * @return array
      */
-    public function createProducts($category, $attrData)
+    public function preconditionsForTests()
     {
-        $products = array();
-        $productTypes = array('simple',
-                              'grouped',
-                              'configurable',
-                              'virtual',
-                              'bundle',
-                              'downloadable');
-        $this->navigate('manage_products');
-        foreach ($productTypes as $productType) {
-            //Data
-            if ($productType == 'configurable') {
-                $productData = $this->loadData($productType . '_product_required',
-                                               array('configurable_attribute_title' => $attrData['admin_title'],
-                                                    'categories'                    => $category),
-                                               array('general_sku', 'general_name'));
-            } else {
-                $productData = $this->loadData($productType . '_product_required', array('categories' => $category),
-                                               array('general_name', 'general_sku'));
-            }
-            //Steps
-            $this->productHelper()->createProduct($productData, $productType);
-            //Verifying
-            $this->assertMessagePresent('success', 'success_saved_product');
-            $products['sku'][$productType] = $productData['general_sku'];
-            $products['name'][$productType] = $productData['general_name'];
-        }
-        return $products;
+        $productData = $this->productHelper()->createConfigurableProduct(true);
+        $categoryPath = $productData['category']['path'];
+        $bundle = $this->loadDataSet('SalesOrder', 'fixed_bundle_for_order', array('categories' => $categoryPath),
+            array('add_product_1' => $productData['simple']['product_sku'],
+                  'add_product_2' => $productData['virtual']['product_sku']));
+        $grouped = $this->loadDataSet('SalesOrder', 'grouped_product_for_order', array('categories' => $categoryPath),
+            array('associated_1' => $productData['simple']['product_sku'],
+                  'associated_2' => $productData['virtual']['product_sku'],
+                  'associated_3' => $productData['downloadable']['product_sku']));
+        $this->productHelper()->createProduct($bundle, 'bundle');
+        $this->assertMessagePresent('success', 'success_saved_product');
+        $this->productHelper()->createProduct($grouped, 'grouped');
+        $this->assertMessagePresent('success', 'success_saved_product');
+
+        return array('category' => array('category_path' => $productData['category']['path']),
+                     'products' => array('product_1' => $productData['simple']['product_sku'],
+                                         'product_2' => $grouped['general_sku'],
+                                         'product_3' => $productData['configurable']['product_sku'],
+                                         'product_4' => $productData['virtual']['product_sku'],
+                                         'product_5' => $bundle['general_sku'],
+                                         'product_6' => $productData['downloadable']['product_sku']));
     }
 
     /**
@@ -136,30 +78,17 @@ class Core_Mage_CmsWidgets_CreateTest extends Mage_Selenium_TestCase
      * <p>Widgets are created successfully</p>
      *
      * @param string $dataWidgetType
-     * @param string $category
-     * @param array $products
+     * @param array $testData
      *
      * @test
      * @dataProvider widgetTypesDataProvider
-     * @depends createCategory
-     * @depends createProducts
-     *
+     * @depends preconditionsForTests
      */
-    public function createAllTypesOfWidgetsAllFields($dataWidgetType, $category, $products)
+    public function createAllTypesOfWidgetsAllFields($dataWidgetType, $testData)
     {
         //Data
-        $temp['filter_sku'] = $products['sku']['simple'];
-        $temp['category_path'] = $category;
-        $widgetData = $this->loadData($dataWidgetType . '_widget', $temp, 'widget_instance_title');
-        $i = 1;
-        foreach ($products['sku'] as $value) {
-            $widgetData['layout_updates']['layout_3']['choose_options']['product_' . $i++]['filter_sku'] = $value;
-        }
-        $i = 1;
-        foreach ($products['sku'] as $value) {
-            $y = $i + 3;
-            $widgetData['layout_updates']['layout_' . $y]['choose_options']['product_' . $i++]['filter_sku'] = $value;
-        }
+        $widgetData =
+            $this->loadDataSet('CmsWidget', $dataWidgetType . '_widget', $testData['category'], $testData['products']);
         //Steps
         $this->navigate('manage_cms_widgets');
         $this->cmsWidgetsHelper()->createWidget($widgetData);
@@ -190,39 +119,28 @@ class Core_Mage_CmsWidgets_CreateTest extends Mage_Selenium_TestCase
      * <p>Widgets are created successfully</p>
      *
      * @param string $dataWidgetType
-     * @param string $category
-     * @param array $products
+     * @param array $testData
      *
      * @test
-     * @dataProvider widgetTypesReqDataProvider
-     * @depends createCategory
-     * @depends createProducts
+     * @dataProvider widgetTypesDataProvider
+     * @depends preconditionsForTests
      */
-    public function createAllTypesOfWidgetsReqFields($dataWidgetType, $category, $products)
+    public function createAllTypesOfWidgetsReqFields($dataWidgetType, $testData)
     {
         //Data
-        $temp['filter_sku'] = $products['sku']['simple'];
-        $temp['category_path'] = $category;
-        $widgetData = $this->loadData($dataWidgetType . '_widget_req', $temp, 'widget_instance_title');
+        $override = array();
+        if ($dataWidgetType == 'catalog_product_link') {
+            $override = array('filter_sku'    => $testData['products']['product_3'],
+                              'category_path' => $testData['category']['category_path']);
+        } elseif ($dataWidgetType == 'catalog_category_link') {
+            $override = array('category_path' => $testData['category']['category_path']);
+        }
+        $widgetData = $this->loadDataSet('CmsWidget', $dataWidgetType . '_widget_req', $override);
         //Steps
         $this->navigate('manage_cms_widgets');
         $this->cmsWidgetsHelper()->createWidget($widgetData);
         //Verifying
         $this->assertMessagePresent('success', 'successfully_saved_widget');
-    }
-
-    public function widgetTypesReqDataProvider()
-    {
-        return array(
-            array('cms_page_link'),
-            array('cms_static_block'),
-            array('catalog_category_link'),
-            array('catalog_new_products_list'),
-            array('catalog_product_link'),
-            array('orders_and_returns'),
-            array('recently_compared_products'),
-            array('recently_viewed_products')
-        );
     }
 
     /**
@@ -236,32 +154,37 @@ class Core_Mage_CmsWidgets_CreateTest extends Mage_Selenium_TestCase
      * @param string $dataWidgetType
      * @param string $emptyField
      * @param string $fieldType
-     * @param string $category
-     * @param array $products
+     * @param array $testData
      *
      * @test
      * @dataProvider withEmptyFieldsDataProvider
-     * @depends createCategory
-     * @depends createProducts
+     * @depends preconditionsForTests
      */
-    public function withEmptyFields($dataWidgetType, $emptyField, $fieldType, $category, $products)
+    public function withEmptyFields($dataWidgetType, $emptyField, $fieldType, $testData)
     {
         //Data
-        $temp['filter_sku'] = $products['sku']['simple'];
-        $temp['category_path'] = $category;
+        $override = array();
+        if ($dataWidgetType == 'catalog_product_link') {
+            $override = array('filter_sku'    => $testData['products']['product_3'],
+                              'category_path' => $testData['category']['category_path']);
+        } elseif ($dataWidgetType == 'catalog_category_link') {
+            $override = array('category_path' => $testData['category']['category_path']);
+        }
         if ($fieldType == 'field') {
-            $temp[$emptyField] = ' ';
+            $override[$emptyField] = ' ';
         } elseif ($fieldType == 'dropdown') {
             if ($emptyField == 'select_display_on') {
-                $temp['select_block_reference'] = '%noValue%';
-                $temp['select_template'] = '%noValue%';
+                if ($dataWidgetType == 'cms_page_link' || $dataWidgetType == 'catalog_category_link') {
+                    $override['select_template'] = '%noValue%';
+                }
+                $override['select_block_reference'] = '%noValue%';
             }
-            $temp[$emptyField] = '-- Please Select --';
+            $override[$emptyField] = '-- Please Select --';
         } else {
-            $temp['widget_options'] = '%noValue%';
+            $override['widget_options'] = '%noValue%';
             $this->addParameter('elementName', 'Not Selected');
         }
-        $widgetData = $this->loadData($dataWidgetType . '_widget_req', $temp);
+        $widgetData = $this->loadDataSet('CmsWidget', $dataWidgetType . '_widget_req', $override);
         //Steps
         $this->navigate('manage_cms_widgets');
         $this->cmsWidgetsHelper()->createWidget($widgetData);

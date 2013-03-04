@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  Mage_Selenium
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -42,10 +42,16 @@ class Mage_Selenium_Helper_Data extends Mage_Selenium_Helper_Abstract
     protected $_configFixtures = array();
 
     /**
-     * Test data array
+     * Test data array used in tests
      * @var array
      */
     protected $_testData = array();
+
+    /**
+     * Test data array loaded from files and not used in tests
+     * @var array
+     */
+    protected $_loadedTestData = array();
 
     /**
      * Initialize process
@@ -124,34 +130,49 @@ class Mage_Selenium_Helper_Data extends Mage_Selenium_Helper_Abstract
      */
     public function loadTestDataSet($dataFile, $dataSetName)
     {
+        $fileName = $dataFile;
         if (preg_match('/(\/)|(\\\)/', $dataFile)) {
             $condition = preg_quote(preg_replace('/(\/)|(\\\)/', DIRECTORY_SEPARATOR, $dataFile));
+            $fileName = end(explode(DIRECTORY_SEPARATOR, $condition));
         } else {
             $condition = 'data' . preg_quote(DIRECTORY_SEPARATOR) . $dataFile;
         }
         if (!preg_match('|\.yml$|', $condition)) {
             $condition .= '\.yml$';
         }
+        $fileName = preg_replace('|\.yml$|', '', $fileName);
 
-        foreach ($this->_configFixtures as $codePoolData) {
-            if (!array_key_exists('data', $codePoolData)) {
-                continue;
-            }
-            foreach ($codePoolData['data'] as $file) {
-                if (!preg_match('|' . $condition . '|', $file)) {
+        if (!array_key_exists($fileName, $this->_loadedTestData)) {
+            foreach ($this->_configFixtures as $codePoolData) {
+                if (!array_key_exists('data', $codePoolData)) {
                     continue;
                 }
-                $dataSets = $this->getConfig()->getHelper('file')->loadYamlFile($file);
-                if (!$dataSets) {
-                    throw new RuntimeException($dataFile . ' file is empty');
-                }
-                if (array_key_exists($dataSetName, $dataSets)) {
-                    $this->_testData[$dataSetName] = $dataSets[$dataSetName];
-                    return $this->_testData[$dataSetName];
+                foreach ($codePoolData['data'] as $file) {
+                    if (!preg_match('|' . $condition . '|', $file)) {
+                        continue;
+                    }
+                    $dataSets = $this->getConfig()->getHelper('file')->loadYamlFile($file);
+                    if (!$dataSets) {
+                        throw new RuntimeException($dataFile . ' file is empty');
+                    }
+                    foreach ($dataSets as $dataSetKey => $content) {
+                        if ($content) {
+                            $this->_loadedTestData[$fileName][$dataSetKey] = $content;
+                        }
+                    }
                 }
             }
+        } elseif (array_key_exists($dataSetName, $this->_testData)) {
+            return $this->_testData[$dataSetName];
         }
-        throw new RuntimeException('DataSet with name "' . $dataSetName
-            . '" is not present in "' . $dataFile . '" file.');
+        if (isset($this->_loadedTestData[$fileName])
+            && array_key_exists($dataSetName, $this->_loadedTestData[$fileName])
+        ) {
+            $this->_testData[$dataSetName] = $this->_loadedTestData[$fileName][$dataSetName];
+            unset($this->_loadedTestData[$fileName][$dataSetName]);
+            return $this->_testData[$dataSetName];
+        }
+        throw new RuntimeException(
+            'DataSet with name "' . $dataSetName . '" is not present in "' . $dataFile . '" file.');
     }
 }

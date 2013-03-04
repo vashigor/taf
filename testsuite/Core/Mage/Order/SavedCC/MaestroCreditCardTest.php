@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  tests
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -42,10 +42,9 @@ class Core_Mage_Order_SavedCC_MaestroCreditCardTest extends Mage_Selenium_TestCa
 
     protected function tearDownAfterTestClass()
     {
-        $currency = $this->loadDataSet('Currency', 'enable_usd');
         $this->loginAdminUser();
         $this->navigate('system_configuration');
-        $this->systemConfigurationHelper()->configure($currency);
+        $this->systemConfigurationHelper()->configure('Currency/enable_usd');
     }
 
     /**
@@ -56,16 +55,15 @@ class Core_Mage_Order_SavedCC_MaestroCreditCardTest extends Mage_Selenium_TestCa
     {
         //Data
         $productData = $this->loadDataSet('Product', 'simple_product_visible');
-        $settings = $this->loadDataSet('PaymentMethod', 'savedcc_with_3Dsecure');
-        $currency = $this->loadDataSet('Currency', 'enable_gbp');
         //Steps
         $this->loginAdminUser();
         $this->navigate('manage_products');
         $this->productHelper()->createProduct($productData);
         $this->assertMessagePresent('success', 'success_saved_product');
-        $this->navigate('system_configuration');
-        $this->systemConfigurationHelper()->configure($settings);
-        $this->systemConfigurationHelper()->configure($currency);
+        $this->systemConfigurationHelper()->useHttps('admin', 'yes');
+        $this->systemConfigurationHelper()->configure('PaymentMethod/savedcc_with_3Dsecure');
+        $this->systemConfigurationHelper()->configure('Currency/enable_gbp');
+        $this->systemConfigurationHelper()->configure('PaymentMethod/enable_3d_secure');
 
         return $productData['general_sku'];
     }
@@ -119,7 +117,6 @@ class Core_Mage_Order_SavedCC_MaestroCreditCardTest extends Mage_Selenium_TestCa
      *
      * @test
      * @depends orderWithSwitchMaestroCard
-     *
      */
     public function fullInvoiceWithDifferentTypesOfCapture($orderData)
     {
@@ -141,7 +138,6 @@ class Core_Mage_Order_SavedCC_MaestroCreditCardTest extends Mage_Selenium_TestCa
      * @test
      * @depends orderWithSwitchMaestroCard
      * @depends preconditionsForTests
-     *
      */
     public function partialInvoiceWithDifferentTypesOfCapture($orderData, $sku)
     {
@@ -182,7 +178,6 @@ class Core_Mage_Order_SavedCC_MaestroCreditCardTest extends Mage_Selenium_TestCa
      *
      * @test
      * @depends orderWithSwitchMaestroCard
-     *
      */
     public function fullCreditMemo($orderData)
     {
@@ -203,7 +198,6 @@ class Core_Mage_Order_SavedCC_MaestroCreditCardTest extends Mage_Selenium_TestCa
      * @test
      * @depends orderWithSwitchMaestroCard
      * @depends preconditionsForTests
-     *
      */
     public function partialCreditMemo($orderData, $sku)
     {
@@ -244,7 +238,6 @@ class Core_Mage_Order_SavedCC_MaestroCreditCardTest extends Mage_Selenium_TestCa
      *
      * @test
      * @depends orderWithSwitchMaestroCard
-     *
      */
     public function fullShipmentForOrderWithoutInvoice($orderData)
     {
@@ -271,7 +264,6 @@ class Core_Mage_Order_SavedCC_MaestroCreditCardTest extends Mage_Selenium_TestCa
      *
      * @test
      * @depends orderWithSwitchMaestroCard
-     *
      */
     public function holdAndUnholdPendingOrderViaOrderPage($orderData)
     {
@@ -301,5 +293,13 @@ class Core_Mage_Order_SavedCC_MaestroCreditCardTest extends Mage_Selenium_TestCa
         $this->assertMessagePresent('success', 'success_created_order');
         $this->clickButtonAndConfirm('cancel', 'confirmation_for_cancel');
         $this->assertMessagePresent('success', 'success_canceled_order');
+    }
+
+    /**
+     * @test
+     * @TODO temporary fix for tearDownAfterTestClass()
+     */
+    public function temporaryFixTearDownAfterTestClass()
+    {
     }
 }

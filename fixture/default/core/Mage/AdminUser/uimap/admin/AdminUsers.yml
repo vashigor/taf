@@ -20,7 +20,7 @@
 # @package     selenium
 # @subpackage  uimaps
 # @author      Magento Core Team <core@magentocommerce.com>
-# @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+# @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
 # @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 #
 ---
@@ -118,7 +118,7 @@ new_admin_user:
 # 'Edit User' page
 edit_admin_user:
     mca: permissions_user/edit/user_id/%id%/
-    title: %user_first_last_name% / Users / Permissions / System / Magento Admin
+    title: %elementTitle% / Users / Permissions / System / Magento Admin
     uimap:
         form: *adminUserForm
         buttons:
@@ -205,7 +205,7 @@ new_role:
 # 'Edit Role' page
 edit_role:
     mca: permissions_role/editrole/rid/%role_id%/
-    title: %roleName% / Roles / Permissions / System / Magento Admin
+    title: %elementTitle% / Roles / Permissions / System / Magento Admin
     uimap:
         form: &editRoleForm
             tabs:

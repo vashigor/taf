@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  Mage_Selenium
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -32,16 +32,16 @@
  * @package     selenium
  * @subpackage  Mage_Selenium
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
- * @method string findCheckbox()
- * @method string findButton()
- * @method string findDropdown()
- * @method string findField()
+ * @method findCheckbox()
+ * @method findButton()
+ * @method findDropdown()
+ * @method findField()
  * @method Mage_Selenium_Uimap_Fieldset findFieldset()
- * @method string findLink()
- * @method string findMessage()
- * @method string findMultiselect()
- * @method string findPageelement()
- * @method string findRadiobutton()
+ * @method findLink()
+ * @method findMessage()
+ * @method findMultiselect()
+ * @method findPageelement()
+ * @method findRadiobutton()
  * @method Mage_Selenium_Uimap_Tab findTab()
  * @method Mage_Selenium_Uimap_ElementsCollection getAllCheckboxes()
  * @method Mage_Selenium_Uimap_ElementsCollection getAllButtons()
@@ -53,6 +53,7 @@
  * @method Mage_Selenium_Uimap_ElementsCollection getAllMultiselects()
  * @method Mage_Selenium_Uimap_ElementsCollection getAllPageelements()
  * @method Mage_Selenium_Uimap_ElementsCollection getAllRadiobuttons()
+ * @method Mage_Selenium_Uimap_ElementsCollection getAllRequired()
  * @method Mage_Selenium_Uimap_ElementsCollection getAllTabs()
  * @method Mage_Selenium_Uimap_ElementsCollection getCheckboxes()
  * @method Mage_Selenium_Uimap_ElementsCollection getButtons()

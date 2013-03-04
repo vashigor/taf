@@ -1,3 +1,4 @@
+#
 # Magento
 #
 # NOTICE OF LICENSE
@@ -20,7 +21,7 @@
 # @package     selenium
 # @subpackage  uimaps
 # @author      Magento Core Team <core@magentocommerce.com>
-# @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+# @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
 # @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 #
 ---
@@ -31,8 +32,8 @@ system_configuration:
     mca: system_config/
     click_xpath: //ul[@id='nav']//a[contains(@href, 'system_config/')]
     title: Configuration / System / Magento Admin
-    uimap:
-        form: &systemConfiguration
+    uimap: &system_configuration_uimap
+        form:
             fieldsets:
                 -
                     current_configuration_scope:
@@ -2193,7 +2194,7 @@ system_configuration:
                                         api_certificate_use_default: //input[@name='groups[api][fields][api_cert][inherit]']
                                         api_signature_use_default: //input[@name='groups[api][fields][api_signature][inherit]']
                                         api_authentication_methods_use_default: //input[@name='groups[api][fields][api_authentication][inherit]']
-                                        sandbox_mode_use_default: //input[@name='groups[api][fields][sandbox_flag][inherit]']
+                                        api_sandbox_mode_use_default: //input[@name='groups[api][fields][sandbox_flag][inherit]']
                                         api_uses_proxy_use_default: //input[@name='groups[api][fields][use_proxy][inherit]']
                                         proxy_host: //input[@name='groups[api][fields][proxy_host][inherit]']
                                         proxy_port: //input[@name='groups[api][fields][proxy_port][inherit]']
@@ -2531,6 +2532,11 @@ system_configuration:
                     sales_payment_methods:
                         xpath: //a[contains(@href, 'edit/section/payment/')]
                         fieldsets:
+                            -
+                                paypal_solutions:
+                                    xpath: //div[@class='paypal-payment-notice']
+                                    links:
+                                        go_to_paypal_solutions: //a[text()='View PayPal solutions.']
                             -
                                 saved_cc:
                                     xpath: //fieldset[@id='payment_ccsave']
@@ -4349,29 +4355,19 @@ system_configuration:
 system_configuration_tabs:
     mca: system_config/edit/section/%tabName%/
     title: Configuration / System / Magento Admin
-    uimap:
-        form: *systemConfiguration
-        buttons:
-            save_config: //button[span='Save Config']
-        messages:
-            success_saved_config: //li[normalize-space(@class)='success-msg' and contains(.,'The configuration has been saved.')]
+    uimap: *system_configuration_uimap
 
 system_configuration_website:
     mca: system_config/edit/section/%tabName%/website/%webSite%/
     title: Configuration / System / Magento Admin
-    uimap:
-        form: *systemConfiguration
-        buttons:
-            save_config: //button[span='Save Config']
-        messages:
-            success_saved_config: //li[normalize-space(@class)='success-msg' and contains(.,'The configuration has been saved.')]
+    uimap: *system_configuration_uimap
 
 system_configuration_store:
     mca: system_config/edit/section/%tabName%/website/%webSite%/store/%storeName%/
     title: Configuration / System / Magento Admin
-    uimap:
-        form: *systemConfiguration
-        buttons:
-            save_config: //button[span='Save Config']
-        messages:
-            success_saved_config: //li[normalize-space(@class)='success-msg' and contains(.,'The configuration has been saved.')]
+    uimap: *system_configuration_uimap
+
+system_configuration_country:
+    mca: system_config/edit/section/payment/country/%country%
+    title: Configuration / System / Magento Admin
+    uimap: *system_configuration_uimap

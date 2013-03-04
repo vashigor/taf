@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  tests
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -43,7 +43,6 @@ class Core_Mage_ProductAttribute_Create_MediaImageTest extends Mage_Selenium_Tes
     {
         $this->loginAdminUser();
         $this->navigate('manage_attributes');
-        $this->addParameter('id', 0);
     }
 
     /**
@@ -52,14 +51,14 @@ class Core_Mage_ProductAttribute_Create_MediaImageTest extends Mage_Selenium_Tes
     public function navigation()
     {
         $this->assertTrue($this->buttonIsPresent('add_new_attribute'),
-                'There is no "Add New Attribute" button on the page');
+            'There is no "Add New Attribute" button on the page');
         $this->clickButton('add_new_attribute');
         $this->assertTrue($this->checkCurrentPage('new_product_attribute'), $this->getParsedMessages());
         $this->assertTrue($this->buttonIsPresent('back'), 'There is no "Back" button on the page');
         $this->assertTrue($this->buttonIsPresent('reset'), 'There is no "Reset" button on the page');
         $this->assertTrue($this->buttonIsPresent('save_attribute'), 'There is no "Save" button on the page');
         $this->assertTrue($this->buttonIsPresent('save_and_continue_edit'),
-                'There is no "Save and Continue Edit" button on the page');
+            'There is no "Save and Continue Edit" button on the page');
     }
 
     /**
@@ -76,12 +75,11 @@ class Core_Mage_ProductAttribute_Create_MediaImageTest extends Mage_Selenium_Tes
      * @return array
      * @test
      * @depends navigation
-     *
      */
     public function withRequiredFieldsOnly()
     {
         //Data
-        $attrData = $this->loadData('product_attribute_mediaimage', null, array('attribute_code', 'admin_title'));
+        $attrData = $this->loadDataSet('ProductAttribute', 'product_attribute_mediaimage');
         //Steps
         $this->productAttributeHelper()->createAttribute($attrData);
         //Verifying
@@ -107,7 +105,6 @@ class Core_Mage_ProductAttribute_Create_MediaImageTest extends Mage_Selenium_Tes
      *
      * @test
      * @depends withRequiredFieldsOnly
-     *
      */
     public function withAttributeCodeThatAlreadyExists(array $attrData)
     {
@@ -133,17 +130,16 @@ class Core_Mage_ProductAttribute_Create_MediaImageTest extends Mage_Selenium_Tes
      * @test
      * @dataProvider withRequiredFieldsEmptyDataProvider
      * @depends withRequiredFieldsOnly
-     *
      */
     public function withRequiredFieldsEmpty($emptyField)
     {
         //Data
         if ($emptyField == 'apply_to') {
-            $attrData = $this->loadData('product_attribute_mediaimage', array($emptyField => 'Selected Product Types'),
-                    'attribute_code');
+            $attrData = $this->loadDataSet('ProductAttribute', 'product_attribute_mediaimage',
+                array($emptyField => 'Selected Product Types'));
         } else {
-            $attrData = $this->loadData('product_attribute_mediaimage', array($emptyField => '%noValue%'),
-                    'attribute_code');
+            $attrData = $this->loadDataSet('ProductAttribute', 'product_attribute_mediaimage',
+                array($emptyField => '%noValue%'));
         }
         //Steps
         $this->productAttributeHelper()->createAttribute($attrData);
@@ -186,12 +182,12 @@ class Core_Mage_ProductAttribute_Create_MediaImageTest extends Mage_Selenium_Tes
      * @test
      * @dataProvider withInvalidAttributeCodeDataProvider
      * @depends withRequiredFieldsOnly
-     *
      */
     public function withInvalidAttributeCode($wrongAttributeCode, $validationMessage)
     {
         //Data
-        $attrData = $this->loadData('product_attribute_mediaimage', array('attribute_code' => $wrongAttributeCode));
+        $attrData = $this->loadDataSet('ProductAttribute', 'product_attribute_mediaimage',
+            array('attribute_code' => $wrongAttributeCode));
         //Steps
         $this->productAttributeHelper()->createAttribute($attrData);
         //Verifying
@@ -225,15 +221,15 @@ class Core_Mage_ProductAttribute_Create_MediaImageTest extends Mage_Selenium_Tes
      *
      * @test
      * @depends withRequiredFieldsOnly
-     *
      */
     public function withSpecialCharactersInTitle()
     {
         //Data
-        $attrData = $this->loadData('product_attribute_mediaimage',
-                array('admin_title' => $this->generate('string', 32, ':punct:')), 'attribute_code');
+        $attrData = $this->loadDataSet('ProductAttribute', 'product_attribute_mediaimage',
+            array('admin_title' => $this->generate('string', 32, ':punct:')));
         $attrData['admin_title'] = preg_replace('/<|>/', '', $attrData['admin_title']);
-        $searchData = $this->loadData('attribute_search_data', array('attribute_code' => $attrData['attribute_code']));
+        $searchData = $this->loadDataSet('ProductAttribute', 'attribute_search_data',
+            array('attribute_code' => $attrData['attribute_code']));
         //Steps
         $this->productAttributeHelper()->createAttribute($attrData);
         //Verifying
@@ -257,23 +253,16 @@ class Core_Mage_ProductAttribute_Create_MediaImageTest extends Mage_Selenium_Tes
      *
      * @test
      * @depends withRequiredFieldsOnly
-     *
      */
     public function withLongValues()
     {
         //Data
-        $attrData = $this->loadData('product_attribute_mediaimage',
-                array(
-                    'attribute_code' => $this->generate('string', 30, ':lower:'),
-                    'admin_title'    => $this->generate('string', 255, ':alnum:')
-                )
-        );
-        $searchData = $this->loadData('attribute_search_data',
-                array(
-                    'attribute_code'  => $attrData['attribute_code'],
-                    'attribute_label' => $attrData['admin_title']
-                )
-        );
+        $attrData = $this->loadDataSet('ProductAttribute', 'product_attribute_mediaimage',
+            array('attribute_code' => $this->generate('string', 30, ':lower:'),
+                  'admin_title'    => $this->generate('string', 255, ':alnum:')));
+        $searchData = $this->loadDataSet('ProductAttribute', 'attribute_search_data',
+            array('attribute_code'  => $attrData['attribute_code'],
+                  'attribute_label' => $attrData['admin_title']));
         //Steps
         $this->productAttributeHelper()->createAttribute($attrData);
         //Verifying

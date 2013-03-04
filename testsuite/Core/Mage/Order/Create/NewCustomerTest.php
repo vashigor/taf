@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  tests
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -64,6 +64,59 @@ class Core_Mage_Order_Create_NewCustomerTest extends Mage_Selenium_TestCase
     }
 
     /**
+     * <p>Create customer via 'Create order' with saving address</p>
+     * <p>Create order.</p>
+     * <p>Steps:</p>
+     * <p>1.Go to Sales->Orders;</p>
+     * <p>2.Press "Create New Order" button;</p>
+     * <p>3.Press "Create New Customer" button;</p>
+     * <p>4.Choose Store View;</p>
+     * <p>5.Press 'Add Products' button;</p>
+     * <p>6.Add product;</p>
+     * <p>7.Fill in billing address(check 'save in address book');</p>
+     * <p>8.Choose in shipping address the same as billing(check 'save in address book');</p>
+     * <p>9.Check shipping method;</p>
+     * <p>10.Check payment method 'Check / Money order';</p>
+     * <p>11. Submit order;</p>
+     * <p>Expected result:</p>
+     * <p>New customer is created with addresses. Order is created for the new customer;</p>
+     *
+     * @param string $simpleSku
+     *
+     * @test
+     * @depends preconditionsForTests
+     */
+    public function newCustomerWithAddress($simpleSku)
+    {
+        //Data
+        $orderData = $this->loadDataSet('SalesOrder', 'order_physical',
+            array('filter_sku' => $simpleSku, 'customer_email' => $this->generate('email', 32, 'valid')));
+        $orderData['billing_addr_data'] = $this->loadDataSet('SalesOrder', 'billing_address_all');
+        $orderData['shipping_addr_data'] = $this->loadDataSet('SalesOrder', 'shipping_address_all');
+        $customerTitle = $orderData['billing_addr_data']['billing_first_name'] . ' '
+                         . $orderData['billing_addr_data']['billing_last_name'];
+        $searchCustomer = $this->loadDataSet('Customers', 'search_customer',
+            array('email' => $orderData['account_data']['customer_email']));
+        $addressVerify[] = $this->loadDataSet('SalesOrder', 'billing');
+        $addressVerify[] = $this->loadDataSet('SalesOrder', 'shipping');
+        //Steps
+        $this->navigate('manage_sales_orders');
+        $this->orderHelper()->createOrder($orderData);
+        //Verifying
+        $this->assertMessagePresent('success', 'success_created_order');
+        //Steps
+        $this->navigate('manage_customers');
+        $this->addParameter('elementTitle', $customerTitle);
+        $this->customerHelper()->openCustomer($searchCustomer);
+        $this->openTab('addresses');
+        foreach ($addressVerify as $value) {
+            $addressNumber = $this->customerHelper()->isAddressPresent($value);
+            $this->assertNotEquals(0, $addressNumber, 'The specified address is not present.');
+            $this->clearMessages('verification');
+        }
+    }
+
+    /**
      * <p>Create customer via 'Create order' form (use exist email).</p>
      * <p>Create order.</p>
      * <p>Steps:</p>
@@ -91,8 +144,7 @@ class Core_Mage_Order_Create_NewCustomerTest extends Mage_Selenium_TestCase
         //Data
         $userData = $this->loadDataSet('Customers', 'generic_customer_account');
         $orderData = $this->loadDataSet('SalesOrder', 'order_newcustomer_checkmoney_flatrate_usa',
-                                     array('filter_sku'     => $simpleSku,
-                                           'customer_email' => $userData['email']));
+            array('filter_sku' => $simpleSku, 'customer_email' => $userData['email']));
         //Steps
         $this->navigate('manage_customers');
         $this->customerHelper()->createCustomer($userData);
@@ -133,8 +185,7 @@ class Core_Mage_Order_Create_NewCustomerTest extends Mage_Selenium_TestCase
         //Data
         $email = $this->generate('string', 129, ':alnum:') . '@unknown-domain.com';
         $orderData = $this->loadDataSet('SalesOrder', 'order_newcustomer_checkmoney_flatrate_usa',
-                                     array('filter_sku'     => $simpleSku,
-                                           'customer_email' => $email));
+            array('filter_sku' => $simpleSku, 'customer_email' => $email));
         //Steps
         $this->navigate('manage_sales_orders');
         $this->orderHelper()->createOrder($orderData);
@@ -164,16 +215,13 @@ class Core_Mage_Order_Create_NewCustomerTest extends Mage_Selenium_TestCase
      *
      * @test
      * @depends preconditionsForTests
-     *
      */
     public function newCustomerWithNotCorrectEmail($simpleSku)
     {
         //Data
-        $email = $this->generate('string', 23, ':alnum:') . '@'
-            . $this->generate('string', 65, ':alnum:') . '.org';
+        $email = $this->generate('string', 23, ':alnum:') . '@' . $this->generate('string', 65, ':alnum:') . '.org';
         $orderData = $this->loadDataSet('SalesOrder', 'order_newcustomer_checkmoney_flatrate_usa',
-                                     array('filter_sku'     => $simpleSku,
-                                           'customer_email' => $email));
+            array('filter_sku' => $simpleSku, 'customer_email' => $email));
         //Steps
         $this->navigate('manage_sales_orders');
         $this->orderHelper()->createOrder($orderData);
@@ -210,8 +258,7 @@ class Core_Mage_Order_Create_NewCustomerTest extends Mage_Selenium_TestCase
     {
         //Data
         $orderData = $this->loadDataSet('SalesOrder', 'order_newcustomer_checkmoney_flatrate_usa',
-                                        array('filter_sku'     => $simpleSku,
-                                              'customer_email' => $this->generate('email', 20, 'invalid')));
+            array('filter_sku' => $simpleSku, 'customer_email' => $this->generate('email', 20, 'invalid')));
         //Steps
         $this->navigate('manage_sales_orders');
         $this->orderHelper()->createOrder($orderData);
@@ -247,7 +294,7 @@ class Core_Mage_Order_Create_NewCustomerTest extends Mage_Selenium_TestCase
     {
         //Data
         $orderData = $this->loadDataSet('SalesOrder', 'order_newcustomer_checkmoney_flatrate_usa',
-                                     array('filter_sku' => $simpleSku));
+            array('filter_sku' => $simpleSku));
         $orderData['billing_addr_data'] = $this->orderHelper()->customerAddressGenerator(':alnum:', 'billing', 255);
         $orderData['shipping_addr_data'] = $this->orderHelper()->customerAddressGenerator(':alnum:', 'shipping', 255);
         //Steps

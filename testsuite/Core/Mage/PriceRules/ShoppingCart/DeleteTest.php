@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  tests
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -43,7 +43,6 @@ class Core_Mage_PriceRules_ShoppingCart_DeleteTest extends Mage_Selenium_TestCas
     {
         $this->loginAdminUser();
         $this->navigate('manage_shopping_cart_price_rules');
-        $this->addParameter('id', '0');
     }
 
     /**
@@ -61,10 +60,10 @@ class Core_Mage_PriceRules_ShoppingCart_DeleteTest extends Mage_Selenium_TestCas
     public function deleteShoppingCartPriceRule()
     {
         $this->navigate('manage_shopping_cart_price_rules');
-        $ruleData = $this->loadData('scpr_required_fields', null, array('rule_name', 'coupon_code'));
-        $ruleSearch = $this->loadData('search_shopping_cart_rule',
-                                      array('filter_rule_name' => $ruleData['info']['rule_name'],
-                                            'filter_coupon_code' => $ruleData['info']['coupon_code']));
+        $ruleData = $this->loadDataSet('ShoppingCartPriceRule', 'scpr_required_fields');
+        $ruleSearch = $this->loadDataSet('ShoppingCartPriceRule', 'search_shopping_cart_rule',
+            array('filter_rule_name'   => $ruleData['info']['rule_name'],
+                  'filter_coupon_code' => $ruleData['info']['coupon_code']));
         $this->priceRulesHelper()->createRule($ruleData);
         $this->assertMessagePresent('success', 'success_saved_rule');
         $this->priceRulesHelper()->deleteRule($ruleSearch);

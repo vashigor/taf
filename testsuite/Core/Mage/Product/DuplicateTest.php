@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  tests
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -128,7 +128,6 @@ class Core_Mage_Product_DuplicateTest extends Mage_Selenium_TestCase
      * @test
      * @depends createConfigurableAttribute
      * @depends createProducts
-     *
      */
     public function duplicateSimple($attrData, $assignData)
     {
@@ -164,7 +163,6 @@ class Core_Mage_Product_DuplicateTest extends Mage_Selenium_TestCase
      * @test
      * @depends createConfigurableAttribute
      * @depends createProducts
-     *
      */
     public function duplicateVirtual($attrData, $assignData)
     {
@@ -203,7 +201,6 @@ class Core_Mage_Product_DuplicateTest extends Mage_Selenium_TestCase
      *
      * @test
      * @depends createProducts
-     *
      */
     public function duplicateGrouped($assignData)
     {
@@ -245,7 +242,6 @@ class Core_Mage_Product_DuplicateTest extends Mage_Selenium_TestCase
      * @test
      * @dataProvider duplicateBundleDataProvider
      * @depends createProducts
-     *
      */
     public function duplicateBundle($data, $assignData)
     {
@@ -299,7 +295,6 @@ class Core_Mage_Product_DuplicateTest extends Mage_Selenium_TestCase
      * @test
      * @depends createConfigurableAttribute
      * @depends createProducts
-     *
      */
     public function duplicateConfigurable($attrData, $assignData)
     {

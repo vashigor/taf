@@ -20,7 +20,7 @@
 # @package     selenium
 # @subpackage  uimaps
 # @author      Magento Core Team <core@magentocommerce.com>
-# @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+# @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
 # @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 #
 ---
@@ -49,7 +49,11 @@ cache_storage_management:
                             selected_items: //strong[@id='cache_grid_massaction-count']
                             cache_invalided: //tr[normalize-space(td/span)='Invalidated']
                             cache_disabled: //tr[normalize-space(td/span)='Disabled']
+        buttons:
+            flush_magento_cache: //button[span='Flush Magento Cache']
+            flush_cache_storage: //button[span='Flush Cache Storage']
         messages:
             success_refreshed_cache: "//li[normalize-space(@class)='success-msg' and contains(.,'%qtySelected% cache type(s) refreshed.)]"
             success_disabled_cache: "//li[normalize-space(@class)='success-msg' and contains(.,'%qtySelected% cache type(s) disabled.)]"
             success_enabled_cache: "//li[normalize-space(@class)='success-msg' and contains(.,'%qtySelected% cache type(s) enabled.)]"
+            flush_cache_confirmation: Cache storage may contain additional data. Are you sure that you want flush it?

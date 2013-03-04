@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  tests
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -37,9 +37,8 @@ class Core_Mage_AdminUser_LoginTest extends Mage_Selenium_TestCase
 {
     public function setUpBeforeTests()
     {
-        $logOutXpath = $this->_getControlXpath('link', 'log_out');
         $this->admin('log_in_to_admin', false);
-        if ($this->_findCurrentPageFromUrl() != 'log_in_to_admin' && $this->isElementPresent($logOutXpath)) {
+        if ($this->_findCurrentPageFromUrl() != 'log_in_to_admin' && $this->controlIsPresent('link', 'log_out')) {
             $this->logoutAdminUser();
         }
         $this->validatePage('log_in_to_admin');
@@ -58,9 +57,8 @@ class Core_Mage_AdminUser_LoginTest extends Mage_Selenium_TestCase
      */
     protected function assertPreConditions()
     {
-        $logOutXpath = $this->_getControlXpath('link', 'log_out');
         $this->admin('log_in_to_admin', false);
-        if ($this->_findCurrentPageFromUrl() != 'log_in_to_admin' && $this->isElementPresent($logOutXpath)) {
+        if ($this->_findCurrentPageFromUrl() != 'log_in_to_admin' && $this->controlIsPresent('link', 'log_out')) {
             $this->logoutAdminUser();
         }
         $this->validatePage('log_in_to_admin');
@@ -100,7 +98,6 @@ class Core_Mage_AdminUser_LoginTest extends Mage_Selenium_TestCase
      * @test
      * @dataProvider loginEmptyOneFieldDataProvider
      * @depends loginValidUser
-     *
      */
     public function loginEmptyOneField($emptyField, $loginData)
     {
@@ -133,7 +130,6 @@ class Core_Mage_AdminUser_LoginTest extends Mage_Selenium_TestCase
      *
      * @test
      * @depends loginValidUser
-     *
      */
     public function loginNonExistentUser($loginData)
     {
@@ -157,7 +153,6 @@ class Core_Mage_AdminUser_LoginTest extends Mage_Selenium_TestCase
      *
      * @test
      * @depends loginValidUser
-     *
      */
     public function loginIncorrectPassword($loginData)
     {
@@ -181,7 +176,6 @@ class Core_Mage_AdminUser_LoginTest extends Mage_Selenium_TestCase
      *
      * @test
      * @depends loginValidUser
-     *
      */
     public function loginInactiveAdminAccount()
     {
@@ -215,7 +209,6 @@ class Core_Mage_AdminUser_LoginTest extends Mage_Selenium_TestCase
      *
      * @test
      * @depends loginValidUser
-     *
      */
     public function loginWithoutPermissions()
     {
@@ -247,7 +240,6 @@ class Core_Mage_AdminUser_LoginTest extends Mage_Selenium_TestCase
      * <p>"This is a required field" message appears;</p>
      *
      * @test
-     *
      */
     public function forgotEmptyPassword()
     {
@@ -271,7 +263,6 @@ class Core_Mage_AdminUser_LoginTest extends Mage_Selenium_TestCase
      * <p>"If there is an account associated.." message appears;</p>
      *
      * @test
-     *
      */
     public function forgotPasswordInvalidEmail()
     {
@@ -296,7 +287,6 @@ class Core_Mage_AdminUser_LoginTest extends Mage_Selenium_TestCase
      * <p>Please check your email and click Back to Login."</p>
      *
      * @test
-     *
      */
     public function forgotPasswordCorrectEmail()
     {
@@ -334,7 +324,6 @@ class Core_Mage_AdminUser_LoginTest extends Mage_Selenium_TestCase
      * <p>User still can login, since the password has not been reset.</p>
      *
      * @test
-     *
      */
     public function forgotPasswordOldPassword()
     {

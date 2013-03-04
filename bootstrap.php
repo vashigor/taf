@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  runner
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 if (version_compare(PHPUnit_Runner_Version::id(), '3.6.0', '<')) {
@@ -49,3 +49,4 @@ Mage_Selenium_TestConfiguration::getInstance();
 
 //Mage_Listener_EventListener::autoAttach(SELENIUM_TESTS_BASEDIR
 //                                            . implode(DIRECTORY_SEPARATOR, array('', 'framework', 'Mage', 'Listener', 'Observers', '*.php')));
+//Mage_Testlink_Listener::registerObserver('Mage_Testlink_Annotation');

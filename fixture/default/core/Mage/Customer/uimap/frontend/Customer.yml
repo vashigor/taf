@@ -21,7 +21,7 @@
 # @package     selenium
 # @subpackage  uimaps
 # @author      Magento Core Team <core@magentocommerce.com>
-# @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+# @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
 # @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 #
 ---
@@ -68,6 +68,7 @@ register_account:
 # 'Login or Create an Account' page
 customer_login:
     mca: customer/account/login/
+    click_xpath: //a[@title='Log In'][contains(@href,'/customer/account/login/')]
     title: Customer Login
     uimap:
         form: &customerLogin

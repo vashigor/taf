@@ -21,7 +21,7 @@
 # @package     selenium
 # @subpackage  test-data
 # @author      Magento Core Team <core@magentocommerce.com>
-# @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+# @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
 # @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 #
 ---
@@ -73,7 +73,7 @@ ups_enable:
         configuration:
             ups_enabled: Yes
             ups_ups_type: United Parcel Service
-            ups_gateway_url: 'YOUR CREDENTIALS'
+            ups_gateway_url: http://ups_gateway_url/test.cgi
             ups_title: United Parcel Service
             ups_container: %noValue%
             ups_destination_type: %noValue%
@@ -102,15 +102,15 @@ upsxml_enable:
         configuration:
             ups_enabled: Yes
             ups_ups_type: United Parcel Service XML
-            ups_password: 'YOUR CREDENTIALS'
-            ups_access_license_number: 'YOUR CREDENTIALS'
-            ups_userid: 'YOUR CREDENTIALS'
+            ups_password: 'YOUR_TEST_ACCOUNT_UPS_PASSWORD'
+            ups_access_license_number: 'YOUR_TEST_ACCOUNT_ACCESS_LICENSE_NUMBER'
+            ups_userid: 'YOUR_TEST_ACCOUNT_USER_ID'
             ups_mode: Development
-            ups_gateway_xml_url: 'YOUR CREDENTIALS'
+            ups_gateway_xml_url: https://ups_gateway_xml_url/Rate
             ups_origin_of_the_shipment: United States Domestic Shipments
             ups_enable_negotiated_rates: Yes
             ups_title: United Parcel Service XML
-            ups_shipper_number: 'YOUR CREDENTIALS'
+            ups_shipper_number: 'YOUR_TEST_ACCOUNT_SHIPPER_NUMBER'
             ups_container: %noValue%
             ups_destination_type: %noValue%
             ups_tracking_xml_url: net uimap
@@ -137,8 +137,14 @@ usps_enable:
         tab_name: sales_shipping_methods
         configuration:
             usps_enabled_for_checkout: Yes
-            usps_user_id: 'YOUR CREDENTIALS'
-            usps_password: 'YOUR CREDENTIALS'
+            usps_gateway_url: http://usps_gateway_url/test.dll
+            usps_secure_gateway_url: https://usps_gateway_url/test.dll
+            usps_title: United States Postal Service
+            usps_user_id: 'YOUR_TEST_ACCOUNT_USER_ID'
+            usps_password: 'YOUR_TEST_ACCOUNT_PASSWORD'
+            usps_maximum_package_weight: 70
+            usps_allowed_methods: All
+            usps_displayed_error_message: This shipping method is currently unavailable. If you would like to ship using this shipping method, please contact us.
             usps_ship_to_applicable_countries: All Allowed Countries
             usps_debug: Yes
             usps_show_method_if_not_applicable: Yes
@@ -150,10 +156,11 @@ fedex_enable:
         tab_name: sales_shipping_methods
         configuration:
             fedex_enabled_for_checkout: Yes
-            fedex_account_id: 'YOUR CREDENTIALS'
-            fedex_meter_number: 'YOUR CREDENTIALS'
-            fedex_key: 'YOUR CREDENTIALS'
-            fedex_password: 'YOUR CREDENTIALS'
+            fedex_title: Federal Express
+            fedex_account_id: 'YOUR_TEST_ACCOUNT_ID'
+            fedex_meter_number: 'YOUR_TEST_ACCOUNT_METER_NUMBER'
+            fedex_key: 'YOUR_TEST_ACCOUNT_KEY'
+            fedex_password: 'YOUR_TEST_ACCOUNT_USER_ID_PASSWORD'
             fedex_sandbox_mode: Yes
             fedex_maximum_package_weight: 150
             fedex_residential_delivery: Yes
@@ -170,13 +177,14 @@ dhl_enable:
         tab_name: sales_shipping_methods
         configuration:
             dhl_enabled: Yes
+            dhl_gateway_url: https://dhl_gateway_url/test.asp
             dhl_title: DHL
-            dhl_gateway_url: 'YOUR CREDENTIALS'
-            dhl_access_id: 'YOUR CREDENTIALS'
-            dhl_password: 'YOUR CREDENTIALS'
-            dhl_account_number: 'YOUR CREDENTIALS'
-            dhl_shipping_key_int: 'YOUR CREDENTIALS'
-            dhl_ship_to_applicable_countries: All Allowed Countries
+            dhl_access_id: 'YOUR_TEST_ACCOUNT_ACCESS_ID'
+            dhl_password: 'YOUR_TEST_ACCOUNT_PASSWORD'
+            dhl_account_number: 'YOUR_TEST_ACCOUNT_ACCOUNT_NUMBER'
+            dhl_shipping_key_int: 'YOUR_TEST_ACCOUNT_SHIPPING_KEY_INT'
+            dhl_shipping_key: %noValue%
+            dhl_maximum_package_weight: 150
             dhl_allowed_methods: all
             dhl_displayed_error_message: This shipping method is currently unavailable. If you would like to ship using this shipping method, please contact us.
             dhl_ship_to_applicable_countries: All Allowed Countries

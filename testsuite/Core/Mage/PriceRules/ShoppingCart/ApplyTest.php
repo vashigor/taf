@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  tests
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -39,11 +39,10 @@ class Core_Mage_PriceRules_ShoppingCart_ApplyTest extends Mage_Selenium_TestCase
     {
         $this->loginAdminUser();
         $this->navigate('system_configuration');
-        $this->systemConfigurationHelper()->configure($this->loadDataSet('ShippingSettings', 'default_tax_config'));
-        $this->systemConfigurationHelper()->configure($this->loadDataSet('ShippingSettings',
-                                                                         'shipping_settings_default'));
-        $this->systemConfigurationHelper()->configure($this->loadDataSet('ShippingMethod', 'flatrate_enable'));
-        $this->systemConfigurationHelper()->configure($this->loadDataSet('Currency', 'enable_usd'));
+        $this->systemConfigurationHelper()->configure('Tax/default_tax_config');
+        $this->systemConfigurationHelper()->configure('ShippingSettings/shipping_settings_default');
+        $this->systemConfigurationHelper()->configure('Currency/enable_usd');
+        $this->systemConfigurationHelper()->configure('ShippingMethod/flatrate_enable');
     }
 
     protected function assertPreConditions()
@@ -86,14 +85,12 @@ class Core_Mage_PriceRules_ShoppingCart_ApplyTest extends Mage_Selenium_TestCase
         $this->navigate('manage_products');
         for ($i = 1; $i <= 3; $i++) {
             $simple = $this->loadDataSet('PriceReview', 'simple_product_for_prices_validation_front_' . $i,
-                                         array('categories' => $categoryPath));
+                array('categories' => $categoryPath));
             $this->productHelper()->createProduct($simple);
             $this->assertMessagePresent('success', 'success_saved_product');
             $products['sku'][$i] = $simple['general_sku'];
             $products['name'][$i] = $simple['general_name'];
         }
-        $this->reindexInvalidedData();
-        $this->clearInvalidedCache();
         return array(array('email'    => $user['email'],
                            'password' => $user['password']), $products, $categoryPath);
     }
@@ -118,7 +115,6 @@ class Core_Mage_PriceRules_ShoppingCart_ApplyTest extends Mage_Selenium_TestCase
      * @test
      * @dataProvider createSCPRDataProvider
      * @depends preconditionsForTests
-     *
      */
     public function createSCPR($ruleType, $testData)
     {
@@ -126,19 +122,21 @@ class Core_Mage_PriceRules_ShoppingCart_ApplyTest extends Mage_Selenium_TestCase
         list($customer, $products, $category) = $testData;
         $cartProductsData = $this->loadDataSet('ShoppingCartPriceRule', 'prices_for_' . $ruleType);
         $checkoutData = $this->loadDataSet('ShoppingCartPriceRule', 'totals_for_' . $ruleType);
-        $ruleData = $this->loadDataSet('ShoppingCartPriceRule', 'scpr_' . $ruleType,
-                                       array('category' => $category));
+        $ruleData = $this->loadDataSet('ShoppingCartPriceRule', 'scpr_' . $ruleType, array('category' => $category));
         //Steps
         $this->navigate('manage_shopping_cart_price_rules');
         $this->priceRulesHelper()->createRule($ruleData);
         $this->assertMessagePresent('success', 'success_saved_rule');
+        $this->flushCache();
+        $this->reindexAllData();
         $this->customerHelper()->frontLoginCustomer($customer);
         foreach ($products['name'] as $key => $productName) {
             $cartProductsData['product_' . $key]['product_name'] = $productName;
             $this->productHelper()->frontOpenProduct($productName);
             $this->productHelper()->frontAddProductToCart();
         }
-        $this->shoppingCartHelper()->frontEstimateShipping('estimate_shipping', 'shipping_flatrate');
+        $this->shoppingCartHelper()
+            ->frontEstimateShipping('PriceReview/estimate_shipping', 'Shipping/shipping_flatrate');
         $this->addParameter('couponCode', $ruleData['info']['coupon_code']);
         $this->fillFieldset(array('coupon_code' => $ruleData['info']['coupon_code']), 'discount_codes');
         $this->clickButton('apply_coupon');

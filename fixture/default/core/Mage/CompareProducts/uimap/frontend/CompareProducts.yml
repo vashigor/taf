@@ -21,7 +21,7 @@
 # @package     selenium
 # @subpackage  uimaps
 # @author      Magento Core Team <core@magentocommerce.com>
-# @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+# @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
 # @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 #
 ---
@@ -42,9 +42,13 @@ compare_products:
                             add_to_whishlist: //td[h2='%productName%']//a[text()='Add to Wishlist']
                             remove_item: //td[%columnIndex%]/a[@title='Remove This Item']
                         pageelements:
+                            compare_products_row: /*/tr
+                            compare_products_column: /tbody[1]/tr/*
                             product_attribute_names: //tr[th/span/@class]
                             product_attribute_value: /tr[th='%attrName%']/td[%columnIndex%]
                             product_names: //td[h2[@class='product-name']]
+                            product_attribute_index_name: //tr[th/span/@class][%index%]/th/span
+                            product_index_name: //td[h2[@class='product-name']][%index%]//*[@class='product-name']
         buttons:
             close_window: //button[contains(@onclick,'window.close')]
         links:

@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  Mage_Selenium
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -68,19 +68,25 @@ class Mage_Selenium_Uimap_Page extends Mage_Selenium_Uimap_Abstract
      *
      * @param string $pageId Page ID
      * @param array $pageContainer Array of data, which contains in specific page
+     *
+     * @throws UnexpectedValueException
      */
     public function  __construct($pageId, array &$pageContainer)
     {
         $this->_pageId = $pageId;
 
-        if (isset($pageContainer['mca'])) {
+        if (array_key_exists('mca', $pageContainer)) {
             $this->_mca = $pageContainer['mca'];
+        } else {
+            throw new UnexpectedValueException("'MCA' parameter must be specified for '$pageId' page");
         }
         if (isset($pageContainer['click_xpath'])) {
             $this->_clickXpath = $pageContainer['click_xpath'];
         }
-        if (isset($pageContainer['title'])) {
+        if (array_key_exists('title', $pageContainer)) {
             $this->_title = $pageContainer['title'];
+        } else {
+            throw new UnexpectedValueException("'Title' parameter must be specified for '$pageId' page");
         }
         if (isset($pageContainer['uimap'])) {
             $this->_parseContainerArray($pageContainer['uimap']);

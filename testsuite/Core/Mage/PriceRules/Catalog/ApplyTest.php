@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  tests
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -39,15 +39,9 @@ class Core_Mage_PriceRules_Catalog_ApplyTest extends Mage_Selenium_TestCase
     {
         $this->loginAdminUser();
         $this->navigate('system_configuration');
-        $this->systemConfigurationHelper()->configure('default_tax_config');
-        $this->systemConfigurationHelper()->configure('shipping_settings_default');
-        $currency = $this->loadDataSet('Currency', 'enable_usd');
-        $this->systemConfigurationHelper()->configure($currency);
-    }
-
-    protected function assertPreConditions()
-    {
-        $this->loginAdminUser();
+        $this->systemConfigurationHelper()->configure('Tax/default_tax_config');
+        $this->systemConfigurationHelper()->configure('ShippingSettings/shipping_settings_default');
+        $this->systemConfigurationHelper()->configure('Currency/enable_usd');
         $this->navigate('manage_catalog_price_rules');
         $this->priceRulesHelper()->deleteAllRules();
         $this->clickButton('apply_rules', false);
@@ -55,8 +49,14 @@ class Core_Mage_PriceRules_Catalog_ApplyTest extends Mage_Selenium_TestCase
         $this->assertMessagePresent('success', 'success_applied_rule');
     }
 
-    protected function tearDownAfterTestClass()
+    protected function assertPreConditions()
     {
+        $this->loginAdminUser();
+    }
+
+    protected function tearDownAfterTest()
+    {
+        $this->logoutCustomer();
         $this->loginAdminUser();
         $this->navigate('manage_catalog_price_rules');
         $this->priceRulesHelper()->deleteAllRules();
@@ -71,6 +71,7 @@ class Core_Mage_PriceRules_Catalog_ApplyTest extends Mage_Selenium_TestCase
      * <p>Creates Category to use during tests</p>
      * @return array
      * @test
+     * @skipTearDown
      */
     public function preconditionsForTests()
     {
@@ -83,13 +84,9 @@ class Core_Mage_PriceRules_Catalog_ApplyTest extends Mage_Selenium_TestCase
         $this->assertMessagePresent('success', 'success_saved_customer');
         //Steps
         $data = $this->productHelper()->createSimpleProduct(true);
-        return array(
-            'customer'     => array('email'    => $userData['email'],
-                                    'password' => $userData['password']),
-            'categoryPath' => $data['category']['path'],
-            'categoryName' => $data['category']['name'],
-            'simpleName'   => $data['simple']['product_name']
-        );
+        return array('customer'     => array('email' => $userData['email'], 'password' => $userData['password']),
+                     'categoryPath' => $data['category']['path'], 'categoryName' => $data['category']['name'],
+                     'simpleName'   => $data['simple']['product_name']);
     }
 
     /**
@@ -114,25 +111,22 @@ class Core_Mage_PriceRules_Catalog_ApplyTest extends Mage_Selenium_TestCase
      * @test
      * @dataProvider applyRuleToSimpleFrontDataProvider
      * @depends preconditionsForTests
-     *
      */
     public function applyRuleToSimpleFront($ruleType, $testData)
     {
         //Data
         $action = $this->loadDataSet('CatalogPriceRule', $ruleType);
-        $condition = $this->loadDataSet('CatalogPriceRule', 'condition',
-                                        array('category' => $testData['categoryPath']));
+        $condition =
+            $this->loadDataSet('CatalogPriceRule', 'condition', array('category' => $testData['categoryPath']));
         $priceRule = $this->loadDataSet('CatalogPriceRule', 'test_catalog_rule',
-                                        array('conditions' => $condition,
-                                             'status'      => 'Active',
-                                             'actions'     => $action));
-        $override = array('product_name' => $testData['simpleName'],
-                          'category'     => $testData['categoryName']);
+            array('conditions' => $condition, 'status' => 'Active', 'actions' => $action));
+        $override = array('product_name' => $testData['simpleName'], 'category'     => $testData['categoryName']);
         $productPriceLogged = $this->loadDataSet('PriceReview', $ruleType . '_simple_product_logged');
         $productPriceNotLogged = $this->loadDataSet('PriceReview', $ruleType . '_simple_product_not_logged');
         $inCategoryLogged = $this->loadDataSet('PriceReview', $ruleType . '_simple_logged_category', $override);
         $inCategoryNotLogged = $this->loadDataSet('PriceReview', $ruleType . '_simple_not_logged_category', $override);
         //Steps
+        $this->navigate('manage_catalog_price_rules');
         $this->priceRulesHelper()->createRule($priceRule);
         //Verification
         $this->assertMessagePresent('success', 'success_saved_rule');
@@ -140,17 +134,17 @@ class Core_Mage_PriceRules_Catalog_ApplyTest extends Mage_Selenium_TestCase
         $this->clickButton('apply_rules', false);
         $this->waitForNewPage();
         $this->assertMessagePresent('success', 'success_applied_rule');
-        $this->reindexInvalidedData();
-        $this->clearInvalidedCache();
+        $this->flushCache();
+        $this->reindexAllData();
         //Verification on frontend
+        $this->frontend();
+        $this->categoryHelper()->frontOpenCategoryAndValidateProduct($inCategoryNotLogged);
+        $this->productHelper()->frontOpenProduct($testData['simpleName']);
+        $this->categoryHelper()->frontVerifyProductPrices($productPriceNotLogged, $testData['simpleName']);
         $this->customerHelper()->frontLoginCustomer($testData['customer']);
         $this->categoryHelper()->frontOpenCategoryAndValidateProduct($inCategoryLogged);
-        $this->productHelper()->frontOpenProduct($testData['simpleName'], $testData['categoryPath']);
+        $this->productHelper()->frontOpenProduct($testData['simpleName']);
         $this->categoryHelper()->frontVerifyProductPrices($productPriceLogged);
-        $this->logoutCustomer();
-        $this->categoryHelper()->frontOpenCategoryAndValidateProduct($inCategoryNotLogged);
-        $this->productHelper()->frontOpenProduct($testData['simpleName'], $testData['categoryPath']);
-        $this->categoryHelper()->frontVerifyProductPrices($productPriceNotLogged, $testData['simpleName']);
     }
 
     public function applyRuleToSimpleFrontDataProvider()

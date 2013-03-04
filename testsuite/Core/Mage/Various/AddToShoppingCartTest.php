@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  tests
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -61,14 +61,16 @@ class Core_Mage_Various_AddToShoppingCartTest extends Mage_Selenium_TestCase
     public function bundleWithSimpleProductPercentPrice()
     {
         //Data
-        $simpleData = $this->loadData('simple_product_visible');
-        $bundleData = $this->loadData('fixed_bundle_visible', null, array('general_name', 'general_sku'));
-        $bundleData['bundle_items_data']['item_1'] = $this->loadData('bundle_item_2', array(
-            'bundle_items_search_sku'     => $simpleData['general_sku'],
-            'selection_item_price'        => '10',
-            'selection_item_price_type'   => 'Percent',)
-        );
-        $productSearch = $this->loadData('product_search', array('product_sku' => $bundleData['general_sku']));
+        $simpleData = $this->loadDataSet('Product', 'simple_product_visible');
+        $bundleData = $this->loadDataSet('Product', 'fixed_bundle_visible');
+        $bundleData['bundle_items_data']['item_1'] = $this->loadDataSet('Product', 'bundle_item_2',
+            array('bundle_items_search_sku'   => $simpleData['general_sku'],
+                  'selection_item_price'      => '10',
+                  'selection_item_price_type' => 'Percent',));
+        $productSearch =
+            $this->loadDataSet('Product', 'product_search', array('product_sku' => $bundleData['general_sku']));
+        $options['option_1'] = $this->loadDataSet('Product', 'bundle_options_to_add_to_shopping_cart/option_4', null,
+            array('subProduct_4' => $simpleData['general_name']));
         //Steps
         $this->productHelper()->createProduct($simpleData);
         //Verifying
@@ -82,15 +84,10 @@ class Core_Mage_Various_AddToShoppingCartTest extends Mage_Selenium_TestCase
         //Verifying
         $this->productHelper()->verifyProductInfo($bundleData);
         //Steps
-        $this->logoutCustomer();
+        $this->frontend();
         $this->productHelper()->frontOpenProduct($bundleData['general_name']);
-        try {
-            $this->productHelper()->frontAddProductToCart();
-        } catch (PHPUnit_Framework_AssertionFailedError $e) {
-            $this->fail($e->toString());
-        }
+        $this->productHelper()->frontAddProductToCart($options);
         //Verifying
-        $this->validatePage();
-        $this->assertFalse($this->isTextPresent('Internal server error', 'HTTP Error 500 Internal server error'));
+        $this->validatePage('shopping_cart');
     }
 }

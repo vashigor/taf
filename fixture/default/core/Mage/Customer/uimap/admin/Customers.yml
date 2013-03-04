@@ -21,7 +21,7 @@
 # @package     selenium
 # @subpackage  uimaps
 # @author      Magento Core Team <core@magentocommerce.com>
-# @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+# @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
 # @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 #
 ---
@@ -29,7 +29,7 @@
 # 'Manage Customers' page
 manage_customers:
     mca: customer/
-    click_xpath: //div[@class='nav-bar']//a[span='Manage Customers']
+    click_xpath: //div[@class='nav-bar']//a[normalize-space(span)='Manage Customers']
     title: Manage Customers / Customers / Magento Admin
     uimap:
         form: &searchCustomerGrid
@@ -69,10 +69,10 @@ manage_customers:
             success_deleted_customer: //li[normalize-space(@class)='success-msg' and contains(.,'The customer has been deleted.')]
             success_saved_customer: //li[normalize-space(@class)='success-msg' and contains(.,'The customer has been saved.')]
             customer_invalid_email: //li[normalize-space(@class)='error-msg' and contains(.,'"Email" is not a valid')]
-            no_records_found: //td[normalize-space(@class)='empty-text a-center' and text()='No records found.']
             password_too_short: //div[@id='advice-validate-password-_accountpassword']
             invalid_email: //div[@id='advice-validate-email-_accountemail']
             confirmation_for_delete: Are you sure you want to do this?
+            confirmation_for_delete_address: Are you sure you want to delete this address?
             confirmation_for_massaction_delete: Are you sure?
 
 # 'New Customer' Page
@@ -90,12 +90,12 @@ create_customer:
                                 account_info:
                                     xpath: //div[@id='_accountbase_fieldset']
                                     checkboxes:
-                                        send_welcome_email: //input[@id='_accountsendemail' and not(@disabled)]
+                                        send_welcome_email: //input[@id='_accountsendemail']
                                     dropdowns:
                                         associate_to_website: //select[@id='_accountwebsite_id']
                                         group: //select[@id='_accountgroup_id']
                                         gender: //select[@id='_accountgender']
-                                        send_from: //select[@id='_accountsendemail_store_id' and not(@disabled)]
+                                        send_from: //select[@id='_accountsendemail_store_id']
                                     fields:
                                         prefix: //input[@id='_accountprefix']
                                         first_name: //input[@id='_accountfirstname']
@@ -128,6 +128,9 @@ create_customer:
                                     radiobuttons:
                                         default_billing_address: //input[@id='address_item_billing_item%address_number%']
                                         default_shipping_address: //input[@id='address_item_shipping_item%address_number%']
+                                    pageelements:
+                                        list_customer_address: //li
+                                        list_customer_address_index: //li[%index%]
                             -
                                 edit_address:
                                     xpath: //div[@id='_item%address_number%address_fieldset']
@@ -159,7 +162,7 @@ create_customer:
 # 'Edit Customer' Page
 edit_customer:
     mca: customer/edit/id/%id%/
-    title: %customer_first_last_name% / Manage Customers / Customers / Magento Admin
+    title: %elementTitle% / Manage Customers / Customers / Magento Admin
     uimap:
         form: &editCustomerForm
             tabs:
@@ -211,6 +214,9 @@ edit_customer:
                                     radiobuttons:
                                         default_billing_address: //input[@id='address_item_billing%address_number%' or @id='address_item_billing_item%address_number%']
                                         default_shipping_address: //input[@id='address_item_shipping%address_number%' or @id='address_item_shipping_item%address_number%']
+                                    pageelements:
+                                        list_customer_address: //li
+                                        list_customer_address_index: //li[%index%]
                             -
                                 edit_address:
                                     xpath:  //div[@id='_item%address_number%address_fieldset']

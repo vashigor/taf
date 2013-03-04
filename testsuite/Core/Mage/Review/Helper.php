@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  tests
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -43,9 +43,10 @@ class Core_Mage_Review_Helper extends Mage_Selenium_TestCase
     public function createReview($reviewData)
     {
         if (is_string($reviewData)) {
-            $reviewData = $this->loadData($reviewData);
+            $elements = explode('/', $reviewData);
+            $fileName = (count($elements) > 1) ? array_shift($elements) : '';
+            $reviewData = $this->loadDataSet($fileName, implode('/', $elements));
         }
-        $reviewData = $this->arrayEmptyClear($reviewData);
         $this->clickButton('add_new_review');
         $product = (isset($reviewData['product_to_review'])) ? $reviewData['product_to_review'] : array();
         if (!$product) {
@@ -65,7 +66,6 @@ class Core_Mage_Review_Helper extends Mage_Selenium_TestCase
      */
     public function editReview(array $reviewData, array $searchData)
     {
-        $reviewData = $this->arrayEmptyClear($reviewData);
         $this->openReview($searchData);
         $this->fillInfo($reviewData);
         $this->saveForm('save_review');
@@ -78,11 +78,10 @@ class Core_Mage_Review_Helper extends Mage_Selenium_TestCase
      */
     public function openReview(array $reviewSearch)
     {
-        if (isset($reviewSearch['filter_websites'])
-                && !$this->controlIsPresent('dropdown', 'filter_websites')) {
+        if (isset($reviewSearch['filter_websites']) && !$this->controlIsPresent('dropdown', 'filter_websites')) {
             unset($reviewSearch['filter_websites']);
         }
-        $this->searchAndOpen($reviewSearch);
+        $this->searchAndOpen($reviewSearch, 'all_reviews_grid');
     }
 
     /**
@@ -92,8 +91,7 @@ class Core_Mage_Review_Helper extends Mage_Selenium_TestCase
      */
     public function fillInfo($reviewData)
     {
-        if (isset($reviewData['visible_in'])
-                && !$this->controlIsPresent('multiselect', 'visible_in')) {
+        if (isset($reviewData['visible_in']) && !$this->controlIsPresent('multiselect', 'visible_in')) {
             unset($reviewData['visible_in']);
         }
         $this->fillForm($reviewData);
@@ -116,7 +114,7 @@ class Core_Mage_Review_Helper extends Mage_Selenium_TestCase
             if (isset($value['rating_name']) && isset($value['stars'])) {
                 $this->addParameter('ratingName', $value['rating_name']);
                 $this->addParameter('stars', $value['stars']);
-                $this->fillForm(array('detailed_rating' => 'yes'));
+                $this->fillRadiobutton('detailed_rating', 'yes');
             } else {
                 $this->fail('Incorrect data to fill');
             }
@@ -143,11 +141,11 @@ class Core_Mage_Review_Helper extends Mage_Selenium_TestCase
     public function verifyReviewData($reviewData, $skipFields = array())
     {
         if (is_string($reviewData)) {
-            $reviewData = $this->loadData($reviewData);
+            $elements = explode('/', $reviewData);
+            $fileName = (count($elements) > 1) ? array_shift($elements) : '';
+            $reviewData = $this->loadDataSet($fileName, implode('/', $elements));
         }
-        $reviewData = $this->arrayEmptyClear($reviewData);
-        if (isset($reviewData['visible_in'])
-                && !$this->controlIsPresent('multiselect', 'visible_in')) {
+        if (isset($reviewData['visible_in']) && !$this->controlIsPresent('multiselect', 'visible_in')) {
             $skipFields = array_merge($skipFields, array('visible_in'));
         }
         $ratings = (isset($reviewData['product_rating'])) ? $reviewData['product_rating'] : array();
@@ -156,7 +154,7 @@ class Core_Mage_Review_Helper extends Mage_Selenium_TestCase
         foreach ($ratings as $ratingData) {
             $this->addParameter('ratingName', $ratingData['rating_name']);
             $this->addParameter('stars', $ratingData['stars']);
-            $this->verifyChecked($this->_getControlXpath('radiobutton', 'detailed_rating'));
+            $this->verifyForm(array('detailed_rating' => 'Yes'));
         }
         $this->assertEmptyVerificationErrors();
     }
@@ -174,9 +172,10 @@ class Core_Mage_Review_Helper extends Mage_Selenium_TestCase
     public function frontendAddReview($reviewData, $validateRating = true)
     {
         if (is_string($reviewData)) {
-            $reviewData = $this->loadData($reviewData);
+            $elements = explode('/', $reviewData);
+            $fileName = (count($elements) > 1) ? array_shift($elements) : '';
+            $reviewData = $this->loadDataSet($fileName, implode('/', $elements));
         }
-        $reviewData = $this->arrayEmptyClear($reviewData);
         $linkName = ($this->controlIsPresent('link', 'add_your_review')) ? 'add_your_review' : 'first_review';
         $this->defineCorrectParam($linkName);
         $this->clickControl('link', $linkName);
@@ -196,13 +195,15 @@ class Core_Mage_Review_Helper extends Mage_Selenium_TestCase
     public function frontendAddRating($ratingData, $validateRating = true)
     {
         if (is_string($ratingData)) {
-            $ratingData = $this->loadData($ratingData);
+            $elements = explode('/', $ratingData);
+            $fileName = (count($elements) > 1) ? array_shift($elements) : '';
+            $ratingData = $this->loadDataSet($fileName, implode('/', $elements));
         }
         foreach ($ratingData as $value) {
             $this->addParameter('rateName', $value['rating_name']);
             $this->addParameter('rateId', $value['stars']);
             if ($this->controlIsPresent('radiobutton', 'select_rate')) {
-                $this->fillForm(array('select_rate' => 'Yes'));
+                $this->fillRadiobutton('select_rate', 'Yes');
             } else {
                 $this->addVerificationMessage('Rating with name ' . $value['rating_name'] . ' is not on the page');
             }
@@ -223,7 +224,6 @@ class Core_Mage_Review_Helper extends Mage_Selenium_TestCase
     {
         $this->addParameter('productName', $productName);
 
-        $verifyData = $this->arrayEmptyClear($verifyData);
         $review = (isset($verifyData['review'])) ? $verifyData['review'] : '';
         $nickname = (isset($verifyData['nickname'])) ? $verifyData['nickname'] : '';
         $summary = (isset($verifyData['summary_of_review'])) ? $verifyData['summary_of_review'] : '';
@@ -242,33 +242,33 @@ class Core_Mage_Review_Helper extends Mage_Selenium_TestCase
                 $this->fail('Customer with nickname \'' . $nickname . '\' does not added approved review');
             }
             //Define actual review summary
-            $actualSummary = $this->getText($this->_getControlXpath('link', 'review_summary'));
+            $actualSummary = $this->getControlAttribute('link', 'review_summary', 'text');
             //Define actual review text and rating names
-            $xpathReview = $this->_getControlXpath('pageelement', 'review_details');
-            $xpathReviewDate = $this->_getControlXpath('pageelement', 'review_post_date');
-            $xpathReviewRatings = $xpathReview . '/table';
-            $text = preg_quote($this->getText($xpathReviewDate));
-            $actualReview = trim(preg_replace('#' . $text . '#', '', $this->getText($xpathReview)));
-            if ($this->isElementPresent($xpathReviewRatings)) {
-                $text = preg_quote($this->getText($xpathReviewRatings));
+            $xpathReviewRatings = $this->_getControlXpath('pageelement', 'review_details_ratings');
+            $text = preg_quote($this->getControlAttribute('pageelement', 'review_post_date', 'text'));
+            $actualReview = $this->getControlAttribute('pageelement', 'review_details', 'text');
+            $actualReview = trim(preg_replace('#' . $text . '#', '', $actualReview));
+            if ($this->controlIsPresent('pageelement', 'review_details_ratings')) {
+                $text = preg_quote($this->getControlAttribute('pageelement', 'review_details_ratings', 'text'));
                 $actualReview = trim(preg_replace('#' . $text . '#', '', $actualReview), " \t\n\r\0\x0B");
-                $ratingsCount = $this->getXpathCount($xpathReviewRatings . '//th');
+                $ratingsCount = $this->getControlCount('pageelement', 'review_details_ratings_line');
                 for ($i = 0; $i < $ratingsCount; $i++) {
                     $actualRatings[] = $this->getTable($xpathReviewRatings . '.' . $i . '.0');
                 }
             }
             //Verification on product page
             $this->assertEquals($summary, $actualSummary,
-                    'Review Summary is not equal to specified: (' . $summary . ' != ' . $actualSummary . ')');
+                'Review Summary is not equal to specified: (' . $summary . ' != ' . $actualSummary . ')');
             $this->assertEquals($review, $actualReview,
-                    'Review Text is not equal to specified: (' . $review . ' != ' . $actualReview . ')');
+                'Review Text is not equal to specified: (' . $review . ' != ' . $actualReview . ')');
             $this->assertEquals($ratingNames, $actualRatings, 'Review Rating names is not equal to specified');
             //Verification on Review Details page
             $this->clickControl('link', 'review_summary');
-            $this->verifyTextPresent($productName,
-                    $productName . ' product not display on Review Details page');
-            $this->verifyTextPresent($review,
-                    '\'' . $review . '\' review text not display on Review Details page');
+            $actualProductName = $this->getControlAttribute('pageelement', 'product_name', 'text');
+            $actualReview = $this->getControlAttribute('pageelement', 'review_details', 'text');
+            $this->assertSame($productName, $actualProductName,
+                "'$productName' product not display on Review Details page");
+            $this->assertSame($review, $actualReview, "'$review' review text not display on Review Details page");
             $this->assertEmptyVerificationErrors();
         } else {
             $this->fail('Product does not have approved review(s)');
@@ -288,14 +288,16 @@ class Core_Mage_Review_Helper extends Mage_Selenium_TestCase
         $this->navigate('customer_account');
         $this->addParameter('productName', $productName);
         $this->assertTrue($this->controlIsPresent('link', 'product_name'),
-                "Can not find product with name: $productName in My Recent Reviews block");
+            "Can not find product with name: $productName in My Recent Reviews block");
         $this->clickControl('link', 'product_name');
-        $this->assertTextPresent($reviewData['review'],
-                '\'' . $reviewData['review'] . '\' review text not display on Review Details page');
+        $actualReview = $this->getControlAttribute('pageelement', 'review_details', 'text');
+        $expectedReview = $reviewData['review'];
+        $this->assertSame($expectedReview, $actualReview,
+            "'$expectedReview' review text not display on Review Details page");
         //Verification in "My Account -> My Product Reviews"
         $this->navigate('my_product_reviews');
         $this->assertTrue($this->controlIsPresent('link', 'product_name'),
-                "Can not find product with name: $productName in My Product Reviews block");
+            "Can not find product with name: $productName in My Product Reviews block");
     }
 
     /**
@@ -305,7 +307,7 @@ class Core_Mage_Review_Helper extends Mage_Selenium_TestCase
      */
     public function defineCorrectParam($linkName)
     {
-        $url = $this->getAttribute($this->_getControlXpath('link', $linkName) . "/@href");
+        $url = $this->getControlAttribute('link', $linkName, 'href');
         $this->addParameter('categoryId', $this->defineParameterFromUrl('category', $url));
     }
 }

@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  tests
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -59,22 +59,20 @@ class Core_Mage_Tax_TaxRate_CreateTest extends Mage_Selenium_TestCase
      * @return array $taxRateData
      * @test
      * @dataProvider withRequiredFieldsOnlyDataProvider
-     *
      */
     public function withRequiredFieldsOnly($taxRateDataSetName)
     {
         //Data
-        $taxRateData = $this->loadData($taxRateDataSetName);
-        $searchTaxRateData = $this->loadData('search_tax_rate',
-                array('filter_tax_id' => $taxRateData['tax_identifier']));
+        $rate = $this->loadDataSet('Tax', $taxRateDataSetName);
+        $search = $this->loadDataSet('Tax', 'search_tax_rate', array('filter_tax_id' => $rate['tax_identifier']));
         //Steps
-        $this->taxHelper()->createTaxItem($taxRateData, 'rate');
+        $this->taxHelper()->createTaxItem($rate, 'rate');
         //Verifying
         $this->assertMessagePresent('success', 'success_saved_tax_rate');
         //Steps
-        $this->taxHelper()->openTaxItem($searchTaxRateData, 'rate');
+        $this->taxHelper()->openTaxItem($search, 'rate');
         //Verifying
-        $this->assertTrue($this->verifyForm($taxRateData), $this->getParsedMessages());
+        $this->assertTrue($this->verifyForm($rate), $this->getParsedMessages());
     }
 
     public function withRequiredFieldsOnlyDataProvider()
@@ -100,7 +98,7 @@ class Core_Mage_Tax_TaxRate_CreateTest extends Mage_Selenium_TestCase
     public function withTaxIdentifierThatAlreadyExists()
     {
         //Steps
-        $taxRateData = $this->loadData('tax_rate_create_test_zip_no');
+        $taxRateData = $this->loadDataSet('Tax', 'tax_rate_create_test_zip_no');
         //Steps
         $this->taxHelper()->createTaxItem($taxRateData, 'rate');
         $this->assertMessagePresent('success', 'success_saved_tax_rate');
@@ -123,13 +121,13 @@ class Core_Mage_Tax_TaxRate_CreateTest extends Mage_Selenium_TestCase
      * @test
      * @dataProvider withInvalidValuesForRangeDataProvider
      * @depends withRequiredFieldsOnly
-     *
      */
     public function withInvalidValuesForRange($specialValue)
     {
         //Data
-        $taxRateData = $this->loadData('tax_rate_create_test_zip_yes',
-                array('zip_range_from' => $specialValue, 'zip_range_to' => $specialValue));
+        $taxRateData =
+            $this->loadDataSet('Tax', 'tax_rate_create_test_zip_yes', array('zip_range_from' => $specialValue,
+                                                                            'zip_range_to'   => $specialValue));
         //Steps
         $this->taxHelper()->createTaxItem($taxRateData, 'rate');
         //Verifying
@@ -142,10 +140,9 @@ class Core_Mage_Tax_TaxRate_CreateTest extends Mage_Selenium_TestCase
     public function withInvalidValuesForRangeDataProvider()
     {
         return array(
-            array($this->generate('string', 50)), // string
-            array($this->generate('string', 25, ':digit:') . " "
-                . $this->generate('string', 25, ':digit:')), // Number with space
-            array($this->generate('string', 50, ':punct:')) // special chars
+            array($this->generate('string', 50)), //string
+            array($this->generate('string', 2, ':digit:') . " " . $this->generate('string', 2, ':digit:')), //with space
+            array($this->generate('string', 50, ':punct:')) //special chars
         );
     }
 
@@ -163,12 +160,12 @@ class Core_Mage_Tax_TaxRate_CreateTest extends Mage_Selenium_TestCase
      * @test
      * @dataProvider withInvalidValueForRatePercentDataProvider
      * @depends withRequiredFieldsOnly
-     *
      */
     public function withInvalidValueForRatePercent($specialValue)
     {
         //Data
-        $taxRateData = $this->loadData('tax_rate_create_test_zip_yes', array('rate_percent' => $specialValue));
+        $taxRateData =
+            $this->loadDataSet('Tax', 'tax_rate_create_test_zip_yes', array('rate_percent' => $specialValue));
         //Steps
         $this->taxHelper()->createTaxItem($taxRateData, 'rate');
         //Verifying
@@ -196,22 +193,20 @@ class Core_Mage_Tax_TaxRate_CreateTest extends Mage_Selenium_TestCase
      *
      * @test
      * @depends withRequiredFieldsOnly
-     *
      */
     public function withSelectedState()
     {
         //Data
-        $taxRateData = $this->loadData('tax_rate_create_with_custom_state');
-        $searchTaxRateData = $this->loadData('search_tax_rate',
-                array('filter_tax_id' => $taxRateData['tax_identifier']));
+        $taxRate = $this->loadDataSet('Tax', 'tax_rate_create_with_custom_state');
+        $search = $this->loadDataSet('Tax', 'search_tax_rate', array('filter_tax_id' => $taxRate['tax_identifier']));
         //Steps
-        $this->taxHelper()->createTaxItem($taxRateData, 'rate');
+        $this->taxHelper()->createTaxItem($taxRate, 'rate');
         //Verifying
         $this->assertMessagePresent('success', 'success_saved_tax_rate');
         //Steps
-        $this->taxHelper()->openTaxItem($searchTaxRateData, 'rate');
+        $this->taxHelper()->openTaxItem($search, 'rate');
         //Verifying
-        $this->assertTrue($this->verifyForm($taxRateData), $this->getParsedMessages());
+        $this->assertTrue($this->verifyForm($taxRate), $this->getParsedMessages());
     }
 
     /**
@@ -235,21 +230,20 @@ class Core_Mage_Tax_TaxRate_CreateTest extends Mage_Selenium_TestCase
     {
         //Preconditions
         $this->navigate('manage_stores');
-        $storeViewData = $this->loadData('generic_store_view');
+        $storeViewData = $this->loadDataSet('StoreView', 'generic_store_view');
         $this->storeHelper()->createStore($storeViewData, 'store_view');
         $this->assertMessagePresent('success', 'success_saved_store_view');
         //Data
         $storeViewName = $storeViewData['store_view_name'];
-        $taxRateData = $this->loadData('tax_rate_create_with_store_views');
-        $taxRateData['tax_titles'][$storeViewName] = 'tax rate title for ' . $storeViewName;
-        $searchTaxRateData = $this->loadData('search_tax_rate',
-                array('filter_tax_id' => $taxRateData['tax_identifier']));
+        $taxRate = $this->loadDataSet('Tax', 'tax_rate_create_with_store_views');
+        $taxRate['tax_titles'][$storeViewName] = 'tax rate title for ' . $storeViewName;
+        $search = $this->loadDataSet('Tax', 'search_tax_rate', array('filter_tax_id' => $taxRate['tax_identifier']));
         //Steps
         $this->navigate('manage_tax_zones_and_rates');
-        $this->taxHelper()->createTaxItem($taxRateData, 'rate');
+        $this->taxHelper()->createTaxItem($taxRate, 'rate');
         $this->assertMessagePresent('success', 'success_saved_tax_rate');
-        $this->taxHelper()->openTaxItem($searchTaxRateData, 'rate');
+        $this->taxHelper()->openTaxItem($search, 'rate');
         //Verification
-        $this->assertTrue($this->verifyForm($taxRateData), $this->getParsedMessages());
+        $this->assertTrue($this->verifyForm($taxRate), $this->getParsedMessages());
     }
 }

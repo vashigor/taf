@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  tests
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -41,52 +41,12 @@ class Core_Mage_CmsWidgets_DeleteTest extends Mage_Selenium_TestCase
     }
 
     /**
-     * <p>Preconditions</p>
-     * <p>Creates Category to use during tests</p>
-     *
-     * @return string
-     * @test
-     */
-    public function createCategory()
-    {
-        //Data
-        $categoryData = $this->loadData('sub_category_required');
-        //Steps
-        $this->navigate('manage_categories', false);
-        $this->categoryHelper()->checkCategoriesPage();
-        $this->categoryHelper()->createCategory($categoryData);
-        //Verification
-        $this->assertMessagePresent('success', 'success_saved_category');
-        $this->categoryHelper()->checkCategoriesPage();
-
-        return $categoryData['parent_category'] . '/' . $categoryData['name'];
-    }
-
-    /**
-     * Create required products for testing
-     *
-     * @param string $category
-     *
      * @return array
      * @test
-     * @depends createCategory
      */
-    public function createProducts($category)
+    public function preconditionsForTests()
     {
-        $products = array();
-        $productTypes = array('simple');
-        $this->navigate('manage_products');
-        foreach ($productTypes as $productType) {
-            //Data
-            $productData = $this->loadData($productType . '_product_required', array('categories' => $category));
-            //Steps
-            $this->productHelper()->createProduct($productData, $productType);
-            //Verifying
-            $this->assertMessagePresent('success', 'success_saved_product');
-            $products['sku'][$productType] = $productData['general_sku'];
-            $products['name'][$productType] = $productData['general_name'];
-        }
-        return $products;
+        return $this->productHelper()->createSimpleProduct(true);
     }
 
     /**
@@ -100,22 +60,23 @@ class Core_Mage_CmsWidgets_DeleteTest extends Mage_Selenium_TestCase
      * <p>Widgets are created and deleted successfully</p>
      *
      * @param array $dataWidgetType
-     * @param string $category
-     * @param array $products
+     * @param array $testData
      *
      * @test
      * @dataProvider widgetTypesReqDataProvider
-     * @depends createCategory
-     * @depends createProducts
-     *
+     * @depends preconditionsForTests
      */
-    public function deleteAllTypesOfWidgets($dataWidgetType, $category, $products)
+    public function deleteAllTypesOfWidgets($dataWidgetType, $testData)
     {
         //Data
-        $widgetData = $this->loadData($dataWidgetType . '_widget_req',
-                                      array('filter_sku'  => $products['sku']['simple'],
-                                           'category_path'=> $category),
-                                      'widget_instance_title');
+        $override = array();
+        if ($dataWidgetType == 'catalog_product_link') {
+            $override = array('filter_sku'    => $testData['simple']['product_sku'],
+                              'category_path' => $testData['category']['path']);
+        } elseif ($dataWidgetType == 'catalog_category_link') {
+            $override = array('category_path' => $testData['category']['path']);
+        }
+        $widgetData = $this->loadDataSet('CmsWidget', $dataWidgetType . '_widget_req', $override);
         $widgetToDelete = array('filter_type'  => $widgetData['settings']['type'],
                                 'filter_title' => $widgetData['frontend_properties']['widget_instance_title']);
         //Steps

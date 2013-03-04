@@ -21,10 +21,21 @@
 # @package     selenium
 # @subpackage  test-data
 # @author      Magento Core Team <core@magentocommerce.com>
-# @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+# @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
 # @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 #
 ---
+#*********************************************
+#*      Gift Options Configuration Scope     *
+#*********************************************
+
+gift_options_website_price_scope:
+    configuration_scope: Default Config
+    tab_1:
+        tab_name: catalog_catalog
+        configuration:
+            catalog_price_scope: Website
+
 #*********************************************
 #*      Gift Messages Configuration Data     *
 #*********************************************
@@ -64,3 +75,31 @@ gift_message_all_enable:
         configuration:
             allow_gift_messages_on_order_level: Yes
             allow_gift_messages_for_order_items: Yes
+
+gift_message_all_enable_on_website:
+    configuration_scope: Main Website
+    tab_1:
+        tab_name: sales_sales
+        configuration:
+            allow_gift_messages_on_order_level_use_default: No
+            allow_gift_messages_for_order_items_use_default: No
+            allow_gift_messages_on_order_level: Yes
+            allow_gift_messages_for_order_items: Yes
+
+gift_message_all_disable:
+    configuration_scope: Default Config
+    tab_1:
+        tab_name: sales_sales
+        configuration:
+            allow_gift_messages_on_order_level: No
+            allow_gift_messages_for_order_items: No
+
+gift_message_all_disable_on_website:
+    configuration_scope: Main Website
+    tab_1:
+        tab_name: sales_sales
+        configuration:
+            allow_gift_messages_on_order_level_use_default: No
+            allow_gift_messages_for_order_items_use_default: No
+            allow_gift_messages_on_order_level: No
+            allow_gift_messages_for_order_items: No

@@ -20,7 +20,7 @@
 # @package     selenium
 # @subpackage  uimaps
 # @author      Magento Core Team <core@magentocommerce.com>
-# @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+# @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
 # @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 #
 ---
@@ -29,7 +29,7 @@
 # Sales Shipments page
 manage_sales_shipments:
     mca: sales_shipment/
-    click_xpath: //ul[@id='nav']//a[contains(@href, 'sales_invoice/')]
+    click_xpath: //ul[@id='nav']//a[contains(@href, '/sales_shipment/')]
     title: Shipments / Sales / Magento Admin
     uimap:
         form: &salesShipments

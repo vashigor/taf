@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  tests
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -44,7 +44,7 @@ class Core_Mage_CmsStaticBlocks_CreateTest extends Mage_Selenium_TestCase
     {
         $this->loginAdminUser();
         $this->navigate('manage_stores');
-        $this->storeHelper()->createStore('generic_store_view', 'store_view');
+        $this->storeHelper()->createStore('StoreView/generic_store_view', 'store_view');
         $this->assertMessagePresent('success', 'success_saved_store_view');
     }
 
@@ -56,7 +56,6 @@ class Core_Mage_CmsStaticBlocks_CreateTest extends Mage_Selenium_TestCase
     {
         $this->loginAdminUser();
         $this->navigate('manage_cms_static_blocks');
-        $this->addParameter('id', '0');
     }
 
     protected function tearDownAfterTest()
@@ -80,12 +79,11 @@ class Core_Mage_CmsStaticBlocks_CreateTest extends Mage_Selenium_TestCase
      *
      * @return array
      * @test
-     *
      */
     public function createNewWithReqField()
     {
         //Data
-        $setData = $this->loadData('new_static_block');
+        $setData = $this->loadDataSet('CmsStaticBlock', 'new_static_block');
         //Steps
         $this->cmsStaticBlocksHelper()->createStaticBlock($setData);
         //Verifying
@@ -110,8 +108,8 @@ class Core_Mage_CmsStaticBlocks_CreateTest extends Mage_Selenium_TestCase
      */
     public function withExistingIdentifier($setData)
     {
-        $this->_blockToBeDeleted = $this->loadData('search_static_block',
-                array('filter_block_identifier' => $setData['block_identifier']));
+        $this->_blockToBeDeleted = $this->loadDataSet('CmsStaticBlock', 'search_static_block',
+            array('filter_block_identifier' => $setData['block_identifier']));
         //Steps
         $this->cmsStaticBlocksHelper()->createStaticBlock($setData);
         //Verifying
@@ -132,13 +130,13 @@ class Core_Mage_CmsStaticBlocks_CreateTest extends Mage_Selenium_TestCase
     public function createNewWithAllWidgets()
     {
         //Data
-        $setData = $this->loadData('static_block_with_all_widgets');
+        $setData = $this->loadDataSet('CmsStaticBlock', 'static_block_with_all_widgets');
         //Steps
         $this->cmsStaticBlocksHelper()->createStaticBlock($setData);
         //Verifying
         $this->assertMessagePresent('success', 'success_saved_block');
-        $this->_blockToBeDeleted = $this->loadData('search_static_block',
-                array('filter_block_identifier' => $setData['block_identifier']));
+        $this->_blockToBeDeleted = $this->loadDataSet('CmsStaticBlock', 'search_static_block',
+            array('filter_block_identifier' => $setData['block_identifier']));
     }
 
     /**
@@ -156,20 +154,19 @@ class Core_Mage_CmsStaticBlocks_CreateTest extends Mage_Selenium_TestCase
      * @test
      * @dataProvider withSpecialValuesDataProvider
      * @depends createNewWithReqField
-     *
      */
     public function withSpecialValues(array $specialValue)
     {
         //Data
-        $setData = $this->loadData('new_static_block', $specialValue);
-        $blockToOpen = $this->loadData('search_static_block',
-                array('filter_block_identifier' => $setData['block_identifier']));
+        $setData = $this->loadDataSet('CmsStaticBlock', 'new_static_block', $specialValue);
+        $blockToOpen = $this->loadDataSet('CmsStaticBlock', 'search_static_block',
+            array('filter_block_identifier' => $setData['block_identifier']));
         //Steps
         $this->cmsStaticBlocksHelper()->createStaticBlock($setData);
         //Verifying
         $this->assertMessagePresent('success', 'success_saved_block');
-        $this->_blockToBeDeleted = $this->loadData('search_static_block',
-                array('filter_block_identifier' => $setData['block_identifier']));
+        $this->_blockToBeDeleted = $this->loadDataSet('CmsStaticBlock', 'search_static_block',
+            array('filter_block_identifier' => $setData['block_identifier']));
         //Steps
         $this->cmsStaticBlocksHelper()->openStaticBlock($blockToOpen);
         //Verifying
@@ -181,7 +178,7 @@ class Core_Mage_CmsStaticBlocks_CreateTest extends Mage_Selenium_TestCase
         return array(
             array(array('block_title' => $this->generate('string', 255, ':alpha:'))),
             array(array('block_identifier' => $this->generate('string', 255, ':alpha:'))),
-            array(array('block_title' => $this->generate('string', 50, ':punct:'))),
+            array(array('block_title' => $this->generate('string', 50, ':punct:')))
         );
     }
 
@@ -199,12 +196,11 @@ class Core_Mage_CmsStaticBlocks_CreateTest extends Mage_Selenium_TestCase
      *
      * @test
      * @dataProvider withEmptyRequiredFieldsDataProvider
-     *
      */
     public function withEmptyRequiredFields($emptyField, $fieldType)
     {
         //Data
-        $setData = $this->loadData('new_static_block', array($emptyField => '%noValue%'));
+        $setData = $this->loadDataSet('CmsStaticBlock', 'new_static_block', array($emptyField => '%noValue%'));
         //Steps
         $this->cmsStaticBlocksHelper()->createStaticBlock($setData);
         //Verifying
@@ -239,12 +235,11 @@ class Core_Mage_CmsStaticBlocks_CreateTest extends Mage_Selenium_TestCase
      *
      * @test
      * @dataProvider withInvalidXmlIdentifierDataProvider
-     *
      */
     public function withInvalidXmlIdentifier($invalidValue)
     {
         //Data
-        $setData = $this->loadData('new_static_block', array('block_identifier' => $invalidValue));
+        $setData = $this->loadDataSet('CmsStaticBlock', 'new_static_block', array('block_identifier' => $invalidValue));
         //Steps
         $this->cmsStaticBlocksHelper()->createStaticBlock($setData);
         //Verifying

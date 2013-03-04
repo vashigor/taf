@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  tests
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -68,7 +68,6 @@ class Core_Mage_CheckoutOnePage_WithRegistration_CheckingValidationTest extends 
      * <p>Shopping Cart is Empty page appears</p>
      *
      * @test
-     *
      */
     public function emptyShoppingCart()
     {
@@ -76,8 +75,7 @@ class Core_Mage_CheckoutOnePage_WithRegistration_CheckingValidationTest extends 
         $this->clickControl('link', 'checkout');
         $this->validatePage('shopping_cart');
         //Verifying
-        $this->assertElementPresent($this->_getControlXpath('message', 'shopping_cart_is_empty'),
-                                    'Shopping cart is not empty');
+        $this->assertTrue($this->controlIsPresent('message', 'shopping_cart_is_empty'), 'Shopping cart is not empty');
     }
 
     /**
@@ -95,7 +93,6 @@ class Core_Mage_CheckoutOnePage_WithRegistration_CheckingValidationTest extends 
      *
      * @test
      * @depends preconditionsForTests
-     *
      */
     public function checkoutMethodNotDefined($simpleSku)
     {
@@ -131,7 +128,6 @@ class Core_Mage_CheckoutOnePage_WithRegistration_CheckingValidationTest extends 
      * @test
      * @dataProvider emptyRequiredFieldsInBillingAddressDataProvider
      * @depends preconditionsForTests
-     *
      */
     public function emptyRequiredFieldsInBillingAddress($field, $message, $simpleSku)
     {
@@ -182,7 +178,6 @@ class Core_Mage_CheckoutOnePage_WithRegistration_CheckingValidationTest extends 
      *
      * @test
      * @depends preconditionsForTests
-     *
      */
     public function incorrectPasswordLength($simpleSku)
     {
@@ -218,7 +213,6 @@ class Core_Mage_CheckoutOnePage_WithRegistration_CheckingValidationTest extends 
      * @test
      * @dataProvider incorrectEmailDataProvider
      * @depends preconditionsForTests
-     *
      */
     public function incorrectEmail($wrongValue, $simpleSku)
     {
@@ -259,7 +253,6 @@ class Core_Mage_CheckoutOnePage_WithRegistration_CheckingValidationTest extends 
      *
      * @test
      * @depends preconditionsForTests
-     *
      */
     public function existEmail($simpleSku)
     {
@@ -328,7 +321,6 @@ class Core_Mage_CheckoutOnePage_WithRegistration_CheckingValidationTest extends 
      * @test
      * @dataProvider emptyRequiredFieldsInShippingAddressDataProvider
      * @depends preconditionsForTests
-     *
      */
     public function emptyRequiredFieldsInShippingAddress($field, $message, $simpleSku)
     {

@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  tests
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -42,7 +42,7 @@ class Core_Mage_Newsletter_Helper extends Mage_Selenium_TestCase
      */
     public function frontSubscribe($email)
     {
-        $this->fillForm(array('sign_up_newsletter' => $email));
+        $this->fillField('sign_up_newsletter', $email);
         $this->saveForm('subscribe');
     }
 
@@ -55,10 +55,10 @@ class Core_Mage_Newsletter_Helper extends Mage_Selenium_TestCase
     public function massAction($action, $searchDataSet)
     {
         foreach ($searchDataSet as $searchData) {
-            $this->searchAndChoose($searchData);
+            $this->searchAndChoose($searchData, 'subscribers_grid');
         }
         $this->addParameter('qtyOfRecords', count($searchDataSet));
-        $this->fillForm(array('subscribers_massaction' => ucfirst(strtolower($action))));
+        $this->fillDropdown('subscribers_massaction', ucfirst(strtolower($action)));
         $this->clickButton('submit');
     }
 
@@ -73,7 +73,6 @@ class Core_Mage_Newsletter_Helper extends Mage_Selenium_TestCase
     public function checkStatus($status, $searchData)
     {
         $searchData['filter_status'] = ucfirst(strtolower($status));
-        $searchData = $this->arrayEmptyClear($searchData);
-        return !is_null($this->search($searchData));
+        return !is_null($this->search($searchData, 'subscribers_grid'));
     }
 }

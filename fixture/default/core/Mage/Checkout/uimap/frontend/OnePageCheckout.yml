@@ -21,7 +21,7 @@
 # @package     selenium
 # @subpackage  uimaps
 # @author      Magento Core Team <core@magentocommerce.com>
-# @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+# @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
 # @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 #
 ---
@@ -132,7 +132,7 @@ onepage_checkout:
                             payment_method_continue: //button[span='Continue']
                         radiobuttons:
                             check_payment_method: //input[@title='%paymentTitle%']
-                            selected_one_payment: //label[normalize-space(text())='%paymentTitle%']
+                            selected_one_payment: //*[normalize-space(label)='%paymentTitle%']
                         fields:
                             name_on_card: //input[@id='%paymentId%_cc_owner']
                             card_number: //input[@id='%paymentId%_cc_number']
@@ -166,6 +166,10 @@ onepage_checkout:
                         pageelements:
                             product_table_head: //table[@id='checkout-review-table']/thead
                             price_totals: //table[@id='checkout-review-table']/tfoot
+                            price_totals_line: //table[@id='checkout-review-table']/tfoot/descendant::tr
+                            price_totals_line_index: //table[@id='checkout-review-table']/tfoot/descendant::tr[%index%]
+                            price_totals_line_index_name: //table[@id='checkout-review-table']/tfoot/descendant::tr[%index%]/*[1]
+                            price_totals_line_index_value: //table[@id='checkout-review-table']/tfoot/descendant::tr[%index%]/*[2]
                             product_line:  //table[@id='checkout-review-table']/tbody/tr
                         fields:
                             product_name: //table[@id='checkout-review-table']/tbody//td[h3= '%productName%']
@@ -186,12 +190,14 @@ onepage_checkout:
                             billing_address_checkout: //dt[contains(.,'Billing Address')]/following-sibling::dd[1]/address
                             shipping_address_checkout: //dt[contains(.,'Shipping Address')]/following-sibling::dd[1]/address
                             shipping_method_checkout: //dt[contains(.,'Shipping Method')]/following-sibling::dd[1]
+                            shipping_method_checkout_price: //dt[contains(.,'Shipping Method')]/following-sibling::dd[1]/span
                             payment_method_checkout: //dt[contains(.,'Payment Method')]/following-sibling::dd[1]
+                            payment_method_checkout_credit_card: //dt[contains(.,'Payment Method')]/following-sibling::dd[1]/p/strong
                         links:
-                            billing_address_change_link: "//dt[contains(.,'Billing Address')]/a[@href='#billing']"
-                            shipping_address_change_link: "//dt[contains(.,'Shipping Address')]/a[@href='#payment']"
-                            shipping_method_change_link: "//dt[contains(.,'Shipping Method')]/a[@href='#shipping_method']"
-                            payment_method_change_link: "//dt[contains(.,'Payment Method')]/a[@href='#payment']"
+                            billing_information_change: "//dt[contains(.,'Billing Address')]/a[@href='#billing']"
+                            shipping_information_change: "//dt[contains(.,'Shipping Address')]/a[@href='#payment']"
+                            shipping_method_change: "//dt[contains(.,'Shipping Method')]/a[@href='#shipping_method']"
+                            payment_method_change: "//dt[contains(.,'Payment Method')]/a[@href='#payment']"
             links:
                 order_number: //a[contains(@href, '/sales/order/view/order_id/')]
             messages: &checkoutMessages
@@ -223,5 +229,6 @@ onepage_checkout_success:
         form: &successForm
         messages:
             success_checkout: //h1[contains(.,'Your order has been received')]
+            success_checkout_guest: //p[contains(text(),'Your order')]
         links:
             order_number: //a[contains(@href, '/sales/order/view/order_id/')]

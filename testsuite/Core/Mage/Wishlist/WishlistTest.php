@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  tests
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -35,11 +35,6 @@
  */
 class Core_Mage_Wishlist_Wishlist extends Mage_Selenium_TestCase
 {
-    public function setUpBeforeTests()
-    {
-        $this->logoutCustomer();
-    }
-
     protected function tearDownAfterTest()
     {
         $this->frontend();
@@ -65,36 +60,35 @@ class Core_Mage_Wishlist_Wishlist extends Mage_Selenium_TestCase
         $attrData = $this->loadDataSet('ProductAttribute', 'product_attribute_dropdown_with_options');
         $attrCode = $attrData['attribute_code'];
         $associatedAttributes = $this->loadDataSet('AttributeSet', 'associated_attributes',
-                                                   array('General' => $attrData['attribute_code']));
+            array('General' => $attrData['attribute_code']));
         $productCat = array('categories' => $catPath);
         $simple = $this->loadDataSet('Product', 'simple_product_visible', $productCat);
         $simple['general_user_attr']['dropdown'][$attrCode] = $attrData['option_1']['admin_option_name'];
         $virtual = $this->loadDataSet('Product', 'virtual_product_visible', $productCat);
         $virtual['general_user_attr']['dropdown'][$attrCode] = $attrData['option_2']['admin_option_name'];
         $download = $this->loadDataSet('SalesOrder', 'downloadable_product_for_order',
-                                       array('downloadable_links_purchased_separately' => 'No',
-                                            'categories'                               => $catPath));
+            array('downloadable_links_purchased_separately' => 'No',
+                  'categories'                              => $catPath));
         $download['general_user_attr']['dropdown'][$attrCode] = $attrData['option_3']['admin_option_name'];
         $downloadWithOption = $this->loadDataSet('SalesOrder', 'downloadable_product_for_order', $productCat);
         $bundle = $this->loadDataSet('SalesOrder', 'fixed_bundle_for_order', $productCat,
-                                     array('add_product_1' => $simple['general_sku'],
-                                          'add_product_2'  => $virtual['general_sku']));
+            array('add_product_1' => $simple['general_sku'],
+                  'add_product_2' => $virtual['general_sku']));
         $configurable = $this->loadDataSet('SalesOrder', 'configurable_product_for_order',
-                                           array('configurable_attribute_title' => $attrData['admin_title'],
-                                                'categories'                    => $catPath),
-                                           array('associated_1' => $simple['general_sku'],
-                                                'associated_2'  => $virtual['general_sku'],
-                                                'associated_3'  => $download['general_sku']));
+            array('configurable_attribute_title' => $attrData['admin_title'],
+                  'categories'                   => $catPath), array('associated_1' => $simple['general_sku'],
+                                                                     'associated_2' => $virtual['general_sku'],
+                                                                     'associated_3' => $download['general_sku']));
         $grouped = $this->loadDataSet('SalesOrder', 'grouped_product_for_order', $productCat,
-                                      array('associated_1' => $simple['general_sku'],
-                                           'associated_2'  => $virtual['general_sku'],
-                                           'associated_3'  => $download['general_sku']));
+            array('associated_1' => $simple['general_sku'],
+                  'associated_2' => $virtual['general_sku'],
+                  'associated_3' => $download['general_sku']));
         $userData = $this->loadDataSet('Customers', 'generic_customer_account');
         $configurableOptionName = $attrData['option_1']['store_view_titles']['Default Store View'];
         $customOptions = $this->loadDataSet('Product', 'custom_options_data');
-        $simpleWithCustomOptions = $this->loadDataSet('Product', 'simple_product_visible',
-                                                      array('categories'         => $catPath,
-                                                           'custom_options_data' => $customOptions));
+        $simpleWithCustomOptions =
+            $this->loadDataSet('Product', 'simple_product_visible', array('categories'          => $catPath,
+                                                                          'custom_options_data' => $customOptions));
         //Steps and Verification
         $this->loginAdminUser();
         $this->navigate('manage_attributes');
@@ -132,7 +126,7 @@ class Core_Mage_Wishlist_Wishlist extends Mage_Selenium_TestCase
         $this->customerHelper()->createCustomer($userData);
         $this->assertMessagePresent('success', 'success_saved_customer');
         $this->reindexInvalidedData();
-        $this->clearInvalidedCache();
+        $this->flushCache();
 
         return array('productNames'       => array('simple'           => $simple['general_name'],
                                                    'virtual'          => $virtual['general_name'],
@@ -154,8 +148,29 @@ class Core_Mage_Wishlist_Wishlist extends Mage_Selenium_TestCase
                                                    'password' => $userData['password']),
                      'withCustomOption'   => $simpleWithCustomOptions['general_name'],
                      'catName'            => $category['name'],
-                     'catPath'            => $catPath
-        );
+                     'catPath'            => $catPath);
+    }
+
+    /**
+     * <p>Opens My Wishlist using the link in quick access bar</p>
+     * <p>Steps:</p>
+     * <p>1. Open home page</p>
+     * <p>2. Click "My Wishlist" link</p>
+     * <p>Expected result:</p>
+     * <p>The wishlist is opened.</p>
+     *
+     * @param array $testData
+     *
+     * @test
+     * @depends preconditionsForTests
+     */
+    public function openMyWishlistViaQuickAccessLink($testData)
+    {
+        //Steps
+        $this->customerHelper()->frontLoginCustomer($testData['user']);
+        $this->clickControl('link', 'my_wishlist');
+        //Verify
+        $this->assertTrue($this->checkCurrentPage('my_wishlist'), $this->getParsedMessages());
     }
 
     /**
@@ -179,12 +194,12 @@ class Core_Mage_Wishlist_Wishlist extends Mage_Selenium_TestCase
             $this->wishlistHelper()->frontAddProductToWishlistFromProductPage($productName);
             $this->assertMessagePresent('success', 'successfully_added_product');
             $this->assertTrue($this->wishlistHelper()->frontWishlistHasProducts($productName),
-                              'Product ' . $productName . ' is not added to wishlist.');
+                'Product ' . $productName . ' is not added to wishlist.');
         }
         $this->navigate('my_wishlist');
         foreach ($testData['productNames'] as $productName) {
             $this->assertTrue($this->wishlistHelper()->frontWishlistHasProducts($productName),
-                              'Product ' . $productName . ' is not in the wishlist.');
+                'Product ' . $productName . ' is not in the wishlist.');
         }
     }
 
@@ -210,12 +225,12 @@ class Core_Mage_Wishlist_Wishlist extends Mage_Selenium_TestCase
             $this->wishlistHelper()->frontAddProductToWishlistFromCatalogPage($productName, $testData['catName']);
             $this->assertMessagePresent('success', 'successfully_added_product');
             $this->assertTrue($this->wishlistHelper()->frontWishlistHasProducts($productName),
-                              'Product ' . $productName . ' is not added to wishlist.');
+                'Product ' . $productName . ' is not added to wishlist.');
         }
         $this->navigate('my_wishlist');
         foreach ($testData['productNames'] as $productName) {
             $this->assertTrue($this->wishlistHelper()->frontWishlistHasProducts($productName),
-                              'Product ' . $productName . ' is not in the wishlist.');
+                'Product ' . $productName . ' is not in the wishlist.');
         }
     }
 
@@ -244,12 +259,12 @@ class Core_Mage_Wishlist_Wishlist extends Mage_Selenium_TestCase
             $this->wishlistHelper()->frontAddProductToWishlistFromProductPage($productName);
             $this->assertMessagePresent('success', 'successfully_added_product');
             $this->assertTrue($this->wishlistHelper()->frontWishlistHasProducts($productName),
-                              'Product ' . $productName . ' is not added to wishlist.');
+                'Product ' . $productName . ' is not added to wishlist.');
         }
         $this->navigate('my_wishlist');
         foreach ($testData['productNames'] as $productName) {
             $this->assertTrue($this->wishlistHelper()->frontWishlistHasProducts($productName),
-                              'Product ' . $productName . ' is not in the wishlist.');
+                'Product ' . $productName . ' is not in the wishlist.');
         }
         $lastProductName = end($testData['productNames']);
         array_pop($testData['productNames']);
@@ -257,7 +272,7 @@ class Core_Mage_Wishlist_Wishlist extends Mage_Selenium_TestCase
             //Remove all except last
             $this->wishlistHelper()->frontRemoveProductsFromWishlist($productName);
             $this->assertTrue(is_array($this->wishlistHelper()->frontWishlistHasProducts($productName)),
-                              'Product ' . $productName . ' is in the wishlist, but should be removed.');
+                'Product ' . $productName . ' is in the wishlist, but should be removed.');
         }
         //Remove the last one
         $this->wishlistHelper()->frontRemoveProductsFromWishlist($lastProductName);
@@ -291,15 +306,15 @@ class Core_Mage_Wishlist_Wishlist extends Mage_Selenium_TestCase
             $this->wishlistHelper()->frontAddProductToWishlistFromProductPage($productName);
             $this->assertMessagePresent('success', 'successfully_added_product');
             $this->assertTrue($this->wishlistHelper()->frontWishlistHasProducts($productName),
-                              'Product ' . $productName . ' is not added to wishlist.');
+                'Product ' . $productName . ' is not added to wishlist.');
         }
         foreach ($products as $productName) {
             $this->navigate('my_wishlist');
             $this->assertTrue($this->wishlistHelper()->frontWishlistHasProducts($productName),
-                              'Product ' . $productName . ' is not in the wishlist.');
+                'Product ' . $productName . ' is not in the wishlist.');
             $this->wishlistHelper()->frontAddToShoppingCartFromWishlist($productName);
             $this->assertTrue($this->shoppingCartHelper()->frontShoppingCartHasProducts($productName),
-                              'Product ' . $productName . ' is not in the shopping cart.');
+                'Product ' . $productName . ' is not in the shopping cart.');
         }
     }
 
@@ -331,9 +346,9 @@ class Core_Mage_Wishlist_Wishlist extends Mage_Selenium_TestCase
         $this->customerHelper()->frontLoginCustomer($testData['user']);
         $this->wishlistHelper()->frontAddProductToWishlistFromProductPage($productName);
         $this->assertMessagePresent('success', 'successfully_added_product');
-        //hh
+        //Verifying
         $this->assertTrue($this->wishlistHelper()->frontWishlistHasProducts($productName),
-                          'Product ' . $productName . ' is not in the wishlist.');
+            'Product ' . $productName . ' is not in the wishlist.');
         $this->wishlistHelper()->frontAddToShoppingCartFromWishlist($productName);
         $this->assertTrue($this->checkCurrentPage('wishlist_configure_product'), $this->getMessagesOnPage());
         $this->assertMessagePresent('validation', 'specify_product_' . $message);
@@ -375,29 +390,29 @@ class Core_Mage_Wishlist_Wishlist extends Mage_Selenium_TestCase
         $productName = $testData['productNames'][$product];
         if (isset($testData[$product . 'Option'])) {
             if ($product == 'configurable') {
-                $options = $this->loadDataSet('Products', $option, $testData[$product . 'Option']);
+                $options = $this->loadDataSet('Product', $option, $testData[$product . 'Option']);
             } else {
-                $options = $this->loadDataSet('Products', $option, null, $testData[$product . 'Option']);
+                $options = $this->loadDataSet('Product', $option, null, $testData[$product . 'Option']);
             }
         } else {
-            $options = $this->loadDataSet('Products', $option);
+            $options = $this->loadDataSet('Product', $option);
         }
         //Steps and Verifying
         $this->customerHelper()->frontLoginCustomer($testData['user']);
-        $this->wishlistHelper()->frontAddProductToWishlistFromProductPage($productName, null, $options);
+        $this->wishlistHelper()->frontAddProductToWishlistFromProductPage($productName, $options);
         $this->assertMessagePresent('success', 'successfully_added_product');
-        //hh
+        //Verifying
         $this->assertTrue($this->wishlistHelper()->frontWishlistHasProducts($productName),
-                          'Product ' . $productName . ' is not in the wishlist.');
+            'Product ' . $productName . ' is not in the wishlist.');
         $this->wishlistHelper()->frontAddToShoppingCartFromWishlist($productName);
         if ($product == 'grouped') {
             foreach ($testData[$product . 'Option'] as $name) {
                 $this->assertTrue($this->shoppingCartHelper()->frontShoppingCartHasProducts($name),
-                                  'Product ' . $name . ' is not in the shopping cart.');
+                    'Product ' . $name . ' is not in the shopping cart.');
             }
         } else {
             $this->assertTrue($this->shoppingCartHelper()->frontShoppingCartHasProducts($productName),
-                              'Product ' . $productName . ' is not in the shopping cart.');
+                'Product ' . $productName . ' is not in the shopping cart.');
         }
     }
 
@@ -434,12 +449,12 @@ class Core_Mage_Wishlist_Wishlist extends Mage_Selenium_TestCase
         $productName = $testData['productNames'][$product];
         if (isset($testData[$product . 'Option'])) {
             if ($product == 'configurable') {
-                $options = $this->loadDataSet('Products', $option, $testData[$product . 'Option']);
+                $options = $this->loadDataSet('Product', $option, $testData[$product . 'Option']);
             } else {
-                $options = $this->loadDataSet('Products', $option, null, $testData[$product . 'Option']);
+                $options = $this->loadDataSet('Product', $option, null, $testData[$product . 'Option']);
             }
         } else {
-            $options = $this->loadDataSet('Products', $option);
+            $options = $this->loadDataSet('Product', $option);
         }
         //Steps and Verifying
         $this->customerHelper()->frontLoginCustomer($testData['user']);
@@ -449,44 +464,21 @@ class Core_Mage_Wishlist_Wishlist extends Mage_Selenium_TestCase
             foreach ($testData[$product . 'Option'] as $name) {
                 $this->navigate('shopping_cart');
                 $this->assertTrue($this->shoppingCartHelper()->frontShoppingCartHasProducts($name),
-                                  'Product ' . $name . ' is not in the shopping cart.');
+                    'Product ' . $name . ' is not in the shopping cart.');
                 $this->shoppingCartHelper()->frontMoveToWishlist($name);
                 $this->navigate('my_wishlist');
                 $this->assertTrue($this->wishlistHelper()->frontWishlistHasProducts($name),
-                                  'Product ' . $name . ' is not in the wishlist.');
+                    'Product ' . $name . ' is not in the wishlist.');
             }
         } else {
             $this->assertTrue($this->checkCurrentPage('shopping_cart'));
             $this->assertTrue($this->shoppingCartHelper()->frontShoppingCartHasProducts($productName),
-                              'Product ' . $productName . ' is not in the shopping cart.');
+                'Product ' . $productName . ' is not in the shopping cart.');
             $this->shoppingCartHelper()->frontMoveToWishlist($productName);
             $this->navigate('my_wishlist');
             $this->assertTrue($this->wishlistHelper()->frontWishlistHasProducts($productName),
-                              'Product ' . $productName . ' is not in the wishlist.');
+                'Product ' . $productName . ' is not in the wishlist.');
         }
-    }
-
-    /**
-     * <p>Opens My Wishlist using the link in quick access bar</p>
-     * <p>Steps:</p>
-     * <p>1. Open home page</p>
-     * <p>2. Click "My Wishlist" link</p>
-     * <p>Expected result:</p>
-     * <p>The wishlist is opened.</p>
-     *
-     * @param array $testData
-     *
-     * @test
-     * @depends preconditionsForTests
-     */
-    public function openMyWishlistViaQuickAccessLink($testData)
-    {
-        //Steps
-        $this->customerHelper()->frontLoginCustomer($testData['user']);
-        $this->frontend();
-        $this->clickControl('link', 'my_wishlist');
-        //Verify
-        $this->assertTrue($this->checkCurrentPage('my_wishlist'), $this->getParsedMessages());
     }
 
     /**
@@ -523,8 +515,7 @@ class Core_Mage_Wishlist_Wishlist extends Mage_Selenium_TestCase
     public function shareWishlistDataProvider()
     {
         return array(
-            array(array('emails'  => 'autotest@test.com',
-                        'message' => 'autotest message')),
+            array(array('emails' => 'autotest@test.com', 'message' => 'autotest message')),
             array(array('message' => ''))
         );
     }
@@ -602,50 +593,6 @@ class Core_Mage_Wishlist_Wishlist extends Mage_Selenium_TestCase
     }
 
     /**
-     * <p>Verifies that a guest cannot open My Wishlist.</p>
-     * <p>Steps:</p>
-     * <p>1. Logout customer</p>
-     * <p>2. Navigate to My Wishlist</p>
-     * <p>Expected result:</p>
-     * <p>Guest is redirected to login/register page.</p>
-     *
-     * @test
-     */
-    public function guestCannotOpenWishlist()
-    {
-        //Setup
-        $this->logoutCustomer();
-        //Steps
-        $this->clickControl('link', 'my_wishlist');
-        //Verify
-        $this->assertTrue($this->checkCurrentPage('customer_login'), $this->getParsedMessages());
-    }
-
-    /**
-     * <p>Verifies that a guest cannot add a product to a wishlist.</p>
-     * <p>Steps:</p>
-     * <p>1. Logout customer</p>
-     * <p>2. Open a product</p>
-     * <p>3. Add products to the wishlist</p>
-     * <p>Expected result:</p>
-     * <p>Guest is redirected to login/register page.</p>
-     *
-     * @param array $testData
-     *
-     * @test
-     * @depends preconditionsForTests
-     */
-    public function guestCannotAddProductToWishlist($testData)
-    {
-        //Setup
-        $this->logoutCustomer();
-        //Steps
-        $this->wishlistHelper()->frontAddProductToWishlistFromProductPage($testData['productNames']['simple']);
-        //Verify
-        $this->assertTrue($this->checkCurrentPage('customer_login'), $this->getParsedMessages());
-    }
-
-    /**
      * <p>Adds a product with custom options to Shopping Cart from Wishlist without selected options</p>
      * <p>Steps:</p>
      * <p>1. Open product</p>
@@ -665,14 +612,14 @@ class Core_Mage_Wishlist_Wishlist extends Mage_Selenium_TestCase
         $productName = $testData['withCustomOption'];
         $options = $this->loadDataSet('Product', 'custom_options_to_add_to_shopping_cart');
         $this->customerHelper()->frontLoginCustomer($testData['user']);
-        $this->wishlistHelper()->frontAddProductToWishlistFromProductPage($productName, null, $options);
+        $this->wishlistHelper()->frontAddProductToWishlistFromProductPage($productName, $options);
         $this->assertMessagePresent('success', 'successfully_added_product');
-        //hh
+        //Verifying
         $this->assertTrue($this->wishlistHelper()->frontWishlistHasProducts($productName),
-                          'Product ' . $productName . ' is not in the wishlist.');
+            'Product ' . $productName . ' is not in the wishlist.');
         $this->wishlistHelper()->frontAddToShoppingCartFromWishlist($productName);
         $this->assertTrue($this->shoppingCartHelper()->frontShoppingCartHasProducts($productName),
-                          'Product ' . $productName . ' is not in the shopping cart.');
+            'Product ' . $productName . ' is not in the shopping cart.');
     }
 
     /**
@@ -699,10 +646,54 @@ class Core_Mage_Wishlist_Wishlist extends Mage_Selenium_TestCase
         $this->productHelper()->frontOpenProduct($productName);
         $this->productHelper()->frontAddProductToCart($options);
         $this->assertTrue($this->shoppingCartHelper()->frontShoppingCartHasProducts($productName),
-                          'Product ' . $productName . ' is not in the shopping cart.');
+            'Product ' . $productName . ' is not in the shopping cart.');
         $this->shoppingCartHelper()->frontMoveToWishlist($productName);
         $this->navigate('my_wishlist');
         $this->assertTrue($this->wishlistHelper()->frontWishlistHasProducts($productName),
-                          'Product ' . $productName . ' is not in the wishlist.');
+            'Product ' . $productName . ' is not in the wishlist.');
+    }
+
+    /**
+     * <p>Verifies that a guest cannot open My Wishlist.</p>
+     * <p>Steps:</p>
+     * <p>1. Logout customer</p>
+     * <p>2. Navigate to My Wishlist</p>
+     * <p>Expected result:</p>
+     * <p>Guest is redirected to login/register page.</p>
+     *
+     * @test
+     */
+    public function guestCannotOpenWishlist()
+    {
+        //Steps
+        $this->logoutCustomer();
+        $this->clickControl('link', 'my_wishlist');
+        //Verify
+        $this->assertTrue($this->checkCurrentPage('customer_login'), $this->getParsedMessages());
+    }
+
+    /**
+     * <p>Verifies that a guest cannot add a product to a wishlist.</p>
+     * <p>Steps:</p>
+     * <p>1. Logout customer</p>
+     * <p>2. Open a product</p>
+     * <p>3. Add products to the wishlist</p>
+     * <p>Expected result:</p>
+     * <p>Guest is redirected to login/register page.</p>
+     *
+     * @param array $testData
+     *
+     * @test
+     * @depends preconditionsForTests
+     */
+    public function guestCannotAddProductToWishlist($testData)
+    {
+        //Steps
+        $this->frontend();
+        $this->wishlistHelper()->frontAddProductToWishlistFromProductPage($testData['productNames']['simple']);
+        //Verify
+        $this->assertTrue($this->checkCurrentPage('customer_login'), $this->getParsedMessages());
+        $this->customerHelper()->frontLoginCustomer($testData['user']);
+        $this->assertMessagePresent('success', 'successfully_added_product');
     }
 }

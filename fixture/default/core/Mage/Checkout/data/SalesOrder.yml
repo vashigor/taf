@@ -21,7 +21,7 @@
 # @package     selenium
 # @subpackage  test-data
 # @author      Magento Core Team <core@magentocommerce.com>
-# @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+# @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
 # @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 #
 ---
@@ -150,7 +150,7 @@ new_customer:
     gender: 'Male'
     send_welcome_email: No
     send_from: %noValue%
-    password: passw0rd
+    password: 123123q
     auto_generated_password: No
 
 shipping:
@@ -538,7 +538,7 @@ config_option_custom_options:
         field_dropdown_3:
             fieldType: dropdown
             fieldParameter: year
-            fieldsValue: 2012
+            fieldsValue: 2013
     option_4:
         title: Custom Options Date & Time
         field_dropdown_1:
@@ -552,7 +552,7 @@ config_option_custom_options:
         field_dropdown_3:
             fieldType: dropdown
             fieldParameter: year
-            fieldsValue: 2012
+            fieldsValue: 2013
         field_dropdown_4:
             fieldType: dropdown
             fieldParameter: hour

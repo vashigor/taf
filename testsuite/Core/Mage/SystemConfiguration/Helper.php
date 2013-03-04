@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  tests
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -43,20 +43,13 @@ class Core_Mage_SystemConfiguration_Helper extends Mage_Selenium_TestCase
     public function configure($parameters)
     {
         if (is_string($parameters)) {
-            $parameters = $this->loadData($parameters);
+            $elements = explode('/', $parameters);
+            $fileName = (count($elements) > 1) ? array_shift($elements) : '';
+            $parameters = $this->loadDataSet($fileName, implode('/', $elements));
         }
-        $parameters = $this->arrayEmptyClear($parameters);
         $chooseScope = (isset($parameters['configuration_scope'])) ? $parameters['configuration_scope'] : null;
         if ($chooseScope) {
-            $xpath = $this->_getControlXpath('dropdown', 'current_configuration_scope');
-            $toSelect = $xpath . '//option[normalize-space(text())="' . $chooseScope . '"]';
-            $isSelected = $toSelect . '[@selected]';
-            if (!$this->isElementPresent($isSelected)) {
-                $this->_defineParameters($toSelect, 'url');
-                $this->fillForm(array('current_configuration_scope' => $chooseScope));
-                $this->waitForPageToLoad($this->_browserTimeoutPeriod);
-                $this->validatePage();
-            }
+            $this->selectStoreScope('dropdown', 'current_configuration_scope', $chooseScope);
         }
         foreach ($parameters as $value) {
             if (!is_array($value)) {
@@ -65,9 +58,7 @@ class Core_Mage_SystemConfiguration_Helper extends Mage_Selenium_TestCase
             $tab = (isset($value['tab_name'])) ? $value['tab_name'] : null;
             $settings = (isset($value['configuration'])) ? $value['configuration'] : null;
             if ($tab) {
-                $xpath = $this->_getControlXpath('tab', $tab);
-                $this->_defineParameters($xpath, 'href');
-                $this->clickAndWait($xpath, $this->_browserTimeoutPeriod);
+                $this->openConfigurationTab($tab);
                 $this->fillForm($settings, $tab);
                 $this->saveForm('save_config');
                 $this->assertMessagePresent('success', 'success_saved_config');
@@ -85,14 +76,33 @@ class Core_Mage_SystemConfiguration_Helper extends Mage_Selenium_TestCase
     }
 
     /**
+     * Open tab on Configuration page
+     *
+     * @param string $tab
+     */
+    public function openConfigurationTab($tab)
+    {
+        if (!$this->controlIsPresent('tab', $tab)) {
+            $this->fail(
+                "Current location url: '" . $this->getLocation() . "'\nCurrent page: '" . $this->getCurrentPage()
+                . "'\nTab '$tab' is not present on the page");
+        }
+        $this->defineParameters('tab', $tab, 'href');
+        $this->clickControl('tab', $tab);
+    }
+
+    /**
      * Define Url Parameters for System Configuration page
      *
-     * @param string $xpath
+     * @param string $controlType
+     * @param string $controlName
      * @param string $attribute
+     *
+     * @return void
      */
-    private function _defineParameters($xpath, $attribute)
+    public function defineParameters($controlType, $controlName, $attribute)
     {
-        $params = $this->getAttribute($xpath . '/@' . $attribute);
+        $params = $this->getControlAttribute($controlType, $controlName, $attribute);
         $params = explode('/', $params);
         foreach ($params as $key => $value) {
             if ($value == 'section' && isset($params[$key + 1])) {
@@ -116,20 +126,21 @@ class Core_Mage_SystemConfiguration_Helper extends Mage_Selenium_TestCase
     public function useHttps($path = 'admin', $useSecure = 'Yes')
     {
         $this->admin('system_configuration');
-        $xpath = $this->_getControlXpath('tab', 'general_web');
-        $this->addParameter('tabName', 'web');
-        $this->clickAndWait($xpath, $this->_browserTimeoutPeriod);
-        $secureBaseUrlXpath = $this->_getControlXpath('field', 'secure_base_url');
-        $url = preg_replace('/http(s)?/', 'https', $this->getValue($secureBaseUrlXpath));
-        $data = array('secure_base_url'             => $url,
+        $this->openConfigurationTab('general_web');
+        $secureBaseUrl = $this->getControlAttribute('field', 'secure_base_url', 'value');
+        $data = array('secure_base_url'             => preg_replace('/http(s)?/', 'https', $secureBaseUrl),
                       'use_secure_urls_in_' . $path => ucwords(strtolower($useSecure)));
         $this->fillForm($data, 'general_web');
         $this->clickButton('save_config');
-        if ($this->getTitle() == 'Log into Magento Admin Page') {
-            $this->loginAdminUser();
-            $this->admin('system_configuration');
-            $this->clickAndWait($xpath, $this->_browserTimeoutPeriod);
-        }
         $this->assertTrue($this->verifyForm($data, 'general_web'), $this->getParsedMessages());
     }
+
+    /**
+     * @param $parameters
+     */
+    public function configurePaypal($parameters)
+    {
+        $this->configure($parameters);
+    }
+
 }

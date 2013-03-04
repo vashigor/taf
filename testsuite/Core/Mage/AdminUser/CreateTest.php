@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  tests
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -82,7 +82,6 @@ class Core_Mage_AdminUser_CreateTest extends Mage_Selenium_TestCase
      * @return array
      * @test
      * @depends navigationTest
-     *
      */
     public function withRequiredFieldsOnly()
     {
@@ -110,7 +109,6 @@ class Core_Mage_AdminUser_CreateTest extends Mage_Selenium_TestCase
      *
      * @test
      * @depends withRequiredFieldsOnly
-     *
      */
     public function withUserNameThatAlreadyExists($userData)
     {
@@ -136,7 +134,6 @@ class Core_Mage_AdminUser_CreateTest extends Mage_Selenium_TestCase
      *
      * @test
      * @depends withRequiredFieldsOnly
-     *
      */
     public function withUserEmailThatAlreadyExists($userData)
     {
@@ -165,7 +162,6 @@ class Core_Mage_AdminUser_CreateTest extends Mage_Selenium_TestCase
      * @test
      * @dataProvider withRequiredFieldsEmptyDataProvider
      * @depends withRequiredFieldsOnly
-     *
      */
     public function withRequiredFieldsEmpty($emptyField, $messageCount)
     {
@@ -205,7 +201,6 @@ class Core_Mage_AdminUser_CreateTest extends Mage_Selenium_TestCase
      *
      * @test
      * @depends withRequiredFieldsOnly
-     *
      */
     public function withSpecialCharactersExceptEmail()
     {
@@ -214,11 +209,17 @@ class Core_Mage_AdminUser_CreateTest extends Mage_Selenium_TestCase
                                    'first_name' => $this->generate('string', 32, ':punct:'),
                                    'last_name'  => $this->generate('string', 32, ':punct:'),);
         $userData = $this->loadDataSet('AdminUsers', 'generic_admin_user', $specialCharacters);
+        $searchData = $this->loadDataSet('AdminUsers', 'search_admin_user',
+            array('email'      => $userData['email'],
+                  'first_name' => $specialCharacters['first_name'],
+                  'last_name'  => $specialCharacters['last_name'],
+                  'user_name'  => $specialCharacters['user_name']));
         //Steps
         $this->adminUserHelper()->createAdminUser($userData);
         //Verifying
         $this->assertMessagePresent('success', 'success_saved_user');
-        $this->assertTrue($this->checkCurrentPage('edit_admin_user'), $this->getParsedMessages());
+        $this->navigate('manage_admin_users');
+        $this->searchAndOpen($searchData, 'permissionsUserGrid');
         $this->assertTrue($this->verifyForm($userData, 'user_info', array('password', 'password_confirmation')),
             $this->getParsedMessages());
     }
@@ -236,7 +237,6 @@ class Core_Mage_AdminUser_CreateTest extends Mage_Selenium_TestCase
      *
      * @test
      * @depends withRequiredFieldsOnly
-     *
      */
     public function withLongValues()
     {
@@ -249,11 +249,17 @@ class Core_Mage_AdminUser_CreateTest extends Mage_Selenium_TestCase
                             'password'              => $password,
                             'password_confirmation' => $password);
         $userData = $this->loadDataSet('AdminUsers', 'generic_admin_user', $longValues);
+        $searchData = $this->loadDataSet('AdminUsers', 'search_admin_user',
+            array('email'      => $userData['email'],
+                  'first_name' => $userData['first_name'],
+                  'last_name'  => $userData['last_name'],
+                  'user_name'  => $userData['user_name']));
         //Steps
         $this->adminUserHelper()->createAdminUser($userData);
         //Verifying
         $this->assertMessagePresent('success', 'success_saved_user');
-        $this->assertTrue($this->checkCurrentPage('edit_admin_user'), $this->getParsedMessages());
+        $this->navigate('manage_admin_users');
+        $this->searchAndOpen($searchData, 'permissionsUserGrid');
         $this->assertTrue($this->verifyForm($userData, 'user_info', array('password', 'password_confirmation')),
             $this->getParsedMessages());
     }
@@ -276,7 +282,6 @@ class Core_Mage_AdminUser_CreateTest extends Mage_Selenium_TestCase
      * @test
      * @dataProvider withInvalidPasswordDataProvider
      * @depends withRequiredFieldsOnly
-     *
      */
     public function withInvalidPassword($wrongPasswords, $errorMessage)
     {
@@ -292,22 +297,14 @@ class Core_Mage_AdminUser_CreateTest extends Mage_Selenium_TestCase
     public function withInvalidPasswordDataProvider()
     {
         return array(
-            array(array(
-                    'password' => '1234567890',
-                    'password_confirmation' => '1234567890',
-                ), 'invalid_password'),
-            array(array(
-                    'password' => 'testText',
-                    'password_confirmation' => 'testText',
-                ), 'invalid_password'),
-            array(array(
-                    'password' => '123qwe',
-                    'password_confirmation' => '123qwe',
-                ), 'invalid_password'),
-            array(array(
-                    'password' => '123qwe123',
-                    'password_confirmation' => '123qwe1234',
-                ), 'password_unmatch')
+            array(array('password'              => '1234567890',
+                        'password_confirmation' => '1234567890',), 'invalid_password'),
+            array(array('password'              => 'testText',
+                        'password_confirmation' => 'testText',), 'invalid_password'),
+            array(array('password'              => '123qwe',
+                        'password_confirmation' => '123qwe',), 'invalid_password'),
+            array(array('password'              => '123123qwe',
+                        'password_confirmation' => '1231234qwe',), 'password_unmatch')
         );
     }
 
@@ -329,7 +326,6 @@ class Core_Mage_AdminUser_CreateTest extends Mage_Selenium_TestCase
      * @test
      * @dataProvider withInvalidEmailDataProvider
      * @depends withRequiredFieldsOnly
-     *
      */
     public function withInvalidEmail($invalidEmail)
     {
@@ -367,7 +363,6 @@ class Core_Mage_AdminUser_CreateTest extends Mage_Selenium_TestCase
      *
      * @test
      * @depends withRequiredFieldsOnly
-     *
      */
     public function inactiveUser()
     {
@@ -402,7 +397,6 @@ class Core_Mage_AdminUser_CreateTest extends Mage_Selenium_TestCase
      *
      * @test
      * @depends withRequiredFieldsOnly
-     *
      */
     public function withRole()
     {
@@ -435,7 +429,6 @@ class Core_Mage_AdminUser_CreateTest extends Mage_Selenium_TestCase
      *
      * @test
      * @depends withRequiredFieldsOnly
-     *
      */
     public function withoutRole()
     {

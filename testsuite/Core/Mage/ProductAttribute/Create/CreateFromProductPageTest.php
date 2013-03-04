@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  tests
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -43,17 +43,11 @@ class Core_Mage_ProductAttribute_Create_CreateFromProductPageTest extends Mage_S
     {
         $this->loginAdminUser();
         $this->navigate('manage_products');
-        $this->addParameter('id', 0);
     }
 
     protected function tearDownAfterTest()
     {
-        $windowQty = $this->getAllWindowNames();
-        if (count($windowQty) > 1 && end($windowQty) != 'null') {
-            $this->selectWindow("name=" . end($windowQty));
-            $this->close();
-            $this->selectWindow(null);
-        }
+        $this->closeLastWindow();
     }
 
     /**
@@ -81,15 +75,19 @@ class Core_Mage_ProductAttribute_Create_CreateFromProductPageTest extends Mage_S
     public function onProductPageWithRequiredFieldsOnly($attributeType)
     {
         //Data
-        $productData = $this->loadData('simple_product_required');
-        $attrData = $this->loadData($attributeType, null, array('attribute_code', 'admin_title'));
+        $productData = $this->loadDataSet('Product', 'simple_product_required');
+        $attrData = $this->loadDataSet('ProductAttribute', $attributeType, null);
         //Steps
         $this->clickButton('add_new_product');
         $this->productHelper()->fillProductSettings($productData);
         $this->productAttributeHelper()->createAttributeOnGeneralTab($attrData);
         //Verifying
         $this->selectWindow(null);
-        $this->assertElementPresent("//*[contains(@id,'" . $attrData['attribute_code'] . "')]");
+        $code = ($attributeType != 'product_attribute_fpt')
+            ? $attrData['attribute_code']
+            : $attrData['attribute_code'] . '_table';
+        $this->addParameter('elementId', $code);
+        $this->assertTrue($this->controlIsPresent('pageelement', 'element_by_id'));
     }
 
     public function onProductPageWithRequiredFieldsOnlyDataProvider()

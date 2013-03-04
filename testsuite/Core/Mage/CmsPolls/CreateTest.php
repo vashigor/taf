@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  tests
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -54,7 +54,6 @@ class Core_Mage_CmsPolls_CreateTest extends Mage_Selenium_TestCase
         $this->loginAdminUser();
         $this->navigate('poll_manager');
         $this->cmsPollsHelper()->closeAllPolls();
-        $this->addParameter('id', '0');
     }
 
     /**
@@ -72,9 +71,9 @@ class Core_Mage_CmsPolls_CreateTest extends Mage_Selenium_TestCase
     public function createNew()
     {
         //Data
-        $pollData = $this->loadData('poll_open');
+        $pollData = $this->loadDataSet('CmsPoll', 'poll_open');
         $name = $pollData['poll_question'];
-        $searchPollData = $this->loadData('search_poll', array('filter_question' => $name));
+        $searchPollData = $this->loadDataSet('CmsPoll', 'search_poll', array('filter_question' => $name));
         //Steps
         $this->cmsPollsHelper()->createPoll($pollData);
         //Verifying
@@ -83,8 +82,7 @@ class Core_Mage_CmsPolls_CreateTest extends Mage_Selenium_TestCase
         $this->cmsPollsHelper()->checkPollData($pollData);
         $this->clearInvalidedCache();
         $this->frontend('about_us');
-        $this->assertTrue($this->cmsPollsHelper()->frontCheckPoll($name),
-                'There is no ' . $name . ' poll on the page');
+        $this->assertTrue($this->cmsPollsHelper()->frontCheckPoll($name), 'There is no ' . $name . ' poll on the page');
     }
 
     /**
@@ -105,10 +103,10 @@ class Core_Mage_CmsPolls_CreateTest extends Mage_Selenium_TestCase
     public function withEmptyRequiredFields($emptyField, $fieldType)
     {
         //Data
-        $pollData = $this->loadData('poll_empty_required', array($emptyField => ''));
+        $pollData = $this->loadDataSet('CmsPoll', 'poll_empty_required', array($emptyField => ''));
         if ($emptyField == 'visible_in') {
             $this->navigate('manage_stores');
-            $this->storeHelper()->createStore('generic_store_view', 'store_view');
+            $this->storeHelper()->createStore('StoreView/generic_store_view', 'store_view');
             $this->assertMessagePresent('success', 'success_saved_store_view');
             $this->navigate('poll_manager');
         }
@@ -144,7 +142,7 @@ class Core_Mage_CmsPolls_CreateTest extends Mage_Selenium_TestCase
     public function withoutAnswer()
     {
         //Data
-        $pollData = $this->loadData('poll_open', array('assigned_answers_set' => '%noValue%'));
+        $pollData = $this->loadDataSet('CmsPoll', 'poll_open', array('assigned_answers_set' => '%noValue%'));
         //Steps
         $this->cmsPollsHelper()->createPoll($pollData);
         //Verifying
@@ -166,7 +164,7 @@ class Core_Mage_CmsPolls_CreateTest extends Mage_Selenium_TestCase
     public function identicalAnswer()
     {
         //Data
-        $pollData = $this->loadData('poll_open', array('answer_title' => 'duplicate'));
+        $pollData = $this->loadDataSet('CmsPoll', 'poll_open', array('answer_title' => 'duplicate'));
         //Steps
         $this->cmsPollsHelper()->createPoll($pollData);
         //Verifying
@@ -189,27 +187,25 @@ class Core_Mage_CmsPolls_CreateTest extends Mage_Selenium_TestCase
     public function closedIsNotDisplayed()
     {
         //Data
-        $pollData = $this->loadData('poll_open');
+        $pollData = $this->loadDataSet('CmsPoll', 'poll_open');
         $name = $pollData['poll_question'];
-        $searchPollData = $this->loadData('search_poll', array('filter_question' => $name));
+        $searchPollData = $this->loadDataSet('CmsPoll', 'search_poll', array('filter_question' => $name));
         //Steps
         $this->cmsPollsHelper()->createPoll($pollData);
         //Verifying
         $this->assertMessagePresent('success', 'success_saved_poll');
         $this->clearInvalidedCache();
         $this->frontend('about_us');
-        $this->assertTrue($this->cmsPollsHelper()->frontCheckPoll($name),
-                'There is no ' . $name . ' poll on the page');
+        $this->assertTrue($this->cmsPollsHelper()->frontCheckPoll($name), 'There is no ' . $name . ' poll on the page');
         //Steps
-        $this->admin();
+        $this->loginAdminUser();
         $this->navigate('poll_manager');
         $this->cmsPollsHelper()->setPollState($searchPollData, 'Closed');
         //Verifying
         $this->assertMessagePresent('success', 'success_saved_poll');
         $this->clearInvalidedCache();
         $this->frontend('about_us');
-        $this->assertFalse($this->cmsPollsHelper()->frontCheckPoll($name),
-                'There is ' . $name . ' poll on the page');
+        $this->assertFalse($this->cmsPollsHelper()->frontCheckPoll($name), 'There is ' . $name . ' poll on the page');
     }
 
     /**
@@ -229,7 +225,7 @@ class Core_Mage_CmsPolls_CreateTest extends Mage_Selenium_TestCase
     public function votePoll()
     {
         //Data
-        $pollData = $this->loadData('poll_open');
+        $pollData = $this->loadDataSet('CmsPoll', 'poll_open');
         $name = $pollData['poll_question'];
         //Steps and Verifying
         $this->cmsPollsHelper()->createPoll($pollData);
@@ -237,12 +233,10 @@ class Core_Mage_CmsPolls_CreateTest extends Mage_Selenium_TestCase
         $this->clearInvalidedCache();
         $this->frontend();
         $this->navigate('about_us');
-        $this->assertTrue($this->cmsPollsHelper()->frontCheckPoll($name),
-                'There is no ' . $name . ' poll on the page');
+        $this->assertTrue($this->cmsPollsHelper()->frontCheckPoll($name), 'There is no ' . $name . ' poll on the page');
         $this->cmsPollsHelper()->vote($name, $pollData['assigned_answers_set']['answer_1']['answer_title']);
         //Verifying
         $this->navigate('about_us');
-        $this->assertFalse($this->cmsPollsHelper()->frontCheckPoll($name),
-                'There is ' . $name . ' poll on the page');
+        $this->assertFalse($this->cmsPollsHelper()->frontCheckPoll($name), 'There is ' . $name . ' poll on the page');
     }
 }

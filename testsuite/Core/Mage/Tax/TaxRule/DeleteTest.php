@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  tests
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -47,15 +47,13 @@ class Core_Mage_Tax_TaxRule_DeleteTest extends Mage_Selenium_TestCase
 
     /**
      * <p>Create Tax Rate for tests<p>
-     *
      * @return array $taxRateData
-     *
      * @test
      */
-    public function setupTestDataCreateTaxRate()
+    public function preconditionsForTests()
     {
         //Data
-        $taxRateData = $this->loadData('tax_rate_create_test');
+        $taxRateData = $this->loadDataSet('Tax', 'tax_rate_create_test');
         //Steps
         $this->navigate('manage_tax_zones_and_rates');
         $this->taxHelper()->createTaxItem($taxRateData, 'rate');
@@ -73,21 +71,22 @@ class Core_Mage_Tax_TaxRule_DeleteTest extends Mage_Selenium_TestCase
      * <p>Expected result:</p>
      * <p>Received the message that the Tax Rule has been deleted.</p>
      *
-     * @depends setupTestDataCreateTaxRate
      * @param array $taxRateData
+     *
      * @test
+     * @depends preconditionsForTests
      */
     public function deleteTaxRule($taxRateData)
     {
         //Data
-        $taxRuleData = $this->loadData('new_tax_rule_required', array('tax_rate' => $taxRateData['tax_identifier']));
-        $searchTaxRuleData = $this->loadData('search_tax_rule', array('filter_name' => $taxRuleData['name']));
+        $rule = $this->loadDataSet('Tax', 'new_tax_rule_required', array('tax_rate' => $taxRateData['tax_identifier']));
+        $searchTaxRule = $this->loadDataSet('Tax', 'search_tax_rule', array('filter_name' => $rule['name']));
         //Steps
-        $this->taxHelper()->createTaxItem($taxRuleData, 'rule');
+        $this->taxHelper()->createTaxItem($rule, 'rule');
         //Verifying
         $this->assertMessagePresent('success', 'success_saved_tax_rule');
         //Steps
-        $this->taxHelper()->deleteTaxItem($searchTaxRuleData, 'rule');
+        $this->taxHelper()->deleteTaxItem($searchTaxRule, 'rule');
         //Verifying
         $this->assertMessagePresent('success', 'success_deleted_tax_rule');
     }

@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  Mage_Selenium
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 /**
@@ -282,12 +282,15 @@ class Mage_Selenium_Helper_Config extends Mage_Selenium_Helper_Abstract
 
     /**
      * Return all area configs for current application
+     *
+     * @param bool $loadDefault Will override current settings with default values
+     *
      * @return array
      * @throws OutOfRangeException
      */
-    public function getConfigAreas()
+    public function getConfigAreas($loadDefault = false)
     {
-        if (!$this->_configAreas) {
+        if (!$this->_configAreas || $loadDefault) {
             $config = $this->getApplicationConfig();
             if (!isset($config['areas'])) {
                 throw new OutOfRangeException('Areas for "' . $this->_application . '" application are not set');

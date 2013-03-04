@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  tests
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -43,7 +43,6 @@ class Core_Mage_CmsPolls_DeleteTest extends Mage_Selenium_TestCase
     {
         $this->loginAdminUser();
         $this->navigate('poll_manager');
-        $this->addParameter('id', '0');
     }
 
     /**
@@ -60,9 +59,9 @@ class Core_Mage_CmsPolls_DeleteTest extends Mage_Selenium_TestCase
     public function deleteNewPoll()
     {
         //Data
-        $pollData = $this->loadData('poll_open');
-        $searchPollData = $this->loadData('search_poll',
-                array('filter_question' => $pollData['poll_question']));
+        $pollData = $this->loadDataSet('CmsPoll', 'poll_open');
+        $searchPollData = $this->loadDataSet('CmsPoll', 'search_poll',
+            array('filter_question' => $pollData['poll_question']));
         //Steps
         $this->cmsPollsHelper()->createPoll($pollData);
         //Verifying

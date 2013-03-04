@@ -22,14 +22,14 @@ REM @category    tests
 REM @package     selenium
 REM @subpackage  runner
 REM @author      Magento Core Team <core@magentocommerce.com>
-REM @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+REM @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
 REM @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 REM
 
 echo "You can pass the parameters to the script and execute several"
 echo " configuration at the same time. In case you would like to"
 echo "use this ability use the command in such way: "
-echo "runtests.bat mage:firefox, enterprise:iexplore, mage:googlechrome"
+echo "runtests.bat mage:firefox:phpunit1.xml, enterprise:iexplore:phpunit2.xml, mage:googlechrome:phpunit3.xml"
 echo "Mentioned command will execute 3 instances of phpunit tests"
 echo "with different configuration: application 'mage' will be executed in"
 echo "'firefox' browser, application 'enterprise' will be executed in"
@@ -107,10 +107,11 @@ GOTO :EOF
 :functionReplace
 set defaultapp=    default: *mage
 set defaultbrowser=    default: *firefox
-For /F "usebackq delims=.=: tokens=2,3,4" %%a IN (`set strConfName`) DO (
+For /F "usebackq delims=.=:=: tokens=2,3,4,5,6" %%a IN (`set strConfName`) DO (
 	set counter=%%a
 	set browser=%%c
 	set app=%%b
+	set phpunit=%%d
 	set newdefaultapp=    default: *%%b
 	set newdefaultbrowser=    default: *%%c
 	call:functionRepAnExec
@@ -118,19 +119,19 @@ For /F "usebackq delims=.=: tokens=2,3,4" %%a IN (`set strConfName`) DO (
 GOTO :EOF
 
 :functionRepAnExec
-for /F "tokens=* delims=" %%i in (%workingDir%\%tufn%\%app%%browser%_%counter%\config\config.yml) do (
+for /F "tokens=* delims=" %%i in (%workingDir%\%tufn%\%app%%browser%%phpunit%_%counter%\config\config.yml) do (
 	if "%%i"=="%defaultbrowser%" (
-		(echo %newdefaultbrowser%)>> %workingDir%\%tufn%\%app%%browser%_%counter%\config\confignew.yml
+		(echo %newdefaultbrowser%)>> %workingDir%\%tufn%\%app%%browser%%phpunit%_%counter%\config\confignew.yml
 	) else (
 		if "%%i"=="%defaultapp%" (
-			(echo %newdefaultapp%)>> %workingDir%\%tufn%\%app%%browser%_%counter%\config\confignew.yml
+			(echo %newdefaultapp%)>> %workingDir%\%tufn%\%app%%browser%%phpunit%_%counter%\config\confignew.yml
 		) else (
-			(echo %%i)>> %workingDir%\%tufn%\%app%%browser%_%counter%\config\confignew.yml
+			(echo %%i)>> %workingDir%\%tufn%\%app%%browser%%phpunit%_%counter%\config\confignew.yml
 		)
 	)
 )
-move %workingDir%\%tufn%\%app%%browser%_%counter%\config\confignew.yml %workingDir%\%tufn%\%app%%browser%_%counter%\config\config.yml
-start cmd /X/V:ON/K "cd /d %workingDir%\%tufn%\%app%%browser%_%counter%&%PHPBIN% %PHP_PEAR_BIN_DIR%\phpunit --configuration phpunit.xml >var\logs\PHPUnitReport.txt"
+move %workingDir%\%tufn%\%app%%browser%%phpunit%_%counter%\config\confignew.yml %workingDir%\%tufn%\%app%%browser%%phpunit%_%counter%\config\config.yml
+start cmd /X/V:ON/K "cd /d %workingDir%\%tufn%\%app%%browser%%phpunit%_%counter%&%PHPBIN% %PHP_PEAR_BIN_DIR%\phpunit --configuration %phpunit%.xml >var\logs\PHPUnitReport.txt"
 GOTO :EOF
 
 :EOF

@@ -20,7 +20,7 @@
 # @package     selenium
 # @subpackage  uimaps
 # @author      Magento Core Team <core@magentocommerce.com>
-# @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+# @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
 # @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 #
 ---
@@ -61,7 +61,7 @@ manage_sales_credit_memos:
             confirmation_to_procced: This will create an offline refund. To create an online refund, open an invoice and create credit memo for it. Do you wish to proceed?
             success_creating_creditmemo: //li[normalize-space(@class)='success-msg' and contains(.,'The credit memo has been created.')]
             failed_authorize_online_refund: "//li[normalize-space(@class)='error-msg' and contains(.,'Gateway error: The referenced transaction does not meet the criteria for issuing a credit. If the invoice was created offline, try creating an offline creditmemo.')]"
-
+            order_id: "//*[contains(@class,'head-sales-order')][contains(text(), 'Order #')]"
 
 create_credit_memo:
     mca: sales_order_creditmemo/new/order_id/%id%/
@@ -125,6 +125,10 @@ create_credit_memo:
                             email_copy_of_credit_memo: //input[@name='creditmemo[send_email]']
                         pageelements:
                             price_totals: //tbody
+                            price_totals_line: //tbody/descendant::tr
+                            price_totals_line_index: //tbody/descendant::tr[%index%]
+                            price_totals_line_index_name: //tbody/descendant::tr[%index%]/*[1]
+                            price_totals_line_index_value: //tbody/descendant::tr[%index%]/*[2]
         buttons:
             back: //p[@class='form-buttons']//button[span='Back']
             reset: //p[@class='form-buttons']//button[span='Reset']
@@ -132,7 +136,7 @@ create_credit_memo:
 
 create_credit_memo_for_invoice:
     mca: sales_order_creditmemo/new/order_id/%id%/invoice_id/%invoice_id%/
-    title: New Memo for %invoiceId% / Credit Memos / Sales / Magento Admin
+    title: New Memo for %elementTitle% / Credit Memos / Sales / Magento Admin
     uimap: *orderCreditmemo
 
 view_credit_memo:
@@ -177,6 +181,10 @@ view_credit_memo:
                         xpath: //div[@class='box-right entry-edit'][./div/h4='Credit Memo Totals']
                         pageelements:
                             price_totals: //tbody
+                            price_totals_line: //tbody/descendant::tr
+                            price_totals_line_index: //tbody/descendant::tr[%index%]
+                            price_totals_line_index_name: //tbody/descendant::tr[%index%]/*[1]
+                            price_totals_line_index_value: //tbody/descendant::tr[%index%]/*[2]
         buttons:
             back: //p[@class='form-buttons']//button[span='Back']
             send_email: //p[@class='form-buttons']//button[span='Send Email']

@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  tests
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -97,7 +97,6 @@ class Core_Mage_CheckoutMultipleAddresses_LoggedIn_InputDataValidationTest exten
      * @test
      * @dataProvider emptyRequiredFieldsDataProvider
      * @depends preconditionsForTests
-     *
      */
     public function emptyRequiredFieldsInShippingAddress($emptyField, $fieldName, $testData)
     {
@@ -145,7 +144,6 @@ class Core_Mage_CheckoutMultipleAddresses_LoggedIn_InputDataValidationTest exten
      * @test
      * @dataProvider emptyRequiredFieldsDataProvider
      * @depends preconditionsForTests
-     *
      */
     public function emptyRequiredFieldsInBillingAddress($emptyField, $fieldName, $testData)
     {
@@ -203,7 +201,6 @@ class Core_Mage_CheckoutMultipleAddresses_LoggedIn_InputDataValidationTest exten
      *
      * @test
      * @depends preconditionsForTests
-     *
      */
     public function withSpecialCharsInShippingAddress($testData)
     {
@@ -237,7 +234,6 @@ class Core_Mage_CheckoutMultipleAddresses_LoggedIn_InputDataValidationTest exten
      *
      * @test
      * @depends preconditionsForTests
-     *
      */
     public function withLongValuesInShippingAddress($testData)
     {
@@ -275,7 +271,6 @@ class Core_Mage_CheckoutMultipleAddresses_LoggedIn_InputDataValidationTest exten
      *
      * @test
      * @depends preconditionsForTests
-     *
      */
     public function withSpecialCharsInBillingAddress($testData)
     {
@@ -310,7 +305,6 @@ class Core_Mage_CheckoutMultipleAddresses_LoggedIn_InputDataValidationTest exten
      *
      * @test
      * @depends preconditionsForTests
-     *
      */
     public function withLongValuesInBillingAddress($testData)
     {
@@ -344,7 +338,6 @@ class Core_Mage_CheckoutMultipleAddresses_LoggedIn_InputDataValidationTest exten
      * @test
      * @dataProvider selectAddressesPageInvalidQtyDataProvider
      * @depends preconditionsForTests
-     *
      */
     public function selectInvalidProductQty($invalidQty, $testData)
     {
@@ -388,7 +381,6 @@ class Core_Mage_CheckoutMultipleAddresses_LoggedIn_InputDataValidationTest exten
      *
      * @test
      * @depends preconditionsForTests
-     *
      */
     public function shippingMethodNotSelected($testData)
     {
@@ -422,7 +414,6 @@ class Core_Mage_CheckoutMultipleAddresses_LoggedIn_InputDataValidationTest exten
      *
      * @test
      * @depends preconditionsForTests
-     *
      */
     public function paymentMethodNotSelected($testData)
     {
@@ -459,7 +450,6 @@ class Core_Mage_CheckoutMultipleAddresses_LoggedIn_InputDataValidationTest exten
      * @test
      * @dataProvider emptyCardInfoDataProvider
      * @depends preconditionsForTests
-     *
      */
     public function emptyCardInfo($emptyField, $fieldName, $testData)
     {

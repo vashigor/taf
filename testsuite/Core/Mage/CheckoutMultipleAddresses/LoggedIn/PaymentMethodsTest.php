@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  tests
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -77,10 +77,8 @@ class Core_Mage_CheckoutMultipleAddresses_LoggedIn_PaymentMethodsTest extends Ma
 
         return array('products' => array('product_1' => $simple1['simple']['product_name'],
                                          'product_2' => $simple2['simple']['product_name']),
-                     'user'     => array('email'    => $userData['email'],
-                                         'password' => $userData['password']),
-                     'api'      => $api,
-                     'visa'     => $accounts['visa']['credit_card']);
+                     'user'     => array('email' => $userData['email'], 'password' => $userData['password']),
+                     'api'      => $api, 'visa' => $accounts['visa']['credit_card']);
     }
 
     /**
@@ -110,39 +108,32 @@ class Core_Mage_CheckoutMultipleAddresses_LoggedIn_PaymentMethodsTest extends Ma
      * @test
      * @dataProvider paymentsWithout3dDataProvider
      * @depends preconditionsForTests
-     *
      */
     public function paymentsWithout3d($payment, $testData)
     {
         //Data
         $paymentData = $this->loadDataSet('Payment', 'payment_' . $payment);
         $checkoutData = $this->loadDataSet('MultipleAddressesCheckout', 'multiple_with_signed_in',
-                                           array('payment' => $paymentData),
-                                           $testData['products']);
-        if ($payment != 'checkmoney') {
-            if ($payment != 'payflowpro') {
-                $checkoutData = $this->overrideArrayData($testData['visa'], $checkoutData, 'byFieldKey');
-            }
-            $payment .= '_without_3Dsecure';
+            array('payment' => $paymentData), $testData['products']);
+        $configName = ($payment !== 'checkmoney') ? $payment . '_without_3Dsecure' : $payment;
+        $paymentConfig = $this->loadDataSet('PaymentMethod', $configName);
+        if ($payment != 'payflowpro' && $payment != 'checkmoney') {
+            $checkoutData = $this->overrideArrayData($testData['visa'], $checkoutData, 'byFieldKey');
         }
-        $paymentConfig = $this->loadDataSet('PaymentMethod', $payment);
-        if (preg_match('/^paypaldirect_/', $payment)) {
+        if ($payment == 'paypaldirect') {
             $paymentConfig = $this->overrideArrayData($testData['api'], $paymentConfig, 'byFieldKey');
         }
         //Steps
         $this->navigate('system_configuration');
-        $this->systemConfigurationHelper()->configure($paymentConfig);
+        if (preg_match('/^pay(pal)|(flow)/', $payment)) {
+            $this->systemConfigurationHelper()->configurePaypal($paymentConfig);
+        } else {
+            $this->systemConfigurationHelper()->configure($paymentConfig);
+        }
         $this->customerHelper()->frontLoginCustomer($testData['user']);
         $this->checkoutMultipleAddressesHelper()->frontMultipleCheckout($checkoutData);
         //Verification
-        //@TODO Uncomment and remove workaround for getting fails, not skipping tests if payment methods are inaccessible
-        //$this->assertMessagePresent('success', 'success_checkout');
-        //Workaround start
-        if (!$this->controlIsPresent('message', 'success_checkout')) {
-            $this->markTestSkipped("Messages on the page:\n" . self::messagesToString($this->getMessagesOnPage()));
-        }
-        //Workaround finish
-
+        $this->assertMessagePresent('success', 'success_checkout');
     }
 
     public function paymentsWithout3dDataProvider()
@@ -185,15 +176,13 @@ class Core_Mage_CheckoutMultipleAddresses_LoggedIn_PaymentMethodsTest extends Ma
      * @test
      * @dataProvider paymentsWith3dDataProvider
      * @depends preconditionsForTests
-     *
      */
     public function paymentsWith3d($payment, $testData)
     {
         //Data
         $paymentData = $this->loadDataSet('Payment', 'payment_' . $payment);
         $checkoutData = $this->loadDataSet('MultipleAddressesCheckout', 'multiple_with_signed_in',
-                                           array('payment' => $paymentData),
-                                           $testData['products']);
+            array('payment' => $paymentData), $testData['products']);
         $paymentConfig = $this->loadDataSet('PaymentMethod', $payment . '_with_3Dsecure');
         //Steps
         if ($payment == 'paypaldirect') {
@@ -201,17 +190,17 @@ class Core_Mage_CheckoutMultipleAddresses_LoggedIn_PaymentMethodsTest extends Ma
             $paymentConfig = $this->overrideArrayData($testData['api'], $paymentConfig, 'byFieldKey');
         }
         $this->navigate('system_configuration');
+        if (preg_match('/^pay(pal)|(flow)/', $payment)) {
+            $this->systemConfigurationHelper()->configurePaypal($paymentConfig);
+            $this->systemConfigurationHelper()->configure('PaymentMethod/enable_3d_secure');
+        } else {
+            $this->systemConfigurationHelper()->configure($paymentConfig);
+        }
         $this->systemConfigurationHelper()->configure($paymentConfig);
         $this->customerHelper()->frontLoginCustomer($testData['user']);
         $this->checkoutMultipleAddressesHelper()->frontMultipleCheckout($checkoutData);
         //Verification
-        //@TODO Uncomment and remove workaround for getting fails, not skipping tests if payment methods are inaccessible
-        //$this->assertMessagePresent('success', 'success_checkout');
-        //Workaround start
-        if (!$this->controlIsPresent('message', 'success_checkout')) {
-            $this->markTestSkipped("Messages on the page:\n" . self::messagesToString($this->getMessagesOnPage()));
-        }
-        //Workaround finish
+        $this->assertMessagePresent('success', 'success_checkout');
     }
 
     public function paymentsWith3dDataProvider()

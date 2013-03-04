@@ -21,7 +21,7 @@
 # @package     selenium
 # @subpackage  test-data
 # @author      Magento Core Team <core@magentocommerce.com>
-# @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+# @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
 # @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 #
 ---
@@ -56,7 +56,7 @@ test_catalog_rule:
         websites: Main Website
         customer_groups: NOT LOGGED IN
         from_date: %currentDate%
-        to_date: %currentDate%
+        to_date: %nextWeek%
         priority: %noValue%
     conditions: %noValue%
     actions:

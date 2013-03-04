@@ -21,14 +21,14 @@
 # @package     selenium
 # @subpackage  uimaps
 # @author      Magento Core Team <core@magentocommerce.com>
-# @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+# @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
 # @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 #
 ---
 # All Tags page
 all_tags:
     mca: tag/
-    click_xpath: //div[@class='nav-bar']//a[span='All Tags']
+    click_xpath: //div[@class='nav-bar']//a[normalize-space(span)='All Tags']
     title: All Tags / Tags / Catalog / Magento Admin
     uimap: &allTags
         form: &searchTagsGrid
@@ -36,6 +36,8 @@ all_tags:
                 -
                     tags_grid:
                         xpath: //div[@id='tag_tag_grid']
+                        links:
+                            select_all: //a[text()='Select All']
                         buttons:
                             reset_filter: //button[span='Reset Filter']
                             search: //button[span='Search']
@@ -62,12 +64,13 @@ all_tags:
             success_deleted_products_massaction: //li[normalize-space(@class)='success-msg' and contains(.,'Total of %qtyDeletedTags% record(s) have been deleted.')]
             success_changed_status: //li[normalize-space(@class)='success-msg' and contains(.,'Total of %qtyDeletedTags% record(s) have been updated.')]
             confirmation_for_delete: Are you sure you want to do this?
+            confirmation_for_massaction_delete: Are you sure?
             tag_already_exists: //li[@class='error-msg' and contains(.,'Tag already exists.')]
             required_name: //div[@id='advice-required-entry-name' and text()='This is a required field.']
 
 all_tags_index:
     mca: tag/index/
-    click_xpath: //div[@class='nav-bar']//a[span='All Tags']
+    click_xpath: //div[@class='nav-bar']//a[normalize-space(span)='All Tags']
     title: All Tags / Tags / Catalog / Magento Admin
     uimap: *allTags
 
@@ -92,9 +95,9 @@ edit_tag:
                             base_popularity: //input[@name='base_popularity']
                 -
                     products_tagged_by_admins:
-                        xpath: //dl[@id='tag_assigned_grid']
+                        xpath: //dl[contains(@id, 'tag_assigned_grid')]
                         links:
-                            prod_tag_admin_expand:  //dl[@id='tag_assigned_grid']//a[contains(.,'Products Tagged by Administrators')]
+                            prod_tag_admin_expand: //a[normalize-space(text())='Products Tagged by Administrators']
                         buttons:
                             reset_filter: //button[span='Reset Filter']
                             search: //button[span='Search']
@@ -117,7 +120,7 @@ edit_tag:
                     customers_submitted_tags:
                         xpath: //dd[@id='dd-tag_customer']
                         links:
-                            customers_submit_tag_expand:  //dl[@id='tag_customer_and_product_accordion']//a[contains(.,'Customers Submitted this Tag')]
+                            customers_submit_tag_expand: /parent::*//a[normalize-space(text())='Customers Submitted this Tag']
                         buttons:
                             reset_filter: //button[span='Reset Filter']
                             search: //button[span='Search']
@@ -129,7 +132,7 @@ edit_tag:
                     products_tagged_by_customers:
                         xpath: //dd[@id='dd-tag_product']
                         links:
-                            prod_tag_customer_expand:  //dl[@id='tag_customer_and_product_accordion']//a[contains(.,'Products Tagged by Customers')]
+                            prod_tag_customer_expand: /parent::*//a[normalize-space(text())='Products Tagged by Customers']
                         buttons:
                             reset_filter: //button[span='Reset Filter']
                             search: //button[span='Search']
@@ -155,7 +158,7 @@ edit_tag_more_options:
 # New Tag page
 new_tag:
     mca: tag/edit/store/%storeId%
-    click_xpath: //div[@class='nav-bar']//a[span='All Tags']
+    click_xpath: //div[@class='nav-bar']//a[normalize-space(span)='All Tags']
     title: New Tag / Tags / Catalog / Magento Admin
     uimap:
         form:
@@ -182,7 +185,7 @@ new_tag:
 # Pending Tags page
 pending_tags:
     mca: tag/pending
-    click_xpath: //div[@class='nav-bar']//a[span='Pending Tags']
+    click_xpath: //div[@class='nav-bar']//a[normalize-space(span)='Pending Tags']
     title: Pending Tags / Tags / Catalog / Magento Admin
     uimap:
         form:

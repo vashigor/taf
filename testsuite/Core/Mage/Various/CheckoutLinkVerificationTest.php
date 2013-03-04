@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  tests
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -36,7 +36,7 @@
 class Core_Mage_Various_CheckoutLinkVerificationTest extends Mage_Selenium_TestCase
 {
     /**
-     * <p>Creating product with required fields only</p>
+     * <p>Creating product with required fields only and customer</p>
      * <p>Steps:</p>
      * <p>1. Click "Add product" button;</p>
      * <p>2. Fill in "Attribute Set" and "Product Type" fields;</p>
@@ -46,21 +46,25 @@ class Core_Mage_Various_CheckoutLinkVerificationTest extends Mage_Selenium_TestC
      * <p>Expected result:</p>
      * <p>Product is created, confirmation message appears;</p>
      *
-     * @return string
+     * @return array
      * @test
      */
-    public function preconditionForTest()
+    public function preconditionsForTest()
     {
         //Data
-        $productData = $this->loadData('simple_product_visible');
-        //Steps
+        $userData = $this->loadDataSet('Customers', 'generic_customer_account');
+        $productData = $this->loadDataSet('Product', 'simple_product_visible');
+        //Steps and Verification
         $this->loginAdminUser();
+        $this->navigate('manage_customers');
+        $this->customerHelper()->createCustomer($userData);
+        $this->assertMessagePresent('success', 'success_saved_customer');
         $this->navigate('manage_products');
         $this->productHelper()->createProduct($productData);
-        //Verifying
         $this->assertMessagePresent('success', 'success_saved_product');
 
-        return $productData['general_name'];
+        return array($productData['general_name'], array('email'    => $userData['email'],
+                                                         'password' => $userData['password']));
     }
 
     /**
@@ -79,33 +83,26 @@ class Core_Mage_Various_CheckoutLinkVerificationTest extends Mage_Selenium_TestC
      * <p>Expected result:</p>
      * <p>User is redirected to OnePageCheckout after steps 3 and 7;</p>
      *
-     * @param string $productName
+     * @param array $testData
      *
-     * @depends preconditionForTest
      * @test
+     * @depends preconditionsForTest
      */
-    public function frontendCheckoutLinkVerification($productName)
+    public function frontendCheckoutLinkVerification($testData)
     {
         //Data
-        $userData = $this->loadData('customer_account_register');
-        //Steps for Preconditions
-        $this->logoutCustomer();
-        $this->navigate('customer_login');
-        $this->customerHelper()->registerCustomer($userData);
-        //Verifying
-        $this->assertMessagePresent('success', 'success_registration');
-        //Steps
-        $this->productHelper()->frontOpenProduct($productName);
+        list($product, $customer) = $testData;
+        //Steps and Verification
+        $this->customerHelper()->frontLoginCustomer($customer);
+        $this->productHelper()->frontOpenProduct($product);
         $this->productHelper()->frontAddProductToCart();
-        //Validation
         $this->clickControl('link', 'checkout');
         $this->validatePage('onepage_checkout');
         //Steps
         $this->logoutCustomer();
-        $this->productHelper()->frontOpenProduct($productName);
+        $this->productHelper()->frontOpenProduct($product);
         $this->productHelper()->frontAddProductToCart();
         //Validation
-        $this->validatePage('shopping_cart');
         $this->clickControl('link', 'checkout');
         $this->validatePage('onepage_checkout');
     }

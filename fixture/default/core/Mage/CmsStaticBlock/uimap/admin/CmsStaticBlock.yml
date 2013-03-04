@@ -21,14 +21,14 @@
 # @package     selenium
 # @subpackage  uimaps
 # @author      Magento Core Team <core@magentocommerce.com>
-# @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+# @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
 # @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 #
 ---
 # 'Static Blocks' page
 manage_cms_static_blocks:
     mca: cms_block/
-    click_xpath: //div[@class='nav-bar']//a[span='Static Blocks']
+    click_xpath: //div[@class='nav-bar']//a[contains(@href, '/cms_block/')]
     title: Static Blocks / CMS / Magento Admin
     uimap:
         form: &searchStaticBlocksGrid
@@ -56,7 +56,6 @@ manage_cms_static_blocks:
         messages: &staticBlockMessages
              success_saved_block: //li[normalize-space(@class)='success-msg' and contains(.,'The block has been saved.')]
              success_deleted_block: //li[normalize-space(@class)='success-msg' and contains(.,'The block has been deleted.')]
-             no_records_found: //td[normalize-space(@class)='empty-text a-center' and text()='No records found.']
              confirmation_for_delete: Are you sure you want to do this?
              empty_required_field: "//div[@id='advice-required-entry-%fieldId%' and not(contains(@style,'display: none;'))]"
              specify_valid_xml_identifier: "//div[@id='advice-validate-xml-identifier-block_identifier' and not(contains(@style,'display: none'))]"
@@ -66,7 +65,7 @@ manage_cms_static_blocks:
 # 'Edit Block %blockName%' page
 edit_cms_static_block:
     mca: cms_block/edit/block_id/%id%/
-    title: %blockName% / Static Blocks / CMS / Magento Admin
+    title: %elementTitle% / Static Blocks / CMS / Magento Admin
     uimap:
         form: &editStaticBlockForm
             fieldsets:
@@ -164,9 +163,13 @@ edit_cms_static_block:
                     select_category:
                         xpath: //div[@id='widget-chooser' and //div[text()='Select Category...']]
                         links:
-                            root_category: //ul/div/li[contains(div/a/span,'%rootName%')]
-                            sub_category: //*[@id='%parentCategoryId%']/ancestor::li/ul/li[contains(div/a/span,'%subName%') and not(div/a/span/@id='%parentCategoryId%')]
-                            expand_category: //*[@id='%parentCategoryId%']/ancestor::div/img[contains(@class,'x-tree-elbow-plus') or contains(@class,'x-tree-elbow-end-plus')]
+                            select_category_root_category: //ul/div/li[contains(div/a/span,'%rootName%')]
+                            select_category_sub_category: //*[@id='%parentCategoryId%']/ancestor::li/ul/li[contains(div/a/span,'%subName%') and not(div/a/span/@id='%parentCategoryId%')]
+                            select_category_expand_category: //*[@id='%parentCategoryId%']/ancestor::div/img[contains(@class,'x-tree-elbow-plus') or contains(@class,'x-tree-elbow-end-plus')]
+                        pageelements:
+                            select_category_category_text: %categoryXpath%/div/a/span
+                            select_category_category_index_text: %categoryXpath%[%index%]/div/a/span
+                            select_category_category_index_link: %categoryXpath%[%index%]/div/a
                         buttons:
                             close_category_insertion: //div[@id='widget-chooser_close']
                 -
@@ -184,11 +187,14 @@ edit_cms_static_block:
                             search: //button[span='Search']
                             close_product_insertion: //div[@id='widget-chooser_close']
                         links:
-                            root_category: //ul/div/li[contains(div/a/span,'%rootName%')]
-                            sub_category: //*[@id='%parentCategoryId%']/ancestor::li/ul/li[contains(div/a/span,'%subName%') and not(div/a/span/@id='%parentCategoryId%')]
-                            expand_category: //*[@id='%parentCategoryId%']/ancestor::div/img[contains(@class,'x-tree-elbow-plus') or contains(@class,'x-tree-elbow-end-plus')]
+                            select_product_root_category: //ul/div/li[contains(div/a/span,'%rootName%')]
+                            select_product_sub_category: //*[@id='%parentCategoryId%']/ancestor::li/ul/li[contains(div/a/span,'%subName%') and not(div/a/span/@id='%parentCategoryId%')]
+                            select_product_expand_category: //*[@id='%parentCategoryId%']/ancestor::div/img[contains(@class,'x-tree-elbow-plus') or contains(@class,'x-tree-elbow-end-plus')]
                         pageelements:
                             product_table_head: //div[@id='widget-chooser_content']//table/thead/tr[@class='headings']
+                            select_product_category_text: %categoryXpath%/div/a/span
+                            select_product_category_index_text: %categoryXpath%[%index%]/div/a/span
+                            select_product_category_index_link: %categoryXpath%[%index%]/div/a
                 -
                     file_insertion:
                         xpath: //div[@id='browser_window' and //div[text()='Insert File...']]

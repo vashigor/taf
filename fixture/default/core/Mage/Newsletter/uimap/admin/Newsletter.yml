@@ -21,14 +21,14 @@
 # @package     selenium
 # @subpackage  uimaps
 # @author      Magento Core Team <core@magentocommerce.com>
-# @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+# @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
 # @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 #
 ---
 # Newsletter Subscribers Manager page
 newsletter_subscribers:
     mca: newsletter_subscriber/
-    click_xpath: //div[@class='nav-bar']//a[span='Newsletter Subscribers']
+    click_xpath: //ul[@id='nav']//a[contains(@href, '/newsletter_subscriber/')]
     title: Newsletter Subscribers / Newsletter / Magento Admin
     uimap:
         form: &searchSubscribers

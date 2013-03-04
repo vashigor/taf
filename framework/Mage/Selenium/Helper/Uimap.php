@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  Mage_Selenium
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -69,9 +69,8 @@ class Mage_Selenium_Helper_Uimap extends Mage_Selenium_Helper_Abstract
             return $this;
         }
         //Form include elements array
-        $uimapInclude = (isset($this->_configFixtures['uimapInclude']))
-            ? $this->_configFixtures['uimapInclude']
-            : array();
+        $uimapInclude =
+            (isset($this->_configFixtures['uimapInclude'])) ? $this->_configFixtures['uimapInclude'] : array();
         $includeElements = array();
         foreach ($uimapInclude as $area => $files) {
             $includeElements[$area] = array();
@@ -102,8 +101,20 @@ class Mage_Selenium_Helper_Uimap extends Mage_Selenium_Helper_Abstract
                 }
             }
         }
-        $codePoolNames = array_keys($uimapFiles);
+        $this->loadAndMergeUimaps($uimapFiles, $includeElements);
+        return $this;
+    }
+
+    /**
+     * @param array $uimapFiles
+     * @param array $includeElements
+     *
+     * @return void
+     */
+    public function loadAndMergeUimaps(array $uimapFiles, $includeElements)
+    {
         //Uimaps loading for first project
+        $codePoolNames = array_keys($uimapFiles);
         $baseCodePoolName = array_shift($codePoolNames);
         $baseUimapFiles = array_shift($uimapFiles);
         foreach ($baseUimapFiles as $area => $files) {
@@ -158,31 +169,9 @@ class Mage_Selenium_Helper_Uimap extends Mage_Selenium_Helper_Abstract
                 }
             }
         }
-        //Uimaps loading from files that do not exist in base project
-        foreach ($uimapFiles as $codePoolData) {
-            foreach ($codePoolData as $area => $files) {
-                foreach ($files as $file) {
-                    $pages = $this->getConfig()->getHelper('file')->loadYamlFile($file);
-                    //Skip if file is empty
-                    if (!$pages) {
-                        continue;
-                    }
-                    foreach ($pages as $pageKey => $content) {
-                        //Skip if page content is empty
-                        if (!$content) {
-                            continue;
-                        }
-                        if (isset($includeElements[$area])) {
-                            $this->_mergeUimapIncludes($content, $includeElements[$area]);
-                        }
-                        $this->_uimapData[$area][$pageKey] = new Mage_Selenium_Uimap_Page($pageKey, $content);
-                    }
-                }
-            }
-
+        if (!empty($uimapFiles)) {
+            $this->loadAndMergeUimaps($uimapFiles, $includeElements);
         }
-
-        return $this;
     }
 
     /**
@@ -233,7 +222,7 @@ class Mage_Selenium_Helper_Uimap extends Mage_Selenium_Helper_Abstract
      *
      * @param string $area Application area
      *
-     * @return mixed
+     * @return array
      * @throws OutOfRangeException
      */
     public function getAreaUimaps($area)
@@ -275,7 +264,7 @@ class Mage_Selenium_Helper_Uimap extends Mage_Selenium_Helper_Abstract
      * @param string $mca a part of current URL opened in browser
      * @param null|Mage_Selenium_Helper_Params $paramsDecorator Params decorator instance
      *
-     * @return mixed
+     * @return Mage_Selenium_Uimap_Page
      * @throws OutOfRangeException
      */
     public function getUimapPageByMca($area, $mca, $paramsDecorator = null)

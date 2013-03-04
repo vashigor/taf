@@ -21,7 +21,7 @@
 # @package     selenium
 # @subpackage  uimaps
 # @author      Magento Core Team <core@magentocommerce.com>
-# @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+# @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
 # @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 #
 ---
@@ -29,7 +29,7 @@
 checkout_multishipping_login:
     mca: checkout/multishipping/login/
     title: Customer Login
-    uimap:
+    uimap: &checkout_multishipping_login_uimap
         form:
             fieldsets:
                 -
@@ -75,6 +75,12 @@ checkout_multishipping_login:
             short_passwords: //div[@id='advice-validate-password-password']
             email_exists: //li[span='There is already an account with this email address. If you are sure that it is your email address, click here to get your password and access your account.']
             shopping_cart_is_empty: //h1[contains(.,'Shopping Cart is Empty')]
+            message_with_order_ids: //*[contains(text(),'Your order')]
+
+checkout_multishipping_login_with_params:
+    mca: checkout/multishipping/login/?no_cache=
+    title: Customer Login
+    uimap: *checkout_multishipping_login_uimap
 
 checkout_multishipping_register:
     mca: checkout/multishipping/register/
@@ -137,7 +143,7 @@ checkout_multishipping_addresses:
                             back_to_shopping_cart: //a[contains(text(),'Back to Shopping Cart')]
                             remove_product: //tr[.//a='%productName%']//a[contains(@href, 'removeItem')]
                         dropdowns:
-                            address_choice: //tr[.//a='%productName%'][%index%]//select
+                            address_choice: //tr[.//a='%productName%'][%productIndex%]//select
                             is_any_address_choice: //tr[.//a='%productName%']//select
                         fields:
                             product_qty: //tr[.//a='%productName%']//input[@type='text']
@@ -208,21 +214,20 @@ checkout_multishipping_shipping_methods:
                             product: //a[text()='%productName%']
                             product_qty: //tr[.//a[text()='%productName%']]/td/text()
                         checkboxes:
-                            add_gift_options: //p[label='Add gift options']/input
-                            gift_option_for_the_entire_order: //p[label='Add gift options for the Entire Order']/input
-                            gift_option_for_individual_items: //p[label='Add gift options for Individual Items']/input
+                            add_gift_options: //div[@class='add-gift-message']//p[label='Add gift options']/input
+                            gift_option_for_the_entire_order: //div[not(@class='no-display')]/p[label='Add gift options for the Entire Order']/input
+                            gift_option_for_individual_items: //div[not(@class='no-display')]/p[label='Add gift options for Individual Items']/input
                         radiobuttons:
                             ship_method: //dt[text()='%shipService%']/following-sibling::*//li[contains(label,'%shipMethod%')]//input[not(@checked)]
                             one_method_selected: //dt[text()='%shipService%']/following-sibling::*[contains(.//label,'%shipMethod%')]
                         fields:
                             ship_service_name: //dt[text()='%shipService%']
-                            #@TODO
-                            gift_option_entire_order_from: //div[contains(@id,'allow-gift-messages-for-order-container')]//input[@title='From']
-                            gift_option_entire_order_to: //div[contains(@id,'allow-gift-messages-for-order-container')]//input[@title='To']
-                            gift_option_entire_order_message: //div[contains(@id,'allow-gift-messages-for-order-container')]//textarea[@title='Message']
-                            gift_option_for_individual_items_from: //div[h5[contains(.,'%productName%')]]//input[@title='From']
-                            gift_option_for_individual_items_to: //div[h5[contains(.,'%productName%')]] //input[@title='To']
-                            gift_option_for_individual_items_message: //div[h5[contains(.,'%productName%')]]//textarea[@title='Message']
+                            gift_option_entire_order_from: //div[contains(@id,'gift-messages-for-order-container')]//input[@title='From']
+                            gift_option_entire_order_to: //div[contains(@id,'gift-messages-for-order-container')]//input[@title='To']
+                            gift_option_entire_order_message: //div[contains(@id,'gift-messages-for-order-container')]//textarea[@title='Message']
+                            gift_option_for_individual_items_from: //li[div/h5='%productName%']//input[@title='From']
+                            gift_option_for_individual_items_to: //li[div/h5='%productName%']//input[@title='To']
+                            gift_option_for_individual_items_message: //li[div/h5='%productName%']//textarea[@title='Message']
         messages: *checkoutMessages
 
 checkout_multishipping_edit_shipment_address:
@@ -360,20 +365,65 @@ checkout_multishipping_review_order:
                 -
                     checkout_progress: *checkoutProgress
                 -
+                    billing_address:
+                        xpath: //div[contains(div/h3,'Billing Address')]
+                        links:
+                            billing_address_change: //a[contains(@href, '/editBilling/')]
+                        pageelements:
+                            billing_method_address: //address
+                -
+                    payment_method:
+                        xpath: //div[contains(div/h3,'Payment Method')]
+                        links:
+                            payment_method_change: //a[contains(@href, '/backtobilling/')]
+                        pageelements:
+                            payment_method: //p
+                            card_data: //table
+                -
+                    shipping_address_info:
+                        xpath: //div[@class='col2-set'][not(h2='Billing Information')]
+                        pageelements:
+                            shipping_method_address_header: /h3[%number%]
+                            shipping_method_address: //div[contains(@class,'col-narrow')][%number%]//address
+                            shipping_method_products: //div[table]
+                -
+                    shipping_address:
+                        xpath: //h3[text()='%addressHeader%']/following-sibling::*/div[contains(div/h4,'Shipping To')]
+                        links:
+                            shipping_address_change: //a[contains(@href, '/editShipping/')]
+                -
+                    shipping_method:
+                        xpath: //h3[text()='%addressHeader%']/following-sibling::*/div[contains(div/h4,'Shipping Method')]
+                        links:
+                            shipping_method_change: //a[contains(@href, '/backtoshipping/')]
+                        pageelements:
+                            shipping_method: //p
+                -
+                    order_items:
+                        xpath: //*[text()='%addressHeader%']/following::div[contains(*/text(),'Items')][1]
+                        links:
+                            edit_items: //a[text()='Edit Items']
+                            open_product: //a[text()='productName']
+                        pageelements:
+                            product_table: //table/tbody
+                            product_table_head: //table/thead
+                            product_line: //table/tbody/tr
+                            price_totals: //table/tfoot
+                            price_totals_line: //table/tfoot/descendant::tr
+                            price_totals_line_index: //table/tfoot/descendant::tr[%index%]
+                            price_totals_line_index_name: //table/tfoot/descendant::tr[%index%]/*[1]
+                            price_totals_line_index_value: //table/tfoot/descendant::tr[%index%]/*[2]
+                -
                     review_order:
                         xpath: //div[div/h1[contains(text(),'Review Order')]]
                         links:
-                            billing_address_change: //a[contains(@href, 'editBilling/')]
-                            payment_method_change: //a[contains(@href, 'backtobilling/')][text()='Change']
-                            shipping_to_change: //div[./h2[text()='Shipping Information']]/h3[text()='%addressHeader%']/following-sibling::div//a[contains(@href, 'editShipping/')]
-                            shipping_method_change: //div[./h2[text()='Shipping Information']]/h3[text()='%addressHeader%']/following-sibling::div//a[contains(@href, 'backtoshipping/')]
-                            back_to_billing_information: //a[text() = 'Back to Billing Information')]
-                        pageelements:
-                            product_table_head: //div[./h2[text()='Shipping Information']]/h3[text()='%addressHeader%']/following-sibling::div//table[@class='data-table']/thead
-                            price_totals: //div[./h2[text()='Shipping Information']]/h3[text()='%addressHeader%']/following-sibling::div//table[@class='data-table']/tfoot
-                            product_line:  //div[./h2[text()='Shipping Information']]/h3[text()='%addressHeader%']/following-sibling::div//table[@class='data-table']/tbody/tr
+                            back_to_billing_information: //a[text() = 'Back to Billing Information']
                         buttons:
                             place_order: //button[span='Place Order']
+                        pageelements:
+                            grand_total: //*[@class='grand-total']//span[@class='price']
+                            3d_secure_header: //h3[text()='Card Verification']
+                            virtual_item_head: //*[contains(text(), 'Other')]
                 -
                     3d_secure_card_validation: &3DSecureCardValidation
                         xpath: //div[@id='centinel_authenticate_block']
@@ -390,6 +440,7 @@ checkout_multishipping_review_order:
                         pageelements:
                             incorrect_password: //b[text()='Incorrect, Please try again']
                             verification_successful: //h1[text()='Verification Successful']
+        messages: *checkoutMessages
 
 checkout_multishipping_success_order:
     mca: checkout/multishipping/success/
@@ -404,6 +455,7 @@ checkout_multishipping_success_order:
                         xpath: //div[div/h1[text()='Order Success']]
                         links:
                             all_order_number: //a
+                            all_order_number_index: //a[%index%]
                             order_number: //a[text()='%orderId%']
                         buttons:
                             continue_shopping: //button[span='Continue Shopping']

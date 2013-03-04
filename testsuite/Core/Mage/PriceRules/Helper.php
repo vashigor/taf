@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  tests
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -59,9 +59,10 @@ class Core_Mage_PriceRules_Helper extends Mage_Selenium_TestCase
     public function fillTabs($ruleData)
     {
         if (is_string($ruleData)) {
-            $ruleData = $this->loadData($ruleData);
+            $elements = explode('/', $ruleData);
+            $fileName = (count($elements) > 1) ? array_shift($elements) : '';
+            $ruleData = $this->loadDataSet($fileName, implode('/', $elements));
         }
-        $ruleData = $this->arrayEmptyClear($ruleData);
         $ruleInfo = (isset($ruleData['info'])) ? $ruleData['info'] : array();
         $ruleConditions = (isset($ruleData['conditions'])) ? $ruleData['conditions'] : array();
         $ruleActions = (isset($ruleData['actions'])) ? $ruleData['actions'] : array();
@@ -173,13 +174,12 @@ class Core_Mage_PriceRules_Helper extends Mage_Selenium_TestCase
                 $optionsNesting = self::$optionsNesting . '--' . self::$optionsQty;
             }
             $this->addParameter('condition', $optionsNesting);
-            $xpath = $this->_getControlXpath('fieldset', 'rule_' . $type . '_item') . '/li';
+            self::$optionsQty = $this->getControlCount('pageelement', 'rule_' . $type . '_item_row');
         } else {
-            $xpath = $this->_getControlXpath('fieldset', 'apply_for_rule_' . $type) . '/ul/li';
             $this->addParameter('condition', $optionsNesting);
+            self::$optionsQty = $this->getControlCount('pageelement', 'apply_for_rule_' . $type . '_row');
         }
         self::$optionsNesting = $optionsNesting;
-        self::$optionsQty = $this->getXpathCount($xpath);
         $this->addParameter('key', self::$optionsQty);
     }
 
@@ -209,15 +209,15 @@ class Core_Mage_PriceRules_Helper extends Mage_Selenium_TestCase
         foreach ($formDataMap as $formFieldName => $formField) {
             if ($formFieldName === 'category') {
                 $buttonName = preg_replace('/(^rule_)|(s$)/', '', $tabId) . '_value';
-                $this->click($this->_getControlXpath('link', $buttonName, $uimapData));
-                $this->click($this->_getControlXpath('link', 'open_chosser', $uimapData));
+                $this->clickControl('link', $buttonName, false);
+                $this->clickControl('link', 'open_chooser', false);
                 $this->pleaseWait();
                 $categories = explode(',', $formField['value']);
                 $categories = array_map('trim', $categories);
                 foreach ($categories as $value) {
                     $this->categoryHelper()->selectCategory($value, 'rule_condition_item');
                 }
-                $this->click($this->_getControlXpath('link', 'confirm_choice', $uimapData));
+                $this->clickControl('link', 'confirm_choice', false);
                 continue;
             }
             $this->clickControl('link', preg_replace('/(^select_)|(^type_)/', '', $formFieldName), false);
@@ -250,16 +250,16 @@ class Core_Mage_PriceRules_Helper extends Mage_Selenium_TestCase
      */
     public function openRule(array $ruleSearch)
     {
-        $ruleSearch = $this->arrayEmptyClear($ruleSearch);
         $xpathTR = $this->search($ruleSearch, 'rule_search_grid');
-        $this->assertNotNull($xpathTR, 'Rule with next search criteria:' . "\n"
-            . implode(' and ', $ruleSearch) . "\n" . 'is not found');
+        $this->assertNotNull($xpathTR,
+            'Rule with next search criteria:' . "\n" . implode(' and ', $ruleSearch) . "\n" . 'is not found');
         $cellId = $this->getColumnIdByName('Rule Name');
-        $this->addParameter('elementTitle', $this->getText($xpathTR . '//td[' . $cellId . ']'));
+        $this->addParameter('tableLineXpath', $xpathTR);
+        $this->addParameter('cellIndex', $cellId);
+        $param = $this->getControlAttribute('pageelement', 'table_line_cell_index', 'text');
+        $this->addParameter('elementTitle', $param);
         $this->addParameter('id', $this->defineIdFromTitle($xpathTR));
-        $this->click($xpathTR);
-        $this->waitForPageToLoad($this->_browserTimeoutPeriod);
-        $this->validatePage();
+        $this->clickControl('pageelement', 'table_line_cell_index');
     }
 
     /**
@@ -278,11 +278,14 @@ class Core_Mage_PriceRules_Helper extends Mage_Selenium_TestCase
      */
     public function deleteAllRules()
     {
-        $message = $this->_getMessageXpath('no_price_rules');
+        $this->addParameter('tableXpath', $this->_getControlXpath('pageelement', 'rule_grid'));
         $cellId = $this->getColumnIdByName('Rule Name');
         $xpath = $this->_getControlXpath('pageelement', 'price_rule');
-        while (!$this->isElementPresent($message)) {
-            $this->addParameter('elementTitle', $this->getText($xpath . '//td[' . $cellId . ']'));
+        $this->addParameter('tableLineXpath', $this->_getControlXpath('pageelement', 'price_rule'));
+        $this->addParameter('cellIndex', $cellId);
+        while (!$this->controlIsPresent('message', 'specific_table_no_records_found')) {
+            $param = $this->getControlAttribute('pageelement', 'table_line_cell_index', 'text');
+            $this->addParameter('elementTitle', $param);
             $this->addParameter('id', $this->defineIdFromTitle($xpath));
             $this->clickControl('pageelement', 'price_rule');
             $this->clickButtonAndConfirm('delete_rule', 'confirmation_for_delete');
@@ -297,9 +300,10 @@ class Core_Mage_PriceRules_Helper extends Mage_Selenium_TestCase
     public function verifyRuleData($ruleData)
     {
         if (is_string($ruleData)) {
-            $ruleData = $this->loadData($ruleData);
+            $elements = explode('/', $ruleData);
+            $fileName = (count($elements) > 1) ? array_shift($elements) : '';
+            $ruleData = $this->loadDataSet($fileName, implode('/', $elements));
         }
-        $ruleData = $this->arrayEmptyClear($ruleData);
         $simpleVerify = array();
         $specialVerify = array();
         foreach ($ruleData as $tabData) {
@@ -332,12 +336,13 @@ class Core_Mage_PriceRules_Helper extends Mage_Selenium_TestCase
             return true;
         }
         $cellId = $this->getColumnIdByName('Rule Name');
-        while ($this->isElementPresent($xpathTR)) {
-            $this->addParameter('elementTitle', $this->getText($xpathTR . '//td[' . $cellId . ']'));
+        $this->addParameter('tableLineXpath', $xpathTR);
+        $this->addParameter('cellIndex', $cellId);
+        while ($this->controlIsPresent('pageelement', 'table_line_cell_index')) {
+            $param = $this->getControlAttribute('pageelement', 'table_line_cell_index', 'text');
+            $this->addParameter('elementTitle', $param);
             $this->addParameter('id', $this->defineIdFromTitle($xpathTR));
-            $this->click($xpathTR);
-            $this->waitForPageToLoad($this->_browserTimeoutPeriod);
-            $this->validatePage();
+            $this->clickControl('pageelement', 'table_line_cell_index');
             $this->fillTab(array('status' => 'Inactive'), 'rule_information');
             $this->saveForm('save_rule');
         }

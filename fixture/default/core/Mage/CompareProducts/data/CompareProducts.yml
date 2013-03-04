@@ -21,7 +21,7 @@
 # @package     selenium
 # @subpackage  test-data
 # @author      Magento Core Team <core@magentocommerce.com>
-# @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+# @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
 # @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 #
 ---
@@ -68,18 +68,18 @@ compare_virtual_product:
 
 verify_compare_data:
     product_1:
-        product_name: %noValue%
+        product_name: %product_1_name%
         Description: Description for Simple Product Compare
         Short Description: Short Description for Simple Product Compare
-        SKU: %noValue%
+        SKU: %product_1_sku%
         product_prices:
             regular_price: '2,155.00'
             special_price: '2,000.00'
     product_2:
-        product_name: %noValue%
+        product_name: %product_2_name%
         Description: Description for Virtual Product Compare
         Short Description: Short Description for Virtual Product Compare
-        SKU: %noValue%
+        SKU: %product_2_sku%
         product_prices:
             price: '99.99'
             as_low_as: '70.00'

@@ -21,15 +21,10 @@
 # @package     selenium
 # @subpackage  test-data
 # @author      Magento Core Team <core@magentocommerce.com>
-# @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+# @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
 # @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 #
 ---
-
-paypal_developer_login:
-    login_email: 'YOUR CREDENTIALS'
-    login_password: 'YOUR CREDENTIALS'
-
 paypal_sandbox_new_buyer_account_visa:
     country: United States
     account_type_buyer: Yes

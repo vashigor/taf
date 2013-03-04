@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  tests
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -43,7 +43,6 @@ class Core_Mage_CmsStaticBlocks_DeleteTest extends Mage_Selenium_TestCase
     {
         $this->loginAdminUser();
         $this->navigate('manage_cms_static_blocks');
-        $this->addParameter('id', '0');
     }
 
     /**
@@ -60,9 +59,9 @@ class Core_Mage_CmsStaticBlocks_DeleteTest extends Mage_Selenium_TestCase
     public function deleteNew()
     {
         //Data
-        $setData = $this->loadData('new_static_block');
-        $blockToDelete = $this->loadData('search_static_block',
-                array('filter_block_identifier' => $setData['block_identifier']));
+        $setData = $this->loadDataSet('CmsStaticBlock', 'new_static_block');
+        $blockToDelete = $this->loadDataSet('CmsStaticBlock', 'search_static_block',
+            array('filter_block_identifier' => $setData['block_identifier']));
         //Steps
         $this->cmsStaticBlocksHelper()->createStaticBlock($setData);
         //Verifying

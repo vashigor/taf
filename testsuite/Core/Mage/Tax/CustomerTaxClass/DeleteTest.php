@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  tests
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -47,35 +47,17 @@ class Core_Mage_Tax_CustomerTaxClass_DeleteTest extends Mage_Selenium_TestCase
     protected function assertPreConditions()
     {
         $this->loginAdminUser();
-        $this->navigate('manage_customer_tax_class');
     }
 
     protected function tearDownAfterTest()
     {
         //Remove Tax rule after test
         if (!empty($this->_ruleToBeDeleted)) {
+            $this->loginAdminUser();
             $this->navigate('manage_tax_rule');
             $this->taxHelper()->deleteTaxItem($this->_ruleToBeDeleted, 'rule');
             $this->_ruleToBeDeleted = array();
         }
-    }
-
-    /**
-     * <p>Create Tax Rate for tests<p>
-     *
-     * @return array $taxRateData
-     * @test
-     */
-    public function setupTestDataCreateTaxRate()
-    {
-        //Data
-        $taxRateData = $this->loadData('tax_rate_create_test', null, 'tax_identifier');
-        //Steps
-        $this->navigate('manage_tax_zones_and_rates');
-        $this->taxHelper()->createTaxItem($taxRateData, 'rate');
-        //Verifying
-        $this->assertMessagePresent('success', 'success_saved_tax_rate');
-        return $taxRateData;
     }
 
     /**
@@ -92,8 +74,9 @@ class Core_Mage_Tax_CustomerTaxClass_DeleteTest extends Mage_Selenium_TestCase
     public function notUsedInRule()
     {
         //Data
-        $customerTaxClassData = $this->loadData('new_customer_tax_class');
+        $customerTaxClassData = $this->loadDataSet('Tax', 'new_customer_tax_class');
         //Steps
+        $this->navigate('manage_customer_tax_class');
         $this->taxHelper()->createTaxItem($customerTaxClassData, 'customer_class');
         //Verifying
         $this->assertMessagePresent('success', 'success_saved_tax_class');
@@ -113,19 +96,23 @@ class Core_Mage_Tax_CustomerTaxClass_DeleteTest extends Mage_Selenium_TestCase
      * <p>Expected result:</p>
      * <p>Received the message that the Customer Tax class Core_Mage_could not be deleted.</p>
      *
-     * @depends setupTestDataCreateTaxRate
-     * @param array $taxRateData
      * @test
      */
-    public function usedInRule($taxRateData)
+    public function usedInRule()
     {
         //Data
-        $customerTaxClassData = $this->loadData('new_customer_tax_class');
-        $taxRuleData = $this->loadData('new_tax_rule_required',
-                array('customer_tax_class' => $customerTaxClassData['customer_class_name'],
-                      'tax_rate'           => $taxRateData['tax_identifier']));
-        $searchTaxRuleData = $this->loadData('search_tax_rule', array('filter_name' => $taxRuleData['name']));
+        $taxRateData = $this->loadDataSet('Tax', 'tax_rate_create_test');
+        $customerTaxClassData = $this->loadDataSet('Tax', 'new_customer_tax_class');
+        $taxRuleData = $this->loadDataSet('Tax', 'new_tax_rule_required',
+            array('customer_tax_class' => $customerTaxClassData['customer_class_name'],
+                  'tax_rate'           => $taxRateData['tax_identifier']));
+        $searchTaxRuleData = $this->loadDataSet('Tax', 'search_tax_rule', array('filter_name' => $taxRuleData['name']));
         //Steps
+        $this->navigate('manage_tax_zones_and_rates');
+        $this->taxHelper()->createTaxItem($taxRateData, 'rate');
+        //Verifying
+        $this->assertMessagePresent('success', 'success_saved_tax_rate');
+        $this->navigate('manage_customer_tax_class');
         $this->taxHelper()->createTaxItem($customerTaxClassData, 'customer_class');
         //Verifying
         $this->assertMessagePresent('success', 'success_saved_tax_class');
@@ -134,7 +121,7 @@ class Core_Mage_Tax_CustomerTaxClass_DeleteTest extends Mage_Selenium_TestCase
         $this->taxHelper()->createTaxItem($taxRuleData, 'rule');
         //Verifying
         $this->assertMessagePresent('success', 'success_saved_tax_rule');
-        $this->_ruleToBeDeleted = $searchTaxRuleData;      //For Clean Up
+        $this->_ruleToBeDeleted = $searchTaxRuleData; //For Clean Up
         //Steps
         $this->navigate('manage_customer_tax_class');
         $this->taxHelper()->deleteTaxItem($customerTaxClassData, 'customer_class');
@@ -158,10 +145,11 @@ class Core_Mage_Tax_CustomerTaxClass_DeleteTest extends Mage_Selenium_TestCase
     public function usedInCustomerGroup()
     {
         //Data
-        $customerTaxClassData = $this->loadData('new_customer_tax_class');
-        $customerGroupData = $this->loadData('new_customer_group',
-                array('tax_class' => $customerTaxClassData['customer_class_name']));
+        $customerTaxClassData = $this->loadDataSet('Tax', 'new_customer_tax_class');
+        $customerGroupData = $this->loadDataSet('CustomerGroup', 'new_customer_group',
+            array('tax_class' => $customerTaxClassData['customer_class_name']));
         //Steps
+        $this->navigate('manage_customer_tax_class');
         $this->taxHelper()->createTaxItem($customerTaxClassData, 'customer_class');
         //Verifying
         $this->assertMessagePresent('success', 'success_saved_tax_class');

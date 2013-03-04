@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  tests
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -47,14 +47,6 @@ class Core_Mage_Category_DeleteTest extends Mage_Selenium_TestCase
     }
 
     /**
-     * @TODO Temporary workaround(should be deleted)
-     */
-    protected function tearDownAfterTest()
-    {
-        $this->navigate('manage_categories', false);
-    }
-
-    /**
      * <p>Deleting Root Category</p>
      * <p>Pre-Conditions:</p>
      * <p>Root Category created</p>
@@ -65,12 +57,11 @@ class Core_Mage_Category_DeleteTest extends Mage_Selenium_TestCase
      * <p>Root category Deleted, Success message appears</p>
      *
      * @test
-     *
      */
     public function deleteRootCategory()
     {
         //Data
-        $rootCategoryData = $this->loadData('root_category_required');
+        $rootCategoryData = $this->loadDataSet('Category', 'root_category_required');
         //Steps
         $this->categoryHelper()->createCategory($rootCategoryData);
         //Verifying
@@ -93,12 +84,11 @@ class Core_Mage_Category_DeleteTest extends Mage_Selenium_TestCase
      * <p>Subcategory Deleted, Success message appears</p>
      *
      * @test
-     *
      */
     public function deleteSubCategory()
     {
         //Data
-        $subCategoryData = $this->loadData('sub_category_required');
+        $subCategoryData = $this->loadDataSet('Category', 'sub_category_required');
         //Steps
         $this->categoryHelper()->createCategory($subCategoryData);
         //Verifying
@@ -120,13 +110,12 @@ class Core_Mage_Category_DeleteTest extends Mage_Selenium_TestCase
      * <p>Verify that button "Delete" is absent on the page</p>
      *
      * @test
-     *
      */
     public function rootCategoryThatCannotBeDeleted()
     {
         //Data
-        $rootCategoryData = $this->loadData('root_category_required');
-        $storeData = $this->loadData('generic_store', array('root_category' => $rootCategoryData['name']));
+        $rootCategoryData = $this->loadDataSet('Category', 'root_category_required');
+        $storeData = $this->loadDataSet('Store', 'generic_store', array('root_category' => $rootCategoryData['name']));
         //Steps
         $this->categoryHelper()->createCategory($rootCategoryData);
         //Verifying
@@ -161,14 +150,13 @@ class Core_Mage_Category_DeleteTest extends Mage_Selenium_TestCase
      * <p>Subcategory Deleted, Success message appears</p>
      *
      * @test
-     *
      */
     public function deleteRootCategoryWithSubcategories()
     {
         //Data
-        $rootCategoryData = $this->loadData('root_category_required');
-        $subCategoryData = $this->loadData('sub_category_required',
-                                           array('parent_category'=> $rootCategoryData['name']));
+        $rootCategoryData = $this->loadDataSet('Category', 'root_category_required');
+        $subCategoryData = $this->loadDataSet('Category', 'sub_category_required',
+            array('parent_category'=> $rootCategoryData['name']));
         //Steps
         $this->categoryHelper()->createCategory($rootCategoryData);
         //Verifying
@@ -196,16 +184,15 @@ class Core_Mage_Category_DeleteTest extends Mage_Selenium_TestCase
      * <p>Subcategory Deleted, Success message appears</p>
      *
      * @test
-     *
      */
     public function deleteRootCategoryWithSubcategoriesHavingProducts()
     {
         //Data
-        $productData = $this->loadData('simple_product_required');
-        $rootCategoryData = $this->loadData('root_category_required');
-        $subCategoryData = $this->loadData('sub_category_all',
-                                           array('category_products_search_sku' => $productData['general_sku'],
-                                                'parent_category'               => $rootCategoryData['name']));
+        $productData = $this->loadDataSet('Product', 'simple_product_required');
+        $rootCategoryData = $this->loadDataSet('Category', 'root_category_required');
+        $subCategoryData = $this->loadDataSet('Category', 'sub_category_all',
+            array('category_products_search_sku' => $productData['general_sku'],
+                  'parent_category'              => $rootCategoryData['name']));
         //Steps
         $this->navigate('manage_products');
         $this->productHelper()->createProduct($productData);

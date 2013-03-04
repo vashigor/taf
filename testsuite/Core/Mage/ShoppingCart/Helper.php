@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  tests
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -49,30 +49,30 @@ class Core_Mage_ShoppingCart_Helper extends Mage_Selenium_TestCase
      */
     public function getColumnNamesAndNumbers($tableHeadName = 'product_table_head', $transformKeys = true)
     {
-        $headXpath = $this->_getControlXpath('pageelement', $tableHeadName);
         $isExlAndInclInHead = false;
-        $lineQty = $this->getXpathCount($headXpath . '/tr');
+        $this->addParameter('tableHeadXpath', $this->_getControlXpath('pageelement', $tableHeadName));
+        $lineQty = $this->getControlCount('pageelement', 'table_line');
         if ($lineQty == 2) {
             $isExlAndInclInHead = true;
-            $headXpath .= "/tr[contains(@class,'first')]";
+            $this->addParameter('tableHeadXpath', $this->_getControlXpath('pageelement', 'table_head_first'));
         }
-        $columnXpath = $headXpath . '//th';
-        $columnQty = $this->getXpathCount($columnXpath);
+        $columnQty = $this->getControlCount('pageelement', 'table_column');
         $returnData = array();
         $y = 1;
         for ($i = 1; $i <= $columnQty; $i++) {
-            if ($this->isElementPresent($columnXpath . "[$i][@colspan]")) {
-                $text = $this->getText($columnXpath . "[$i]");
-                if ($isExlAndInclInHead && $this->getAttribute($columnXpath . "[$i]/@colspan") == 2) {
+            $this->addParameter('index', $i);
+            if ($this->controlIsPresent('pageelement', 'table_column_index_colspan')) {
+                $text = $this->getControlAttribute('pageelement', 'table_column_index', 'text');
+                $qtyColspan = $this->getControlAttribute('pageelement', 'table_column_index', 'colspan');
+                if ($isExlAndInclInHead && $qtyColspan == 2) {
                     $returnData[$y] = $text . self::EXCLTAX;
                     $returnData[$y + 1] = $text . self::INCLTAX;
                 } else {
                     $returnData[$y] = $text;
                 }
-                $y = $y + $this->getAttribute($columnXpath . "[$i]/@colspan");
+                $y = $y + $qtyColspan;
             } else {
-                $text = $this->getText($columnXpath . "[$i]");
-                $returnData[$y++] = $text;
+                $returnData[$y++] = $this->getControlAttribute('pageelement', 'table_column_index', 'text');
             }
         }
         $returnData = array_diff($returnData, array(''));
@@ -100,19 +100,43 @@ class Core_Mage_ShoppingCart_Helper extends Mage_Selenium_TestCase
         $productValues = array();
 
         $tableRowNames = $this->getColumnNamesAndNumbers();
-        $productLine = $this->_getControlXpath('pageelement', 'product_line');
-
-        $productCount = $this->getXpathCount($productLine);
+        $this->addParameter('tableLineXpath', $this->_getControlXpath('pageelement', 'product_line'));
+        $productCount = $this->getControlCount('pageelement', 'product_line');
         for ($i = 1; $i <= $productCount; $i++) {
             foreach ($tableRowNames as $key => $value) {
                 if (in_array($key, $skipFields)) {
                     continue;
                 }
-                $xpathValue = $productLine . "[$i]//td[$value]";
-                if ($key == 'qty' && $this->isElementPresent($xpathValue . '/input/@value')) {
-                    $productValues['product_' . $i][$key] = $this->getAttribute($xpathValue . '/input/@value');
+                $this->addParameter('lineIndex', $i);
+                $this->addParameter('cellIndex', $value);
+                if ($key == 'qty'
+                    && $this->controlIsPresent('pageelement', 'table_line_index_cell_index_with_input_value')
+                ) {
+                    $value = $this->getControlAttribute('pageelement', 'table_line_index_cell_index_with_input_value',
+                        'selectedValue');
+                    $productValues['product_' . $i][$key] = $value;
+                } elseif ($key == 'product_name'
+                          && $this->controlIsPresent('pageelement', 'table_line_index_cell_index_options')
+                ) {
+                    $name =
+                        $this->getControlAttribute('pageelement', 'table_line_index_cell_index_product_name', 'text');
+                    $productValues['product_' . $i][$key] = trim($name);
+                    //@TODO get product parameters
+                    /*$optionsXpath = $this->_getControlXpath('pageelement', 'table_line_index_cell_index_options');
+                    $countOptions = $this->getXpathCount($optionsXpath . '//dt');
+                    $options = array();
+                    for ($i = 0; $i < $countOptions; $i++) {
+                        $nameXpath = $optionsXpath . '//dt[' . $i . ']';
+                        $valueXpath = $nameXpath . "/following-sibling::dd[1]";
+                        $name = trim($this->getText($nameXpath));
+                        $price = trim($this->getText($valueXpath . '/span'));
+                        $value = str_replace($price, '', trim($this->getText($valueXpath)));
+                        $options[$i]['option_name'] = $name;
+                        $options[$i]['option_price'] = $price;
+                        $options[$i]['option_parameter'] = $value;
+                    }*/
                 } else {
-                    $text = $this->getText($xpathValue);
+                    $text = $this->getControlAttribute('pageelement', 'table_line_index_cell_index', 'text');
                     if (preg_match('/Excl. Tax/', $text)) {
                         $text = preg_replace("/ \\n/", ':', $text);
                         $values = explode(':', $text);
@@ -130,8 +154,8 @@ class Core_Mage_ShoppingCart_Helper extends Mage_Selenium_TestCase
                         $values = array_map('trim', $values);
                         foreach ($values as $k => $v) {
                             if ($k % 2 != 0 && isset($values[$k - 1])) {
-                                $productValues['product_' . $i][$key . '_'
-                                    . strtolower(preg_replace('#[^0-9a-z]+#i', '', $values[$k - 1]))] = $v;
+                                $newKey = $key . '_' . strtolower(preg_replace('#[^0-9a-z]+#i', '', $values[$k - 1]));
+                                $productValues['product_' . $i][$newKey] = $v;
                             }
                         }
                     } else {
@@ -164,16 +188,16 @@ class Core_Mage_ShoppingCart_Helper extends Mage_Selenium_TestCase
      */
     public function getOrderPriceData()
     {
-        $setXpath = $this->_getControlXpath('pageelement', 'price_totals') . '/descendant::tr';
-        $count = $this->getXpathCount($setXpath);
+        $count = $this->getControlCount('pageelement', 'price_totals_line');
         $returnData = array();
         for ($i = $count; $i >= 1; $i--) {
-            if ($this->getXpathCount($setXpath . "[$i]/*") > 1) {
-                $fieldName = $this->getText($setXpath . "[$i]/*[1]");
+            $this->addParameter('index', $i);
+            if ($this->controlIsPresent('pageelement', 'price_totals_line_index_value')) {
+                $fieldName = $this->getControlAttribute('pageelement', 'price_totals_line_index_name', 'text');
                 if (!preg_match('/\$\(([\d]+\.[\d]+)|([\d]+)\%\)/', $fieldName)) {
                     $fieldName = trim(strtolower(preg_replace('#[^0-9a-z]+#i', '_', $fieldName)), '_');
                 }
-                $fieldValue = $this->getText($setXpath . "[$i]/*[2]");
+                $fieldValue = $this->getControlAttribute('pageelement', 'price_totals_line_index_value', 'text');
                 $returnData[$fieldName] = trim($fieldValue, "\x00..\x1F");
             }
         }
@@ -190,22 +214,26 @@ class Core_Mage_ShoppingCart_Helper extends Mage_Selenium_TestCase
     public function verifyPricesDataOnPage($productData, $orderPriceData)
     {
         if (is_string($productData)) {
-            $productData = $this->loadData($productData);
+            $elements = explode('/', $productData);
+            $fileName = (count($elements) > 1) ? array_shift($elements) : '';
+            $productData = $this->loadDataSet($fileName, implode('/', $elements));
         }
         if (is_string($orderPriceData)) {
-            $orderPriceData = $this->loadData($orderPriceData);
+            $elements = explode('/', $orderPriceData);
+            $fileName = (count($elements) > 1) ? array_shift($elements) : '';
+            $orderPriceData = $this->loadDataSet($fileName, implode('/', $elements));
         }
         //Get Products data and order prices data
         $actualProductData = $this->getProductInfoInTable();
         $actualOrderPriceData = $this->getOrderPriceData();
         //Verify Products data
-        $actualProductQty = count($actualProductData);
-        $expectedProductQty = count($productData);
-        if ($actualProductQty != $expectedProductQty) {
-            $this->addVerificationMessage("'" . $actualProductQty . "' product(s) added to Shopping cart but must be '"
-                                              . $expectedProductQty . "'");
+        $actualQty = count($actualProductData);
+        $expectedQty = count($productData);
+        if ($actualQty != $expectedQty) {
+            $this->addVerificationMessage(
+                "'" . $actualQty . "' product(s) added to Shopping cart but must be '" . $expectedQty . "'");
         } else {
-            for ($i = 1; $i <= $actualProductQty; $i++) {
+            for ($i = 1; $i <= $actualQty; $i++) {
                 $productName = '';
                 foreach ($actualProductData['product_' . $i] as $key => $value) {
                     if (preg_match('/^product/', $key)) {
@@ -269,9 +297,10 @@ class Core_Mage_ShoppingCart_Helper extends Mage_Selenium_TestCase
     public function frontEstimateShipping($shippingAddress, $shippingMethod, $validate = true)
     {
         if (is_string($shippingAddress)) {
-            $shippingAddress = $this->loadData($shippingAddress);
+            $elements = explode('/', $shippingAddress);
+            $fileName = (count($elements) > 1) ? array_shift($elements) : '';
+            $shippingAddress = $this->loadDataSet($fileName, implode('/', $elements));
         }
-        $shippingAddress = $this->arrayEmptyClear($shippingAddress);
         $this->fillForm($shippingAddress);
         $this->clickButton('get_quote');
         $this->chooseShipping($shippingMethod, $validate);
@@ -285,7 +314,9 @@ class Core_Mage_ShoppingCart_Helper extends Mage_Selenium_TestCase
     public function chooseShipping($shippingMethod)
     {
         if (is_string($shippingMethod)) {
-            $shippingMethod = $this->loadData($shippingMethod);
+            $elements = explode('/', $shippingMethod);
+            $fileName = (count($elements) > 1) ? array_shift($elements) : '';
+            $shippingMethod = $this->loadDataSet($fileName, implode('/', $elements));
         }
         $shipService = (isset($shippingMethod['shipping_service'])) ? $shippingMethod['shipping_service'] : null;
         $shipMethod = (isset($shippingMethod['shipping_method'])) ? $shippingMethod['shipping_method'] : null;
@@ -294,14 +325,12 @@ class Core_Mage_ShoppingCart_Helper extends Mage_Selenium_TestCase
         } else {
             $this->addParameter('shipService', $shipService);
             $this->addParameter('shipMethod', $shipMethod);
-            if ($this->isElementPresent($this->_getControlXpath('field', 'ship_service_name'))) {
-                $method = $this->_getControlXpath('radiobutton', 'ship_method');
-                if ($this->isElementPresent($method)) {
-                    $this->click($method);
-                    $this->waitForAjax();
+            if ($this->controlIsPresent('field', 'ship_service_name')) {
+                if ($this->controlIsPresent('radiobutton', 'ship_method')) {
+                    $this->fillRadiobutton('ship_method', 'Yes');
                 } else {
-                    $this->addVerificationMessage('Shipping Method "' . $shipMethod . '" for "'
-                                                      . $shipService . '" is currently unavailable.');
+                    $this->addVerificationMessage(
+                        'Shipping Method "' . $shipMethod . '" for "' . $shipService . '" is currently unavailable.');
                 }
             } else {
                 $this->addVerificationMessage('Shipping Service "' . $shipService . '" is currently unavailable.');
@@ -317,11 +346,10 @@ class Core_Mage_ShoppingCart_Helper extends Mage_Selenium_TestCase
     {
         if ($this->getArea() == 'frontend' && !$this->controlIsPresent('link', 'empty_my_cart')) {
             $this->frontend('shopping_cart');
-            $productLine = $this->_getControlXpath('pageelement', 'product_line');
-            $productCount = $this->getXpathCount($productLine);
+            $productCount = $this->getControlCount('pageelement', 'product_line');
             for ($i = 1; $i <= $productCount; $i++) {
                 $this->addParameter('productNumber', $i);
-                $this->type($this->_getControlXpath('field', 'product_qty'), 0);
+                $this->fillField('product_qty', 0);
             }
             $this->clickButton('update_shopping_cart');
             $this->assertMessagePresent('success', 'shopping_cart_is_empty');
@@ -341,7 +369,7 @@ class Core_Mage_ShoppingCart_Helper extends Mage_Selenium_TestCase
         foreach ($productNameSet as $productName) {
             $this->addParameter('productName', $productName);
             if ($this->controlIsPresent('checkbox', 'move_to_wishlist')) {
-                $this->fillForm(array('move_to_wishlist' => 'Yes'));
+                $this->fillCheckbox('move_to_wishlist', 'Yes');
             } else {
                 $this->fail('Product ' . $productName . ' is not in the shopping cart.');
             }

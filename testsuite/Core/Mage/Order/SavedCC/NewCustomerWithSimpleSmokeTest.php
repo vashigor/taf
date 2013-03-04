@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  tests
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -41,12 +41,10 @@ class Core_Mage_Order_SavedCC_NewCustomerWithSimpleSmokeTest extends Mage_Seleni
      */
     public function setUpBeforeTests()
     {
-        //Data
-        $config = $this->loadDataSet('PaymentMethod', 'savedcc_without_3Dsecure');
         //Steps
         $this->loginAdminUser();
         $this->navigate('system_configuration');
-        $this->systemConfigurationHelper()->configure($config);
+        $this->systemConfigurationHelper()->configure('PaymentMethod/savedcc_without_3Dsecure');
     }
 
     protected function assertPreConditions()
@@ -156,7 +154,6 @@ class Core_Mage_Order_SavedCC_NewCustomerWithSimpleSmokeTest extends Mage_Seleni
      *
      * @test
      * @depends orderWithout3DSecureSmoke
-     *
      */
     public function fullInvoiceWithSavedCC($orderData)
     {
@@ -195,7 +192,6 @@ class Core_Mage_Order_SavedCC_NewCustomerWithSimpleSmokeTest extends Mage_Seleni
      * @test
      * @depends orderWithout3DSecureSmoke
      * @depends preconditionsForTests
-     *
      */
     public function partialInvoiceWithCreditCard($orderData, $sku)
     {
@@ -236,7 +232,6 @@ class Core_Mage_Order_SavedCC_NewCustomerWithSimpleSmokeTest extends Mage_Seleni
      *
      * @test
      * @depends orderWithout3DSecureSmoke
-     *
      */
     public function fullCreditMemoWithCreditCard($orderData)
     {
@@ -275,7 +270,6 @@ class Core_Mage_Order_SavedCC_NewCustomerWithSimpleSmokeTest extends Mage_Seleni
      * @test
      * @depends orderWithout3DSecureSmoke
      * @depends preconditionsForTests
-     *
      */
     public function partialCreditMemoWithCreditCard($orderData, $sku)
     {
@@ -315,7 +309,6 @@ class Core_Mage_Order_SavedCC_NewCustomerWithSimpleSmokeTest extends Mage_Seleni
      *
      * @test
      * @depends orderWithout3DSecureSmoke
-     *
      */
     public function fullShipmentForOrderWithoutInvoice($orderData)
     {
@@ -355,7 +348,6 @@ class Core_Mage_Order_SavedCC_NewCustomerWithSimpleSmokeTest extends Mage_Seleni
      * @test
      * @depends orderWithout3DSecureSmoke
      * @depends preconditionsForTests
-     *
      */
     public function partialShipmentForOrderWithoutInvoice($orderData, $sku)
     {
@@ -387,7 +379,6 @@ class Core_Mage_Order_SavedCC_NewCustomerWithSimpleSmokeTest extends Mage_Seleni
      *
      * @test
      * @depends orderWithout3DSecureSmoke
-     *
      */
     public function holdAndUnholdPendingOrderViaOrderPage($orderData)
     {
@@ -444,7 +435,6 @@ class Core_Mage_Order_SavedCC_NewCustomerWithSimpleSmokeTest extends Mage_Seleni
      * @test
      * @dataProvider createOrderWith3DSecureDataProvider
      * @depends orderWithout3DSecureSmoke
-     *
      */
     public function createOrderWith3DSecure($card, $needSetUp, $orderData)
     {
@@ -453,8 +443,7 @@ class Core_Mage_Order_SavedCC_NewCustomerWithSimpleSmokeTest extends Mage_Seleni
         //Steps
         if ($needSetUp) {
             $this->systemConfigurationHelper()->useHttps('admin', 'yes');
-            $config = $this->loadDataSet('PaymentMethod', 'savedcc_with_3Dsecure');
-            $this->systemConfigurationHelper()->configure($config);
+            $this->systemConfigurationHelper()->configure('PaymentMethod/savedcc_with_3Dsecure');
         }
         $this->navigate('manage_sales_orders');
         $this->orderHelper()->createOrder($orderData);

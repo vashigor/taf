@@ -21,7 +21,7 @@
 # @package     selenium
 # @subpackage  uimaps
 # @author      Magento Core Team <core@magentocommerce.com>
-# @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+# @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
 # @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 #
 ---
@@ -115,7 +115,7 @@ new_product_attribute:
                                         used_in_product_listing: //select[@id='used_in_product_listing']
                                         used_for_sorting_in_product_listing: //select[@id='used_for_sort_by' and not(@disabled)]
                                     fields:
-                                        position: //input[@id='position']
+                                        position: //input[@id='position'][not(@disabled)]
                 -
                     manage_labels_options:
                         xpath: //a[@id='product_attribute_tabs_labels']/span
@@ -138,8 +138,11 @@ new_product_attribute:
                                     fields:
                                         admin_option_name: //input[@name='option[value][option_%fieldOptionNumber%][0]']
                                         option_position: //input[@name='option[order][option_%fieldOptionNumber%]']
-                                        titles_by_store_name: //td[contains(input/@name,'option[value][option_%fieldOptionNumber%]')][%storeViewNumber%]/input
+                                        options_by_store_name: //td[contains(input/@name,'option[value][option_%fieldOptionNumber%]')][%storeViewNumber%]/input
                                     required: [admin_option]
+                                    pageelements:
+                                        manage_options_option: //tr[contains(@class,'option-row')]
+                                        is_default_option_index: //tr[contains(@class,'option-row')][%index%]//input[@class='input-radio']
         buttons:
             back: //button[span='Back']
             reset: //button[span='Reset']
@@ -150,7 +153,7 @@ new_product_attribute:
 # Manage Product Attributes page
 edit_product_attribute:
     mca: catalog_product_attribute/edit/attribute_id/%id%/
-    title: %attribute_code% / Manage Attributes / Attributes / Catalog / Magento Admin
+    title: %elementTitle% / Manage Attributes / Attributes / Catalog / Magento Admin
     uimap:
         form: &editProductAttributeForm
             tabs:
@@ -178,8 +181,11 @@ edit_product_attribute:
                                     fields:
                                         admin_option_name: //input[@name='option[value][%fieldOptionNumber%][0]']
                                         option_position: //input[@name='option[order][%fieldOptionNumber%]']
-                                        titles_by_store_name: //td[contains(input/@name,'option[value][%fieldOptionNumber%]')][%storeViewNumber%]/input
+                                        options_by_store_name: //td[contains(input/@name,'option[value][%fieldOptionNumber%]')][%storeViewNumber%]/input
                                     required: [admin_option]
+                                    pageelements:
+                                        manage_options_option: //tr[contains(@class,'option-row')]
+                                        is_default_option_index: //tr[contains(@class,'option-row')][%index%]//input[@class='input-radio']
         buttons:
             back: //button[span='Back']
             reset: //button[span='Reset']

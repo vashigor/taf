@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  tests
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -62,9 +62,9 @@ class Core_Mage_PriceRules_Catalog_DeleteTest extends Mage_Selenium_TestCase
     public function deleteCatalogPriceRule()
     {
         //Data
-        $priceRuleData = $this->loadData('test_catalog_rule');
-        $ruleSearch = $this->loadData('search_catalog_rule',
-                array('filter_rule_name' => $priceRuleData['info']['rule_name']));
+        $priceRuleData = $this->loadDataSet('CatalogPriceRule', 'test_catalog_rule');
+        $ruleSearch = $this->loadDataSet('CatalogPriceRule', 'search_catalog_rule',
+            array('filter_rule_name' => $priceRuleData['info']['rule_name']));
         //PreConditions
         $this->priceRulesHelper()->createRule($priceRuleData);
         //Verification

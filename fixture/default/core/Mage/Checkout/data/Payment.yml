@@ -21,7 +21,7 @@
 # @package     selenium
 # @subpackage  test-data
 # @author      Magento Core Team <core@magentocommerce.com>
-# @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+# @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
 # @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 #
 ---
@@ -40,189 +40,189 @@ saved_empty_all:
 saved_american_express:
     name_on_card: 'Test Account'
     card_type: 'American Express'
-    card_number: 'YOUR CREDENTIALS'
-    expiration_month: 'YOUR CREDENTIALS'
-    expiration_year: 'YOUR CREDENTIALS'
-    card_verification_number: 'YOUR CREDENTIALS'
+    card_number: '341111111111111'
+    expiration_month: '01 - January'
+    expiration_year: '2014'
+    card_verification_number: '1234'
 
 saved_visa: &visaSavedCC
     name_on_card: 'Test Account'
     card_type: 'Visa'
-    card_number: 'YOUR CREDENTIALS'
-    expiration_month: 'YOUR CREDENTIALS'
-    expiration_year: 'YOUR CREDENTIALS'
-    card_verification_number: 'YOUR CREDENTIALS'
+    card_number: '4000000000000002'
+    expiration_month: '01 - January'
+    expiration_year: '2014'
+    card_verification_number: '111'
 
 saved_mastercard:
     name_on_card: 'Test Account'
     card_type: 'MasterCard'
-    card_number: 'YOUR CREDENTIALS'
-    expiration_month: 'YOUR CREDENTIALS'
-    expiration_year: 'YOUR CREDENTIALS'
-    card_verification_number: 'YOUR CREDENTIALS'
+    card_number: '5200000000000015'
+    expiration_month: '01 - January'
+    expiration_year: '2014'
+    card_verification_number: '111'
 
 saved_jcb:
     name_on_card: 'Test Account'
     card_type: 'JCB'
-    card_number: 'YOUR CREDENTIALS'
-    expiration_month: 'YOUR CREDENTIALS'
-    expiration_year: 'YOUR CREDENTIALS'
-    card_verification_number: 'YOUR CREDENTIALS'
+    card_number: '3000000000000004'
+    expiration_month: '01 - January'
+    expiration_year: '2014'
+    card_verification_number: '1234'
 
 saved_laser:
     name_on_card: 'Test Account'
     card_type: 'Laser'
-    card_number: 'YOUR CREDENTIALS'
-    expiration_month: 'YOUR CREDENTIALS'
-    expiration_year: 'YOUR CREDENTIALS'
-    card_verification_number: 'YOUR CREDENTIALS'
+    card_number: '4024007127653'
+    expiration_month: '01 - January'
+    expiration_year: '2014'
+    card_verification_number: '111'
 
 saved_uatp:
     name_on_card: 'Test Account'
     card_type: 'UATP'
-    card_number: 'YOUR CREDENTIALS'
-    expiration_month: 'YOUR CREDENTIALS'
-    expiration_year: 'YOUR CREDENTIALS'
-    card_verification_number: 'YOUR CREDENTIALS'
+    card_number: '4024007127653'
+    expiration_month: '01 - January'
+    expiration_year: '2014'
+    card_verification_number: '111'
 
 saved_diners_club:
     name_on_card: 'Test Account'
     card_type: 'Diners Club'
-    card_number: 'YOUR CREDENTIALS'
-    expiration_month: 'YOUR CREDENTIALS'
-    expiration_year: 'YOUR CREDENTIALS'
-    card_verification_number: 'YOUR CREDENTIALS'
+    card_number: '30569309025904'
+    expiration_month: '01 - January'
+    expiration_year: '2014'
+    card_verification_number: '111'
 
 saved_switch_maestro:
     name_on_card: 'Test Account'
     card_type: 'Switch/Maestro'
-    card_number: 'YOUR CREDENTIALS'
-    expiration_month: 'YOUR CREDENTIALS'
-    expiration_year: 'YOUR CREDENTIALS'
-    card_verification_number: 'YOUR CREDENTIALS'
-    issue_number: 'YOUR CREDENTIALS'
-    start_date_month: 'YOUR CREDENTIALS'
-    start_date_year: 'YOUR CREDENTIALS'
+    card_number: '6759343422308233'
+    expiration_month: '01 - January'
+    expiration_year: '2014'
+    card_verification_number: '111'
+    issue_number: 1234
+    start_date_month: 12 - December
+    start_date_year: 2011
 
 saved_discover:
     name_on_card: 'Test Account'
     card_type: 'Discover'
-    card_number: 'YOUR CREDENTIALS'
-    expiration_month: 'YOUR CREDENTIALS'
-    expiration_year: 'YOUR CREDENTIALS'
-    card_verification_number: 'YOUR CREDENTIALS'
+    card_number: '6011000000000004'
+    expiration_month: '01 - January'
+    expiration_year: '2014'
+    card_verification_number: '111'
 
 saved_solo:
     name_on_card: 'Test Account'
     card_type: 'Solo'
-    card_number: 'YOUR CREDENTIALS'
-    expiration_month: 'YOUR CREDENTIALS'
-    expiration_year: 'YOUR CREDENTIALS'
-    card_verification_number: 'YOUR CREDENTIALS'
-    issue_number: 'YOUR CREDENTIALS'
-    start_date_month: 'YOUR CREDENTIALS'
-    start_date_year: 'YOUR CREDENTIALS'
+    card_number: '6767705369846419'
+    expiration_month: '01 - January'
+    expiration_year: '2014'
+    card_verification_number: '111'
+    issue_number:
+    start_date_month: 12 - December
+    start_date_year: 2012
 
 saved_enroute:
     name_on_card: 'Test Account'
     card_type: 'enRoute'
-    card_number: 'YOUR CREDENTIALS'
-    expiration_month: 'YOUR CREDENTIALS'
-    expiration_year: 'YOUR CREDENTIALS'
-    card_verification_number: 'YOUR CREDENTIALS'
+    card_number: '6011000000000004'
+    expiration_month: '01 - January'
+    expiration_year: '2014'
+    card_verification_number: '111'
 
 saved_other:
     name_on_card: 'Test Account'
     card_type: 'Other'
-    card_number: 'YOUR CREDENTIALS'
-    expiration_month: 'YOUR CREDENTIALS'
-    expiration_year: 'YOUR CREDENTIALS'
-    card_verification_number: 'YOUR CREDENTIALS'
+    card_number: '6011000000000004'
+    expiration_month: '01 - January'
+    expiration_year: '2014'
+    card_verification_number: '111'
 
 #<------------ELSE------------>
 else_american_express:
     card_type: 'American Express'
-    card_number: 'YOUR CREDENTIALS'
-    expiration_month: 'YOUR CREDENTIALS'
-    expiration_year: 'YOUR CREDENTIALS'
-    card_verification_number: 'YOUR CREDENTIALS'
+    card_number: '371449635398431'
+    expiration_month: '01 - January'
+    expiration_year: '2014'
+    card_verification_number: '1234'
 
 else_visa: &visaElse
     card_type: 'Visa'
-    card_number: 'YOUR CREDENTIALS'
-    expiration_month: 'YOUR CREDENTIALS'
-    expiration_year: 'YOUR CREDENTIALS'
-    card_verification_number: 'YOUR CREDENTIALS'
+    card_number: '4000000000000002'
+    expiration_month: '01 - January'
+    expiration_year: '2014'
+    card_verification_number: '111'
 
 else_mastercard: &mastercardElse
     card_type: 'MasterCard'
-    card_number: 'YOUR CREDENTIALS'
-    expiration_month: 'YOUR CREDENTIALS'
-    expiration_year: 'YOUR CREDENTIALS'
-    card_verification_number: 'YOUR CREDENTIALS'
+    card_number: '5200000000000015'
+    expiration_month: '01 - January'
+    expiration_year: '2014'
+    card_verification_number: '111'
 
 else_discover:
     card_type: 'Discover'
-    card_number: 'YOUR CREDENTIALS'
-    expiration_month: 'YOUR CREDENTIALS'
-    expiration_year: 'YOUR CREDENTIALS'
-    card_verification_number: 'YOUR CREDENTIALS'
+    card_number: '6011000990139424'
+    expiration_month: '01 - January'
+    expiration_year: '2014'
+    card_verification_number: '111'
 
 else_other:
     card_type: 'Other'
-    card_number: 'YOUR CREDENTIALS'
-    expiration_month: 'YOUR CREDENTIALS'
-    expiration_year: 'YOUR CREDENTIALS'
-    card_verification_number: 'YOUR CREDENTIALS'
+    card_number: '6011000000000004'
+    expiration_month: '01 - January'
+    expiration_year: '2014'
+    card_verification_number: '111'
 
 else_jcb: &jcbElse
     card_type: 'JCB'
-    card_number: 'YOUR CREDENTIALS'
-    expiration_month: 'YOUR CREDENTIALS'
-    expiration_year: 'YOUR CREDENTIALS'
-    card_verification_number: 'YOUR CREDENTIALS'
+    card_number: '3566002020360505'
+    expiration_month: '01 - January'
+    expiration_year: '2014'
+    card_verification_number: '1234'
 
 else_solo:
     card_type: 'Solo'
-    card_number: 'YOUR CREDENTIALS'
-    expiration_month: 'YOUR CREDENTIALS'
-    expiration_year: 'YOUR CREDENTIALS'
-    card_verification_number: 'YOUR CREDENTIALS'
-    issue_number: 'YOUR CREDENTIALS'
-    start_date_month: 'YOUR CREDENTIALS'
-    start_date_year: 'YOUR CREDENTIALS'
+    card_number: '6767661395122343'
+    expiration_month: '01 - January'
+    expiration_year: '2014'
+    card_verification_number: '111'
+    issue_number: '1234'
+    start_date_month: '12 - December'
+    start_date_year: '2012'
 
 else_switch_maestro:
     card_type: 'Switch/Maestro'
-    card_number: 'YOUR CREDENTIALS'
-    expiration_month: 'YOUR CREDENTIALS'
-    expiration_year: 'YOUR CREDENTIALS'
-    card_verification_number: 'YOUR CREDENTIALS'
-    issue_number: 'YOUR CREDENTIALS'
-    start_date_month: 'YOUR CREDENTIALS'
-    start_date_year: 'YOUR CREDENTIALS'
+    card_number: '6759343422308233'
+    expiration_month: '01 - January'
+    expiration_year: '2014'
+    card_verification_number: '111'
+    issue_number: '1234'
+    start_date_month: '12 - December'
+    start_date_year: '2012'
 
 #<------------Specific Card------------>
 payflowpro_mastercard:
     card_type: 'MasterCard'
-    card_number: 'YOUR CREDENTIALS'
-    expiration_month: 'YOUR CREDENTIALS'
-    expiration_year: 'YOUR CREDENTIALS'
-    card_verification_number: 'YOUR CREDENTIALS'
+    card_number: '5200000000000007'
+    expiration_month: '01 - January'
+    expiration_year: '2014'
+    card_verification_number: '111'
 
 3dsecure_visa:
     card_type: 'Visa'
-    card_number: 'YOUR CREDENTIALS'
-    expiration_month: 'YOUR CREDENTIALS'
-    expiration_year: 'YOUR CREDENTIALS'
-    card_verification_number: 'YOUR CREDENTIALS'
+    card_number: '4832011527418035'
+    expiration_month: '01 - January'
+    expiration_year: '2014'
+    card_verification_number: '111'
 
 3dsecure_jcb:
     card_type: 'JCB'
-    card_number: 'YOUR CREDENTIALS'
-    expiration_month: 'YOUR CREDENTIALS'
-    expiration_year: 'YOUR CREDENTIALS'
-    card_verification_number: 'YOUR CREDENTIALS'
+    card_number: '3566002020360505'
+    expiration_month: '01 - January'
+    expiration_year: '2014'
+    card_verification_number: '1234'
 #*********************************************
 #*              Payment Data                 *
 #*********************************************

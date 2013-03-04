@@ -21,16 +21,16 @@
 # @package     selenium
 # @subpackage  uimaps
 # @author      Magento Core Team <core@magentocommerce.com>
-# @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+# @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
 # @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 #
 ---
 # Manage Product page
 manage_products:
     mca: catalog_product/
-    click_xpath: //div[@class='nav-bar']//a[span='Manage Products']
+    click_xpath: //div[@class='nav-bar']//a[contains(@href, '/catalog_product/')]
     title: Manage Products / Catalog / Magento Admin
-    uimap:
+    uimap: &manageProductsUimap
         form: &searchProductGrid
             fieldsets:
                 -
@@ -77,7 +77,12 @@ manage_products:
             existing_sku: //div[@class='validation-advice' and contains(text(),'The value of attribute "SKU" must be unique')]
             select_type_of_option: //div[@id='advice-required-option-select-product_option_%optionId%_type']
             confirmation_for_delete: Are you sure?
-            no_records_found: //td[text()='No records found.']
+
+manage_products_store:
+    mca: catalog_product/index/store/%storeId%/
+    click_xpath: //div[@class='nav-bar']//a[contains(@href, '/catalog_product/')]
+    title: Manage Products / Catalog / Magento Admin
+    uimap: *manageProductsUimap
 
 # Settings for New Product creation
 new_product_settings:
@@ -98,6 +103,7 @@ new_product_settings:
                                     dropdowns:
                                         product_attribute_set: //select[@id='attribute_set_id']
                                         product_type: //select[@id='product_type']
+
 # Add New Product page
 new_product:
 #    mca: catalog_product/new/%productParameters%
@@ -145,7 +151,7 @@ new_product:
                                         general_url_key: //input[@id='url_key']
                                         general_user_attr_field: //input[@id='%attributeCodeField%']
                                     multiselects:
-                                        general_user_attr_multiselect: //input[@id='%attributeCodeMultiselect%']
+                                        general_user_attr_multiselect: //select[@id='%attributeCodeMultiselect%']
                 -
                     prices: &pricesTab
                         xpath: //a[@title='Prices']/span
@@ -299,10 +305,16 @@ new_product:
                             -
                                 select_category:
                                     xpath: //div[contains(div/div/h4,'Product Categories')]
+                                    checkboxes:
+                                        category_by_id: //div[*/@id='%categoryId%']/input
                                     links:
-                                        root_category: //ul/div/li[contains(div/a/span,'%rootName%')]
-                                        sub_category: //*[@id='%parentCategoryId%']/ancestor::li/ul/li[contains(div/a/span,'%subName%') and not(div/a/span/@id='%parentCategoryId%')]
-                                        expand_category: //*[@id='%parentCategoryId%']/ancestor::div/img[contains(@class,'x-tree-elbow-plus') or contains(@class,'x-tree-elbow-end-plus')]
+                                        select_category_root_category: //ul/div/li[contains(div/a/span,'%rootName%')]
+                                        select_category_sub_category: //*[@id='%parentCategoryId%']/ancestor::li/ul/li[contains(div/a/span,'%subName%') and not(div/a/span/@id='%parentCategoryId%')]
+                                        select_category_expand_category: //*[@id='%parentCategoryId%']/ancestor::div/img[contains(@class,'x-tree-elbow-plus') or contains(@class,'x-tree-elbow-end-plus')]
+                                    pageelements:
+                                        select_category_category_text: %categoryXpath%/div/a/span
+                                        select_category_category_index_text: %categoryXpath%[%index%]/div/a/span
+                                        select_category_category_index_link: %categoryXpath%[%index%]/div/a
                 -
                     related: &relatedProductsTab
                         xpath: //a[@title='Related Products']/span
@@ -418,6 +430,8 @@ new_product:
                                         custom_options_image_size_x: //input[@name='product[options][%optionId%][image_size_x]']
                                         custom_options_image_size_y: //input[@name='product[options][%optionId%][image_size_y]']
                                         custom_options_sort_order: //input[@name='product[options][%optionId%][values][%rowId%][sort_order]']
+                                    pageelements:
+                                        custom_option_row: //tr[contains(@id,'product_option_')][not(@style)]
                 -
                     bundle_items: &bundleItemsTab
                         xpath: //a[@title='Bundle Items']/span
@@ -432,6 +446,10 @@ new_product:
                                     xpath: //div[contains(div/h4,'Bundle Items')]
                                     buttons:
                                         add_new_option: //button[@id='add_new_option']
+                                    pageelements:
+                                        bundle_item_grid: //div[@class='option-box']
+                                        bundle_item_grid_index_product: //div[@class='option-box'][%index%]//tr[@class='selection' and contains(.,'%productSku%')]
+                                        bundle_item_row: //div[@class='option-box']
                             -
                                 new_bundle_option:
                                     xpath: //div[@id='bundle_option_%optionId%']
@@ -511,6 +529,8 @@ new_product:
                                         associated_search_position_to: //input[@name='position[to]']
                                         associated_product_position: %productXpath%//input[@name='position']
                                         associated_product_default_qty: %productXpath%//input[@name='qty']
+                                    pageelements:
+                                        associated_table: //table[@id]
                 -
                     downloadable_information: &downloadableInformationTab
                         xpath: //a[@title='Downloadable Information']/span
@@ -521,6 +541,9 @@ new_product:
                                     links:
                                         downloadable_sample: //*[@id='dt-samples']/a
                                         downloadable_link: //*[@id='dt-links']/a
+                                    pageelements:
+                                        opened_downloadable_sample: //*[@id='dt-samples'][normalize-space(@class)='open']
+                                        opened_downloadable_link: //*[@id='dt-links'][normalize-space(@class)='open']
                             -
                                 downloadable_sample:
                                     xpath: //*[@id='dd-samples']/div
@@ -535,6 +558,9 @@ new_product:
                                     radiobuttons:
                                         downloadable_sample_row_url_radiobutton: //input[@id='downloadable_sample_%rowId%_url_type']
                                         downloadable_sample_row_file_radiobutton: //input[@id='downloadable_sample_%rowId%_file_type']
+                                    pageelements:
+                                        added_downloadable_sample: //*[@id='sample_items_body']/tr
+                                        downloadable_sample_row: //*[@id='sample_items_body']/tr
                             -
                                 downloadable_link:
                                     xpath: //*[@id='dd-links']/div
@@ -557,12 +583,20 @@ new_product:
                                     radiobuttons:
                                         downloadable_link_row_sample_url_radiobutton: //input[@id='downloadable_link_%rowId%_sample_url_type']
                                         downloadable_link_row_url_radiobutton: //input[@id='downloadable_link_%rowId%_url_type']
+                                    pageelements:
+                                        added_downloadable_link: //*[@id='link_items_body']/tr
+                                        downloadable_link_row: //*[@id='link_items_body']/tr
         buttons:
             back: //button[span='Back']
             reset: //button[span='Reset']
             save: //button[span='Save']
             save_and_continue_edit: //button[span='Save and Continue Edit']
         messages: *productMesssages
+new_virtual_product:
+#    mca: catalog_product/new/%productParameters%
+    mca: catalog_product/edit/set/%setId%/type/%productType%/
+    title: New Product / Manage Products / Catalog / Magento Admin
+    uimap: *newProduct
 
 new_configurable_product:
     mca: catalog_product/new/attributes/%attributesUrl%/set/%setId%/type/%productType%/
@@ -574,12 +608,22 @@ duplicated_configurable_product:
     title: New Product / Manage Products / Catalog / Magento Admin
     uimap: *newProduct
 
+duplicated_configurable_product_edit:
+    mca: catalog_product/edit/attributes/%attributesUrl%/id/%id%/
+    title: New Product / Manage Products / Catalog / Magento Admin
+    uimap: *newProduct
+
 # Edit Product page
 edit_product:
     mca: catalog_product/edit/id/%id%/
-    title: %productName% / Manage Products / Catalog / Magento Admin
+    title: %elementTitle% / Manage Products / Catalog / Magento Admin
     uimap: &editProduct
         form:
+            fieldsets:
+                -
+                    websites:
+                        dropdowns:
+                             choose_store_view: //select[@id='store_switcher']
             tabs:
                 -
                     configurable_product_settings: *configurableProductsettings
@@ -674,7 +718,12 @@ edit_product:
 
 edit_saved_product:
     mca: catalog_product/edit/id/%id%/back/edit/tab/%tab%
-    title: %productName% / Manage Products / Catalog / Magento Admin
+    title: %elementTitle% / Manage Products / Catalog / Magento Admin
+    uimap: *editProduct
+
+edit_product_save_and_continue:
+    mca: catalog_product/edit/id/%id%/back/edit/tab/product_info_tabs_group_%tabId%/
+    title: %elementTitle% / Manage Products / Catalog / Magento Admin
     uimap: *editProduct
 
 create_empty_simple_from_configurable:

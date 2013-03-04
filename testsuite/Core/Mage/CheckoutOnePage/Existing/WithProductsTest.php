@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  tests
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -35,6 +35,11 @@
  */
 class Core_Mage_CheckoutOnePage_Existing_WithProductsTest extends Mage_Selenium_TestCase
 {
+    protected function assertPreConditions()
+    {
+        $this->loginAdminUser();
+    }
+
     /**
      * <p>Creating Simple and Virtual products</p>
      *
@@ -47,7 +52,6 @@ class Core_Mage_CheckoutOnePage_Existing_WithProductsTest extends Mage_Selenium_
         $simple = $this->loadDataSet('Product', 'simple_product_visible');
         $virtual = $this->loadDataSet('Product', 'virtual_product_visible');
         //Steps and Verification
-        $this->loginAdminUser();
         $this->navigate('manage_products');
         $this->productHelper()->createProduct($simple);
         $this->assertMessagePresent('success', 'success_saved_product');
@@ -83,22 +87,19 @@ class Core_Mage_CheckoutOnePage_Existing_WithProductsTest extends Mage_Selenium_
      *
      * @test
      * @depends preconditionsForTests
-     *
      */
     public function withSimpleProductAndCustomerWithoutAddress($data)
     {
-        $userData = $this->loadDataSet('Customers', 'customer_account_register');
+        $userData = $this->loadDataSet('Customers', 'generic_customer_account');
         $checkoutData = $this->loadDataSet('OnePageCheckout', 'exist_flatrate_checkmoney',
-                                           array('general_name'  => $data['simple'],
-                                                'email_address'  => $userData['email']));
+            array('general_name'   => $data['simple'],
+                  'email_address'  => $userData['email']));
         //Steps
-        $this->logoutCustomer();
-        $this->navigate('customer_login');
-        $this->customerHelper()->registerCustomer($userData);
-        //Verifying
-        $this->assertMessagePresent('success', 'success_registration');
+        $this->navigate('manage_customers');
+        $this->customerHelper()->createCustomer($userData);
+        $this->assertMessagePresent('success', 'success_saved_customer');
         //Steps
-        $this->logoutCustomer();
+        $this->frontend();
         $this->checkoutOnePageHelper()->frontCreateCheckout($checkoutData);
         //Verification
         $this->assertMessagePresent('success', 'success_checkout');
@@ -126,23 +127,19 @@ class Core_Mage_CheckoutOnePage_Existing_WithProductsTest extends Mage_Selenium_
      *
      * @test
      * @depends preconditionsForTests
-     *
      */
     public function withVirtualProductAndCustomerWithoutAddress($data)
     {
         //Data
-        $userData = $this->loadDataSet('Customers', 'customer_account_register');
+        $userData = $this->loadDataSet('Customers', 'generic_customer_account');
         $checkoutData = $this->loadDataSet('OnePageCheckout', 'exist_flatrate_checkmoney_virtual',
-                                           array('general_name'  => $data['virtual'],
-                                                'email_address'  => $userData['email']));
+            array('general_name'   => $data['virtual'],
+                  'email_address'  => $userData['email']));
         //Steps
-        $this->logoutCustomer();
-        $this->navigate('customer_login');
-        $this->customerHelper()->registerCustomer($userData);
-        //Verifying
-        $this->assertMessagePresent('success', 'success_registration');
-        //Steps
-        $this->logoutCustomer();
+        $this->navigate('manage_customers');
+        $this->customerHelper()->createCustomer($userData);
+        $this->assertMessagePresent('success', 'success_saved_customer');
+        $this->frontend();
         $this->checkoutOnePageHelper()->frontCreateCheckout($checkoutData);
         //Verification
         $this->assertMessagePresent('success', 'success_checkout');

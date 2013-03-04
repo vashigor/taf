@@ -21,12 +21,13 @@
 # @package     selenium
 # @subpackage  uimaps
 # @author      Magento Core Team <core@magentocommerce.com>
-# @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+# @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
 # @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 #
 ---
 customer_account:
     mca: customer/account/
+    click_xpath: //a[contains(@href,'/customer/account/')][text()='My Account']
     title: My Account
     uimap:
         form:
@@ -93,6 +94,10 @@ view_order:
                         pageelements:
                             product_table_head: //table[@id='my-orders-table']/thead
                             price_totals: //table[@id='my-orders-table']/tfoot
+                            price_totals_line: //table[@id='my-orders-table']/tfoot/descendant::tr
+                            price_totals_line_index: //table[@id='my-orders-table']/tfoot/descendant::tr[%index%]
+                            price_totals_line_index_name: //table[@id='my-orders-table']/tfoot/descendant::tr[%index%]/*[1]
+                            price_totals_line_index_value: //table[@id='my-orders-table']/tfoot/descendant::tr[%index%]/*[2]
                             product_line:  //table[@id='my-orders-table']/tbody
         messages: *myAccountMessages
 

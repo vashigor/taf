@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  tests
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -53,13 +53,11 @@ class Core_Mage_CompareProducts_Helper extends Mage_Selenium_TestCase
     /**
      * Add product from Product page
      *
-     *
      * @param array $productName  Name of product to be added
-     * @param array $categoryName  Product Category
      */
-    public function frontAddToCompareFromProductPage($productName, $categoryName = null)
+    public function frontAddToCompareFromProductPage($productName)
     {
-        $this->productHelper()->frontOpenProduct($productName, $categoryName);
+        $this->productHelper()->frontOpenProduct($productName);
         $this->clickControl('link', 'add_to_compare');
     }
 
@@ -73,12 +71,11 @@ class Core_Mage_CompareProducts_Helper extends Mage_Selenium_TestCase
      */
     public function frontClearAll()
     {
-        if(!$this->controlIsPresent('pageelement', 'compare_block_title')) {
+        if (!$this->controlIsPresent('pageelement', 'compare_block_title')) {
             return false;
         }
-        if($this->controlIsPresent('link', 'compare_clear_all')) {
-            return $this->clickControlAndConfirm('link', 'compare_clear_all',
-                            'confirmation_clear_all_from_compare');
+        if ($this->controlIsPresent('link', 'compare_clear_all')) {
+            return $this->clickControlAndConfirm('link', 'compare_clear_all', 'confirmation_clear_all_from_compare');
         }
         return true;
     }
@@ -95,7 +92,7 @@ class Core_Mage_CompareProducts_Helper extends Mage_Selenium_TestCase
     {
         $this->addParameter('productName', $productName);
         return $this->clickControlAndConfirm('link', 'compare_delete_product',
-                        'confirmation_for_removing_product_from_compare');
+            'confirmation_for_removing_product_from_compare');
     }
 
     /**
@@ -109,7 +106,7 @@ class Core_Mage_CompareProducts_Helper extends Mage_Selenium_TestCase
     public function frontRemoveProductFromComparePopup($productName)
     {
         $compareProducts = $this->frontGetProductsListComparePopup();
-        if (key_exists($productName, $compareProducts) and count($compareProducts) >= 3) {
+        if (array_key_exists($productName, $compareProducts) and count($compareProducts) >= 3) {
             $this->addParameter('columnIndex', $compareProducts[$productName]);
             $this->clickControl('link', 'remove_item');
             return true;
@@ -127,9 +124,8 @@ class Core_Mage_CompareProducts_Helper extends Mage_Selenium_TestCase
     public function getProductDetailsOnComparePage()
     {
         $xpath = $this->_getControlXpath('fieldset', 'compare_products');
-
-        $rowCount = $this->getXpathCount($xpath . '/*/tr');
-        $columnCount = $this->getXpathCount($xpath . '/tbody[1]/tr/*');
+        $rowCount = $this->getControlCount('pageelement', 'compare_products_row');
+        $columnCount = $this->getControlCount('pageelement', 'compare_products_column');
 
         $data = array();
         for ($column = 0; $column < $columnCount; $column++) {
@@ -170,12 +166,13 @@ class Core_Mage_CompareProducts_Helper extends Mage_Selenium_TestCase
             if (isset($value['remove'])) {
                 unset($value['remove']);
             }
-            $value['product_name'] = trim(preg_replace('/' . preg_quote($value['product_prices']) . '/', '',
-                            $value['product_name']));
-            $value['product_prices'] = trim(preg_replace('#(add to wishlist)|(add to cart)|(\n)#i', ' ',
-                            $value['product_prices']), " \t\n\r\0\x0B");
+            $value['product_name'] =
+                trim(preg_replace('/' . preg_quote($value['product_prices']) . '/', '', $value['product_name']));
+            $value['product_prices'] =
+                trim(preg_replace('#(add to wishlist)|(add to cart)|(\n)#i', ' ', $value['product_prices']),
+                    " \t\n\r\0\x0B");
             preg_match_all('#([a-z (\.)?]+: ([a-z \.]+: )?)?\$([\d]+(\.|,)[\d]+(\.[\d]+)?)|([\d]+)#i',
-                    $value['product_prices'], $prices);
+                $value['product_prices'], $prices);
             $value['product_prices'] = array_map('trim', $prices[0]);
 
             foreach ($value['product_prices'] as $keyPrice => $price) {
@@ -208,6 +205,7 @@ class Core_Mage_CompareProducts_Helper extends Mage_Selenium_TestCase
      * Preconditions: Compare Products pop-up is opened and selected
      *
      * @param array $verifyData Array of products info to be checked
+     *
      * @return array Array of  error messages if any
      */
     public function frontVerifyProductDataInComparePopup($verifyData)
@@ -226,8 +224,13 @@ class Core_Mage_CompareProducts_Helper extends Mage_Selenium_TestCase
      */
     public function frontGetAttributesListComparePopup()
     {
-        $attrXPath = $this->_getControlXpath('pageelement', 'product_attribute_names');
-        $attributesList = $this->getElementsText($attrXPath, "/th/span");
+        $totalElements = $this->getControlCount('pageelement', 'product_attribute_names');
+        $attributesList = array();
+        for ($i = 1; $i < $totalElements + 1; $i++) {
+            $this->addParameter('', $i);
+            $elementValue = $this->getControlAttribute('pageelement', 'product_attribute_index_name', 'text');
+            $attributesList[$elementValue] = $i;
+        }
         return $attributesList;
     }
 
@@ -239,29 +242,14 @@ class Core_Mage_CompareProducts_Helper extends Mage_Selenium_TestCase
      */
     public function frontGetProductsListComparePopup()
     {
-        $productsXPath = $this->_getControlXpath('pageelement', 'product_names');
-        $productsList = $this->getElementsText($productsXPath, "//*[@class='product-name']");
-        return $productsList;
-    }
-
-    /**
-     * Gets text for all element(s) by XPath
-     *
-     * @param string $elementsXpath General XPath of looking up element(s)
-     * @param string $additionalXPath Additional XPath (by default = '')
-     *
-     * @return array Array of elements text with id of element
-     */
-    public function getElementsText($elementsXpath, $additionalXPath = '')
-    {
-        $elements = array();
-        $totalElements = $this->getXpathCount($elementsXpath);
+        $totalElements = $this->getControlCount('pageelement', 'product_names');
+        $productsList = array();
         for ($i = 1; $i < $totalElements + 1; $i++) {
-            $elementXpath = $elementsXpath . "[$i]" . $additionalXPath;
-            $elementValue = $this->getText($elementXpath);
-            $elements[$elementValue] = $i;
+            $this->addParameter('', $i);
+            $elementValue = $this->getControlAttribute('pageelement', 'product_index_name', 'text');
+            $productsList[$elementValue] = $i;
         }
-        return $elements;
+        return $productsList;
     }
 
     /**
@@ -274,10 +262,7 @@ class Core_Mage_CompareProducts_Helper extends Mage_Selenium_TestCase
     public function frontOpenComparePopup()
     {
         $this->clickButton('compare', false);
-        $names = $this->getAllWindowNames();
-        $popupId = end($names);
-        $this->waitForPopUp($popupId, $this->_browserTimeoutPeriod);
-        $this->selectWindow("name=" . $popupId);
+        $popupId = $this->selectLastWindow();
         $this->validatePage('compare_products');
         return $popupId;
     }

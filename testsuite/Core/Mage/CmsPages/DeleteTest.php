@@ -22,7 +22,7 @@
  * @package     selenium
  * @subpackage  tests
  * @author      Magento Core Team <core@magentocommerce.com>
- * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -38,7 +38,6 @@ class Core_Mage_CmsPages_DeleteTest extends Mage_Selenium_TestCase
     protected function assertPreconditions()
     {
         $this->loginAdminUser();
-        $this->addParameter('id', '0');
     }
 
     /**
@@ -56,7 +55,7 @@ class Core_Mage_CmsPages_DeleteTest extends Mage_Selenium_TestCase
     public function deleteCmsPage()
     {
         //Data
-        $pageData = $this->loadData('new_cms_page_req');
+        $pageData = $this->loadDataSet('CmsPage', 'new_cms_page_req');
         $search = array('filter_title'   => $pageData['page_information']['page_title'],
                         'filter_url_key' => $pageData['page_information']['url_key']);
         //Steps

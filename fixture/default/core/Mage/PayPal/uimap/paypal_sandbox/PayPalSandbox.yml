@@ -21,13 +21,13 @@
 # @package     selenium
 # @subpackage  test-data
 # @author      Magento Core Team <core@magentocommerce.com>
-# @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+# @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
 # @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 #
 ---
 paypal_sandbox:
     mca: cgi-bin/webscr?cmd=_partner-onboard-flow&onboarding_token=%anyValue%
-    title: %pageTitle%
+    title: %elementTitle%
     uimap: &paypalSandbox
         form:
             fieldsets:
@@ -62,5 +62,5 @@ paypal_sandbox_get_started:
 
 paypal_sandbox_account:
     mca: us/cgi-bin/webscr?cmd=_flow&SESSION=%anyValue%&dispatch=%anyValue%
-    title: %pageTitle%
+    title: %elementTitle%
     uimap: *paypalSandbox

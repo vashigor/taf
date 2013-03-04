@@ -20,13 +20,24 @@
 # @package     selenium
 # @subpackage  uimaps
 # @author      Magento Core Team <core@magentocommerce.com>
-# @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+# @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
 # @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 #
 ---
 paypal_developer:
     uimap:
+        form:
+            fieldsets:
+                -
+                    general_elements:
+                        xpath:
+                        pageelements:
+                            navigation_menu: //*[@id='nav-menu']
         messages:
             general_validation: "//*[@id='alert_content']/span[@class='details']"
             general_success: "//*[@id='alert_content']/span[@class='message']"
             general_error: "//*[@id='alert_content']/span[@class='error']"
+            success_created_account: "//*[@id='alert_content']/span[@class='message'][text()='You have successfully created a test account. You can view email for this account on the Test Email tab.']"
+            failed_account_creation: "//*[@id='alert_content']/span[@class='error'][text()='The account creation process failed, resulting in an incomplete account profile. Please delete this account and start over']"
+            incorrect_information: "//*[@id='alert_content']/span[@class='error'][text()='Some information is incorrect or missing. Please correct your entries and try again.']"
+            success_created_account_without_card: "//*[@id='alert_content']/span[@class='message'][contains(text(), 'Account Created Successfully but failed to add')]"
