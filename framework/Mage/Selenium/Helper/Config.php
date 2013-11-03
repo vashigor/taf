@@ -146,7 +146,7 @@ class Mage_Selenium_Helper_Config extends Mage_Selenium_Helper_Abstract
     {
         $files = array('local.yml', 'config.yml');
         foreach ($files as $file) {
-            $configDir = implode(DIRECTORY_SEPARATOR, array(SELENIUM_TESTS_BASEDIR, 'config', $file));
+            $configDir = implode(DIRECTORY_SEPARATOR, array(PROJECT_TESTS_DIR, 'config', $file));
             $fileData = $this->getConfig()->getHelper('file')->loadYamlFile($configDir);
             if ($fileData) {
                 $this->_configData = $fileData;
