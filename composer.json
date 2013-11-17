@@ -1,0 +1,12 @@
+{
+    "name": "phyro/gmtaf",
+    "authors": [
+        {
+            "name": "Igor Tkachenko",
+            "email": "vash.igor@gmail.com"
+        }
+    ],
+    "require": {
+
+    }
+}

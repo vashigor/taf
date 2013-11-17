@@ -7,3 +7,5 @@ var/*
 .buildpath
 .project
 .settings
+
+/vendor/
