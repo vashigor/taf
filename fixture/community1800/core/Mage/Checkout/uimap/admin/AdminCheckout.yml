@@ -1,0 +1,8 @@
+---
+#Manage Sales Orders and related pages
+
+# 'Orders' page
+create_order_for_new_customer:
+    uimap:
+        messages: #&orderMessages
+            not_valid_email: //*[contains(text(),'"Email" is not a valid email address.') or text()='Please enter a valid email address. For example johndoe@domain.com.']

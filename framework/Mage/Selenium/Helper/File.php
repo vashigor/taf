@@ -47,6 +47,7 @@ class Mage_Selenium_Helper_File extends Mage_Selenium_Helper_Abstract
     public function loadYamlFile($fullFileName)
     {
         $data = false;
+        echo $fullFileName. "\n";
         if ($fullFileName && file_exists($fullFileName)) {
             $data = sfYaml::load($fullFileName);
         }
