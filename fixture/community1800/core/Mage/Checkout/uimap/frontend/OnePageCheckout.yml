@@ -1,0 +1,14 @@
+---
+# 'Checkout' page
+
+onepage_checkout:
+    uimap:
+        form: &checkoutForm
+            fieldsets:
+                -
+                    checkout_progress:
+                        links:
+                            billing_information_change: "//dt[contains(.,'Billing Address')]//a[@href='#billing']"
+                            shipping_information_change: "//dt[contains(.,'Shipping Address')]//a[@href='#payment']"
+                            shipping_method_change: "//dt[contains(.,'Shipping Method')]//a[@href='#shipping_method']"
+                            payment_method_change: "//dt[contains(.,'Payment Method')]//a[@href='#payment']"
