@@ -115,7 +115,6 @@ class IgorTW_Util_ForceCall
 		{
 			throw $exc;
 		}
-		echo "\n (" . $this->number . ")Allow exception by IgorTW_Util_ForceCall:" . $exc ."\n";
 	}
 	
 }

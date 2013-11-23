@@ -282,6 +282,7 @@ class Mage_Selenium_TestCase extends PHPUnit_Extensions_SeleniumTestCase
             }
         }
         
+        // return parent::__call($command, $arguments);
         $method = 'PHPUnit_Extensions_SeleniumTestCase::__call'; // Instead parent::_call
         $args = array( $command , $arguments );
         return $this->forcedDriverCaller->tryCall( $this , $method , $args );
