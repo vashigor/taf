@@ -10,11 +10,11 @@
 class Simplified_Mage_Product_Create_BundleTest extends Core_Mage_Product_Create_BundleTest
 {
 
-	/**
-	 * <p>Simplified list of empty fields.</p>
-	 * 
-	 * @see Core_Mage_Product_Create_BundleTest::emptyRequiredFieldInBundleDataProvider()
-	 */
+    /**
+     * <p>Simplified list of empty fields.</p>
+     * 
+     * @see Core_Mage_Product_Create_BundleTest::emptyRequiredFieldInBundleDataProvider()
+     */
     public function emptyRequiredFieldInBundleDataProvider()
     {
         return array(

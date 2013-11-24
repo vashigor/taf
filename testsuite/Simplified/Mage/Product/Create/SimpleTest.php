@@ -10,11 +10,11 @@
 class Simplified_Mage_Product_Create_SimpleTest extends Core_Mage_Product_Create_SimpleTest
 {
 
-	/**
-	 * <p>Simplified list of empty fields.</p>
-	 *
-	 * @see Core_Mage_Product_Create_SimpleTest::withRequiredFieldsEmptyDataProvider()
-	 */
+    /**
+     * <p>Simplified list of empty fields.</p>
+     *
+     * @see Core_Mage_Product_Create_SimpleTest::withRequiredFieldsEmptyDataProvider()
+     */
     public function withRequiredFieldsEmptyDataProvider()
     {
         return array(

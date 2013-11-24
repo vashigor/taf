@@ -47,7 +47,7 @@ class Community1800_Mage_CheckoutOnePage_WithRegistration_CheckingValidationTest
         
         if ('billing_country' == $field)
         {
-        	unset($checkoutData['billing_address_data']['billing_state']);
+            unset($checkoutData['billing_address_data']['billing_state']);
         }
         
         $this->setExpectedException('PHPUnit_Framework_AssertionFailedError', $message);
@@ -77,7 +77,7 @@ class Community1800_Mage_CheckoutOnePage_WithRegistration_CheckingValidationTest
         
         if ('shipping_country' == $field)
         {
-        	unset($checkoutData['shipping_address_data']['shipping_state']);
+            unset($checkoutData['shipping_address_data']['shipping_state']);
         }
         
         $this->setExpectedException('PHPUnit_Framework_AssertionFailedError', $message);

@@ -10,11 +10,11 @@
 class Simplified_Mage_Product_Create_VirtualTest extends Core_Mage_Product_Create_VirtualTest
 {
 
-	/**
-	 * <p>Simplified list of empty fields.</p>
-	 *
-	 * @see Core_Mage_Product_Create_VirtualTest::withRequiredFieldsEmptyDataProvider()
-	 */
+    /**
+     * <p>Simplified list of empty fields.</p>
+     *
+     * @see Core_Mage_Product_Create_VirtualTest::withRequiredFieldsEmptyDataProvider()
+     */
     public function withRequiredFieldsEmptyDataProvider()
     {
         return array(

@@ -9,7 +9,7 @@
 class Simplified_Mage_Order_SavedCC_NewCustomerWithSimpleSmokeTest extends Core_Mage_Order_SavedCC_NewCustomerWithSimpleSmokeTest
 {
 
-	public function createOrderWith3DSecure($card, $needSetUp, $orderData)
+    public function createOrderWith3DSecure($card, $needSetUp, $orderData)
     {
         
     }

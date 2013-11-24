@@ -11,11 +11,11 @@
  */
 class Simplified_Mage_CheckoutOnePage_LoggedIn_PaymentMethodsTest extends Core_Mage_CheckoutOnePage_LoggedIn_PaymentMethodsTest
 {
-	
-	/**
-	 * <p>We don't initialize PayPal and we shouldn't tear it down</p>
-	 * @see Core_Mage_CheckoutOnePage_Existing_PaymentMethodsTest::tearDownAfterTestClass()
-	 */
+    
+    /**
+     * <p>We don't initialize PayPal and we shouldn't tear it down</p>
+     * @see Core_Mage_CheckoutOnePage_Existing_PaymentMethodsTest::tearDownAfterTestClass()
+     */
     protected function tearDownAfterTestClass()
     {
         $this->loginAdminUser();

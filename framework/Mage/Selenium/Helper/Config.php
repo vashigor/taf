@@ -145,13 +145,22 @@ class Mage_Selenium_Helper_Config extends Mage_Selenium_Helper_Abstract
     protected function _loadConfigData()
     {
         $files = array('local.yml', 'config.yml');
-        foreach ($files as $file) {
-            $configDir = implode(DIRECTORY_SEPARATOR, array(PROJECT_TESTS_DIR, 'config', $file));
-            $fileData = $this->getConfig()->getHelper('file')->loadYamlFile($configDir);
-            if ($fileData) {
-                $this->_configData = $fileData;
-                return $this;
-            }
+        $folders = array();
+        if (defined('PROJECT_TESTS_DIR'))
+        {
+            $folders[] = implode(DIRECTORY_SEPARATOR, array(PROJECT_TESTS_DIR, 'config'));
+        }
+        $folders[] = implode(DIRECTORY_SEPARATOR, array(SELENIUM_TESTS_BASEDIR, 'config'));
+        foreach ($folders as $folder)
+        {
+            foreach ($files as $file) {
+                $configDir = implode(DIRECTORY_SEPARATOR, array($folder, $file));
+                $fileData = $this->getConfig()->getHelper('file')->loadYamlFile($configDir);
+                if ($fileData) {
+                    $this->_configData = $fileData;
+                    return $this;
+                }
+        }
         }
         throw new OutOfRangeException('Configuration files do not exist');
     }

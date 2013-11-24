@@ -10,11 +10,11 @@
 class Simplified_Mage_Product_Create_DownloadableTest extends Core_Mage_Product_Create_DownloadableTest
 {
 
-	/**
-	 * <p>Simplified list of empty fields.</p>
-	 *
-	 * @see Core_Mage_Product_Create_DownloadableTest::withRequiredFieldsEmptyDataProvider()
-	 */
+    /**
+     * <p>Simplified list of empty fields.</p>
+     *
+     * @see Core_Mage_Product_Create_DownloadableTest::withRequiredFieldsEmptyDataProvider()
+     */
     public function withRequiredFieldsEmptyDataProvider()
     {
         return array(
@@ -34,7 +34,7 @@ class Simplified_Mage_Product_Create_DownloadableTest extends Core_Mage_Product_
             array($this->generate('string', 9, ':punct:'))
         );
     }
-	
+    
     /**
      * <p>Simplified list of empty fields for sample data.</p>
      *

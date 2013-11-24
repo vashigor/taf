@@ -12,10 +12,10 @@
 class Simplified_Mage_CheckoutOnePage_WithRegistration_PaymentMethodsTest extends Core_Mage_CheckoutOnePage_WithRegistration_PaymentMethodsTest
 {
 
-	/**
-	 * <p>We don't initialize PayPal and we shouldn't tear it down</p>
-	 * @see Core_Mage_CheckoutOnePage_WithRegistration_PaymentMethodsTest::tearDownAfterTestClass()
-	 */
+    /**
+     * <p>We don't initialize PayPal and we shouldn't tear it down</p>
+     * @see Core_Mage_CheckoutOnePage_WithRegistration_PaymentMethodsTest::tearDownAfterTestClass()
+     */
     protected function tearDownAfterTestClass()
     {
         $this->loginAdminUser();
@@ -54,7 +54,7 @@ class Simplified_Mage_CheckoutOnePage_WithRegistration_PaymentMethodsTest extend
     {
         return $this->correctionHelper()->getPaymentMethodsForDataProvider();
     }
-	
+    
     /**
      * <p>We don't need tests with 3D sentinel in simplified mode</p>
      * @see Core_Mage_CheckoutOnePage_WithRegistration_PaymentMethodsTest::differentPaymentMethodsWith3D()

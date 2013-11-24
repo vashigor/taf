@@ -12,16 +12,16 @@
 class Simplified_Mage_CheckoutOnePage_Guest_PaymentMethodsTest extends Core_Mage_CheckoutOnePage_Guest_PaymentMethodsTest
 {
 
-	/**
-	 * <p>We don't initialize PayPal and we shouldn't tear it down</p>
-	 * @see Core_Mage_CheckoutOnePage_Guest_PaymentMethodsTest::tearDownAfterTestClass()
-	 */
-	protected function tearDownAfterTestClass()
-	{
-		$this->loginAdminUser();
-		$this->systemConfigurationHelper()->useHttps('frontend', 'no');
-		// Work with PayPal has been removed.
-	}
+    /**
+     * <p>We don't initialize PayPal and we shouldn't tear it down</p>
+     * @see Core_Mage_CheckoutOnePage_Guest_PaymentMethodsTest::tearDownAfterTestClass()
+     */
+    protected function tearDownAfterTestClass()
+    {
+        $this->loginAdminUser();
+        $this->systemConfigurationHelper()->useHttps('frontend', 'no');
+        // Work with PayPal has been removed.
+    }
 
     /**
      * <p>Creating Simple product</p>

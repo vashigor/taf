@@ -10,11 +10,11 @@
 class Simplified_Mage_Product_Create_ConfigurableTest extends Core_Mage_Product_Create_ConfigurableTest
 {
 
-	/**
-	 * <p>Simplified list of empty fields.</p>
-	 *
-	 * @see Core_Mage_Product_Create_ConfigurableTest::emptyRequiredFieldInConfigurableDataProvider()
-	 */
+    /**
+     * <p>Simplified list of empty fields.</p>
+     *
+     * @see Core_Mage_Product_Create_ConfigurableTest::emptyRequiredFieldInConfigurableDataProvider()
+     */
     public function emptyRequiredFieldInConfigurableDataProvider()
     {
         return array(

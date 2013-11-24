@@ -9,18 +9,18 @@
  */
 class Community1800_Mage_CheckoutOnePage_LoggedIn_CheckingValidationTest extends Core_Mage_CheckoutOnePage_LoggedIn_CheckingValidationTest
 {
-	
-	/**
-	 * <p>Creating Simple product and customer</p>
-	 *
-	 * @return array
-	 * @test
-	 * @see Core_Mage_CheckoutOnePage_LoggedIn_CheckingValidationTest::preconditionsForTests()
-	 */
-	public function preconditionsForTests()
-	{
-		return parent::preconditionsForTests();
-	}
+    
+    /**
+     * <p>Creating Simple product and customer</p>
+     *
+     * @return array
+     * @test
+     * @see Core_Mage_CheckoutOnePage_LoggedIn_CheckingValidationTest::preconditionsForTests()
+     */
+    public function preconditionsForTests()
+    {
+        return parent::preconditionsForTests();
+    }
 
     /**
      * <p>Empty required fields in billing address tab...</p>
@@ -44,7 +44,7 @@ class Community1800_Mage_CheckoutOnePage_LoggedIn_CheckingValidationTest extends
         
         if ('country' == $field)
         {
-        	unset($checkoutData['billing_address_data']['billing_state']);
+            unset($checkoutData['billing_address_data']['billing_state']);
         }
         
         //Steps
@@ -75,7 +75,7 @@ class Community1800_Mage_CheckoutOnePage_LoggedIn_CheckingValidationTest extends
         
         if ('country' == $field)
         {
-        	unset($checkoutData['shipping_address_data']['shipping_state']);
+            unset($checkoutData['shipping_address_data']['shipping_state']);
         }
         
         //Steps

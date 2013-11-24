@@ -10,11 +10,11 @@
 class Simplified_Mage_Product_Create_CustomOptionsTest extends Core_Mage_Product_Create_CustomOptionsTest
 {
 
-	/**
-	 * <p>Simplified list of empty options.</p>
-	 * 
-	 * @see Core_Mage_Product_Create_CustomOptionsTest::emptyOptionRowTitleInCustomOptionDataProvider()
-	 */
+    /**
+     * <p>Simplified list of empty options.</p>
+     * 
+     * @see Core_Mage_Product_Create_CustomOptionsTest::emptyOptionRowTitleInCustomOptionDataProvider()
+     */
     public function emptyOptionRowTitleInCustomOptionDataProvider()
     {
         return array(

@@ -63,7 +63,7 @@ framework:
     coverageScriptUrl: ''
     #captureScreenshotOnFailure works only for browsers that support it: Firefox/Chrome, IE with snapsIE tool
     captureScreenshotOnFailure: true
-    saveHtmlPageOnFailure: false
+    saveHtmlPageOnFailure: true
     load_all_uimaps: true
     load_all_data: true
     cache:
@@ -84,8 +84,8 @@ framework:
 ################################################################################
 applications:
     mage: &mage
-        fallbackOrderFixture: 'default'
-        fallbackOrderHelper: 'Core'
+        fallbackOrderFixture: 'community1800,community1701,community17,default'
+        fallbackOrderHelper: 'Simplified,Community1701,Community17,Core'
         areas:
             admin:
                 url: 'http://www.localhost.com/magento/admin/'

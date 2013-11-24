@@ -11,11 +11,11 @@
  */
 class Simplified_Mage_CheckoutOnePage_Existing_ShippingMethodsTest extends Core_Mage_CheckoutOnePage_Existing_ShippingMethodsTest
 {
-	
-	/**
-	 * <p>Provide the simplified list ot shipping methods</p>
-	 * @see Core_Mage_CheckoutOnePage_Existing_ShippingMethodsTest::shipmentDataProvider()
-	 */
+    
+    /**
+     * <p>Provide the simplified list ot shipping methods</p>
+     * @see Core_Mage_CheckoutOnePage_Existing_ShippingMethodsTest::shipmentDataProvider()
+     */
     public function shipmentDataProvider()
     {
         return $this->correctionHelper()->getShippingMethodsForDataProvider();
