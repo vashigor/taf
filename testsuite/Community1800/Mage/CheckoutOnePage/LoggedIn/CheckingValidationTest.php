@@ -12,6 +12,7 @@ class Community1800_Mage_CheckoutOnePage_LoggedIn_CheckingValidationTest extends
 
     /**
      * <p>Creating Simple product and customer</p>
+     * <p>This overriding is required, to restore the certain tests order.</p>
      *
      * @return array
      * @test
@@ -24,7 +25,7 @@ class Community1800_Mage_CheckoutOnePage_LoggedIn_CheckingValidationTest extends
 
     /**
      * <p>Empty required fields in billing address tab...</p>
-     * <p>Fixes bug with state when country is empty.</p>
+     * <p>This overriding fixes the bug with state that appears when country is empty.</p>
      *
      * @param string $field
      * @param string $message
@@ -42,10 +43,12 @@ class Community1800_Mage_CheckoutOnePage_LoggedIn_CheckingValidationTest extends
                                            array('general_name'      => $data['sku'],
                                                 'billing_' . $field  => ''));
 
+        // Begin fix
         if ('country' == $field)
         {
             unset($checkoutData['billing_address_data']['billing_state']);
         }
+        // End fix
 
         //Steps
         $this->customerHelper()->frontLoginCustomer($data['customer']);
@@ -55,7 +58,7 @@ class Community1800_Mage_CheckoutOnePage_LoggedIn_CheckingValidationTest extends
 
     /**
      * <p>Empty required fields in shipping address tab</p>
-     * <p>Fix bug with state when country is empty.</p>
+     * <p>This overriding fixes the bug with state that appears when country is empty.</p>
      *
      * @param string $field
      * @param string $message
@@ -73,10 +76,12 @@ class Community1800_Mage_CheckoutOnePage_LoggedIn_CheckingValidationTest extends
                                            array('general_name'       => $data['sku'],
                                                 'shipping_' . $field  => ''));
 
+        // Begin fix
         if ('country' == $field)
         {
             unset($checkoutData['shipping_address_data']['shipping_state']);
         }
+        // End fix
 
         //Steps
         $this->customerHelper()->frontLoginCustomer($data['customer']);

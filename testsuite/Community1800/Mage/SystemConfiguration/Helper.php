@@ -48,10 +48,10 @@ class Community1800_Mage_SystemConfiguration_Helper extends Community1701_Mage_S
     }
 
     /**
-     * Check if attribute presented and return its value.
+     * Check if an attribute is presented and return its value.
      *
-     * @param unknown $tabXpath
-     * @param unknown $attribute
+     * @param string $tabXpath
+     * @param string $attribute
      * @return boolean string|NULL
      */
     protected function _checkAndGetAttribute1800( $tabXpath , $attribute )

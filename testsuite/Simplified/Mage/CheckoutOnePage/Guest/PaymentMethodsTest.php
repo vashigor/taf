@@ -4,7 +4,7 @@
  * Tests for payment methods. Frontend - OnePageCheckout
  *
  * @method Simplified_Mage_Correction_Helper correctionHelper()
- * 
+ *
  * @package     selenium
  * @subpackage  tests
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
@@ -13,7 +13,7 @@ class Simplified_Mage_CheckoutOnePage_Guest_PaymentMethodsTest extends Core_Mage
 {
 
     /**
-     * <p>We don't initialize PayPal and we shouldn't tear it down</p>
+     * <p>We don't initialize PayPal and we shouldn't tear it down.</p>
      * @see Core_Mage_CheckoutOnePage_Guest_PaymentMethodsTest::tearDownAfterTestClass()
      */
     protected function tearDownAfterTestClass()
@@ -25,7 +25,7 @@ class Simplified_Mage_CheckoutOnePage_Guest_PaymentMethodsTest extends Core_Mage
 
     /**
      * <p>Creating Simple product</p>
-     * <p>We remove paypal authentication and configuration for simplified tests</p>
+     * <p>We've removed the paypal authentication and configuration for simplified tests.</p>
      *
      * @return string
      * @test
@@ -40,14 +40,14 @@ class Simplified_Mage_CheckoutOnePage_Guest_PaymentMethodsTest extends Core_Mage
         $this->productHelper()->createProduct($simple);
         //Verification
         $this->assertMessagePresent('success', 'success_saved_product');
-        
+
         // Work with PayPal has been removed.
         $accounts = $this->correctionHelper()->getPaypalLikeVisaAccount();
         return array('sku' => $simple['general_name'], 'api' => array(), 'visa' => $accounts['visa']['credit_card']);
     }
-    
+
     /**
-     * <p>Provide the simplified list ot payment methods</p>
+     * <p>Providing the simplified list ot payment methods.</p>
      * @see Core_Mage_CheckoutOnePage_Guest_PaymentMethodsTest::differentPaymentMethodsWithout3DDataProvider()
      */
     public function differentPaymentMethodsWithout3DDataProvider()
@@ -56,12 +56,12 @@ class Simplified_Mage_CheckoutOnePage_Guest_PaymentMethodsTest extends Core_Mage
     }
 
     /**
-     * <p>We don't need tests with 3D sentinel in simplified mode</p>
+     * <p>We don't need tests with 3D secure in the Simplified mode.</p>
      * @see Core_Mage_CheckoutOnePage_Guest_PaymentMethodsTest::differentPaymentMethodsWith3D()
      */
     public function differentPaymentMethodsWith3D($payment, $testData)
     {
-        
+
     }
-    
+
 }
