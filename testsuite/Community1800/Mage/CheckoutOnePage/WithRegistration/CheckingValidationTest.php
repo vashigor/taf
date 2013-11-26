@@ -12,6 +12,7 @@ class Community1800_Mage_CheckoutOnePage_WithRegistration_CheckingValidationTest
 
     /**
      * <p>Creating Simple product</p>
+     * <p>This overriding is required, to restore the certain tests order.</p>
      *
      * @test
      * @return string
@@ -24,7 +25,7 @@ class Community1800_Mage_CheckoutOnePage_WithRegistration_CheckingValidationTest
 
     /**
      * <p>Empty required fields in billing address tab</p>
-     * <p>Fixes bug with state when country is empty.</p>
+     * <p>This overriding fixes the bug with state that appears when country is empty.</p>
      *
      * @param string $field
      * @param string $message
@@ -57,7 +58,7 @@ class Community1800_Mage_CheckoutOnePage_WithRegistration_CheckingValidationTest
 
     /**
      * <p>Empty required fields in shipping address tab</p>
-     * <p>Fix bug with state when country is empty.</p>
+     * <p>This overriding fixes the bug with state that appears when country is empty.</p>
      *
      * @param string $field
      * @param string $message

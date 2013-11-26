@@ -2,6 +2,7 @@
 
 /**
  * Helper class
+ * This class provide the lists of tests' parameters for Simplified mode.
  *
  * @package     simplified
  * @subpackage  tests
@@ -9,10 +10,10 @@
  */
 class Simplified_Mage_Correction_Helper extends Mage_Selenium_TestCase
 {
-    
+
     /**
-     * <p>Emulate credit card we get from PayPal sendbox.</p>  
-     * 
+     * <p>Emulating credit card we get from PayPal Sandbox.</p>
+     *
      * @return array
      */
     public function getPaypalLikeVisaAccount()
@@ -25,10 +26,10 @@ class Simplified_Mage_Correction_Helper extends Mage_Selenium_TestCase
         );
         return $account;
     }
-    
+
     /**
-     * <p>Provide simplified data set for payment method tests.</p>
-     * 
+     * <p>Providing simplified data set for payment method tests.</p>
+     *
      * @return array
      */
     public function getPaymentMethodsForDataProvider()
@@ -38,10 +39,10 @@ class Simplified_Mage_Correction_Helper extends Mage_Selenium_TestCase
                 array('checkmoney')
         );
     }
-    
+
     /**
-     * <p>Provide simplified data set for shipping method tests.</p>
-     * 
+     * <p>Providing simplified data set for shipping method tests.</p>
+     *
      * @return array
      */
     public function getShippingMethodsForDataProvider()
@@ -51,5 +52,5 @@ class Simplified_Mage_Correction_Helper extends Mage_Selenium_TestCase
             array('free', null, 'usa')
         );
     }
-    
+
 }

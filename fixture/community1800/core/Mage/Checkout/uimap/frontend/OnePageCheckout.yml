@@ -3,7 +3,7 @@
 
 onepage_checkout:
     uimap:
-        form: &checkoutForm
+        form:
             fieldsets:
                 -
                     checkout_progress:

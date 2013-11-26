@@ -139,6 +139,8 @@ class Mage_Selenium_Helper_Config extends Mage_Selenium_Helper_Abstract
 
     /**
      * Load Config Data
+     * <p>Define PROJECT_TESTS_DIR in bootstrap.php to specify a directory that contains config.yml.</p>
+     *
      * @return Mage_Selenium_Helper_Config
      * @throws OutOfRangeException
      */
@@ -146,11 +148,21 @@ class Mage_Selenium_Helper_Config extends Mage_Selenium_Helper_Abstract
     {
         $files = array('local.yml', 'config.yml');
         $folders = array();
+        /**
+         * Addition for Simplified begins.
+         *
+         * This addition allows to load configuration file from a path that
+         * is different from MTAF base path.
+         * For example: You can load config from the directory of a certain project.
+         */
         if (defined('PROJECT_TESTS_DIR'))
         {
             $folders[] = implode(DIRECTORY_SEPARATOR, array(PROJECT_TESTS_DIR, 'config'));
         }
         $folders[] = implode(DIRECTORY_SEPARATOR, array(SELENIUM_TESTS_BASEDIR, 'config'));
+        /**
+         * Addition for Simplified ends.
+         */
         foreach ($folders as $folder)
         {
             foreach ($files as $file) {

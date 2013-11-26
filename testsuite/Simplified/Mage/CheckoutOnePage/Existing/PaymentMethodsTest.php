@@ -2,18 +2,18 @@
 
 /**
  * Tests for payment methods. Frontend - OnePageCheckout
- * 
+ *
  * @method Simplified_Mage_Correction_Helper correctionHelper()
- * 
+ *
  * @package     selenium
  * @subpackage  tests
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 class Simplified_Mage_CheckoutOnePage_Existing_PaymentMethodsTest extends Core_Mage_CheckoutOnePage_Existing_PaymentMethodsTest
 {
-    
+
     /**
-     * <p>We don't initialize PayPal and we shouldn't tear it down</p>
+     * <p>We don't initialize PayPal and we shouldn't tear it down.</p>
      * @see Core_Mage_CheckoutOnePage_Existing_PaymentMethodsTest::tearDownAfterTestClass()
      */
     protected function tearDownAfterTestClass()
@@ -25,7 +25,7 @@ class Simplified_Mage_CheckoutOnePage_Existing_PaymentMethodsTest extends Core_M
 
     /**
      * <p>Creating Simple product</p>
-     * <p>We remove paypal authentication and configuration for simplified tests</p>
+     * <p>We've removed the paypal authentication and configuration for simplified tests.</p>
      *
      * @return string
      * @test
@@ -52,7 +52,7 @@ class Simplified_Mage_CheckoutOnePage_Existing_PaymentMethodsTest extends Core_M
     }
 
     /**
-     * <p>Provide the simplified list ot payment methods</p>
+     * <p>Providing the simplified list ot payment methods.</p>
      * @see Core_Mage_CheckoutOnePage_Existing_PaymentMethodsTest::differentPaymentMethodsWithout3DDataProvider()
      */
     public function differentPaymentMethodsWithout3DDataProvider()
@@ -61,11 +61,11 @@ class Simplified_Mage_CheckoutOnePage_Existing_PaymentMethodsTest extends Core_M
     }
 
     /**
-     * <p>We don't need tests with 3D sentinel in simplified mode</p>
+     * <p>We don't need tests with 3D secure in the Simplified mode.</p>
      * @see Core_Mage_CheckoutOnePage_Existing_PaymentMethodsTest::differentPaymentMethodsWith3D()
      */
     public function differentPaymentMethodsWith3D($payment, $testData)
     {
     }
-    
+
 }
