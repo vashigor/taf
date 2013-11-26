@@ -221,9 +221,9 @@ class Mage_Selenium_TestCase extends PHPUnit_Extensions_SeleniumTestCase
      * @var bool
      */
     protected $captureScreenshotOnFailure = false;
-    
+
     /**
-     * 
+     *
      * @var IgorTW_Util_ForceCall
      */
     protected $forcedDriverCaller;
@@ -260,8 +260,8 @@ class Mage_Selenium_TestCase extends PHPUnit_Extensions_SeleniumTestCase
         $this->_saveHtmlPageOnFailure = $this->frameworkConfig['saveHtmlPageOnFailure'];
         $this->coverageScriptUrl = $this->frameworkConfig['coverageScriptUrl'];
         $this->screenshotPath = $this->screenshotUrl = $this->getDefaultScreenshotPath();
-        
-        $this->forcedDriverCaller = new IgorTW_Util_ForceCall('RuntimeException','/The error message is\: Illegal value/'); 
+
+        $this->forcedDriverCaller = new IgorTW_Util_ForceCall('RuntimeException','/The error message is\: Illegal value/');
     }
 
     /**
@@ -281,7 +281,7 @@ class Mage_Selenium_TestCase extends PHPUnit_Extensions_SeleniumTestCase
                 return $helper;
             }
         }
-        
+
         // return parent::__call($command, $arguments);
         $method = 'PHPUnit_Extensions_SeleniumTestCase::__call'; // Instead parent::_call
         $args = array( $command , $arguments );
