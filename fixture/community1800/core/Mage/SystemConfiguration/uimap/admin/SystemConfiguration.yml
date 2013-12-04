@@ -1,0 +1,23 @@
+---
+#Manage System Configuration
+
+# 'System Configuration' page
+system_configuration:
+    uimap: &system_configuration_uimap
+        form:
+            tabs:
+                -
+                    sales_tax:
+                        xpath: //dd/a[contains(@href, 'edit/section/tax/')]
+
+system_configuration_tabs:
+    uimap: *system_configuration_uimap
+
+system_configuration_website:
+    uimap: *system_configuration_uimap
+
+system_configuration_store:
+    uimap: *system_configuration_uimap
+
+system_configuration_country:
+    uimap: *system_configuration_uimap
