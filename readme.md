@@ -39,6 +39,6 @@ One can also exclude or replace some tests here. Every category of tests has its
 5. One should copy tests/config/config.yml.dist to tests/config/config.yml.
 The values of “host:” and “port:” fields should be changed with real ones in the new file. Fields “url” should be configured also with urls of Magento site one’s going to test.
 
-6. One should make sure that his or here user has write permissions for the tests/var folder with all its sub-folders.
+6. One should make sure that his or her user has write permissions for the tests/var folder with all its sub-folders.
 
 7. Then one can run phpunit command within tests directory to start testing.
